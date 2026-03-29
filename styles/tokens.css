@@ -1,0 +1,16 @@
+:root {
+  --bg-main: #050b14;
+  --bg-soft: #07111f;
+  --bg-card: #0f172a;
+
+  --text-main: #f8fafc;
+  --text-soft: rgba(226, 232, 240, 0.82);
+  --text-muted: rgba(148, 163, 184, 0.7);
+
+  --primary: #38bdf8;
+  --primary-dark: #0ea5e9;
+
+  --success: #22c55e;
+
+  --border-soft: rgba(255, 255, 255, 0.1);
+}

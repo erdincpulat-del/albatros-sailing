@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Reservation {
+  id                 String    @id @default(cuid())
+  fullName           String
+  certificateId      String    @unique
+  program            String?
+  qualificationLevel String?
+  issueDate          DateTime?
+  seaMiles           Int?
+  photoUrl           String?
+  cardFrontUrl       String?
+  cardBackUrl        String?
+  qrCodeUrl          String?
+  verificationHash   String?
+  status             String?   @default("PENDING")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([certificateId])
+  @@index([createdAt])
+  @@index([status])
+}
+
+model AdminLog {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  action     String
+  targetType String?
+  targetId   String?
+  details    String?
+
+  @@index([createdAt])
+  @@index([action])
+  @@index([targetType])
+  @@index([targetId])
+}
+
+model Instructor {
+  id        String   @id @default(cuid())
+  fullName  String
+  title     String?
+  createdAt DateTime @default(now())
+
+  certificates Certificate[]
+
+  @@index([createdAt])
+}
+
+model Certificate {
+  id                 String    @id @default(cuid())
+  certificateId      String    @unique
+  fullName           String
+  program            String?
+  qualificationLevel String?
+  issueDate          DateTime?
+  seaMiles           Int?
+  photoUrl           String?
+  cardFrontUrl       String?
+  cardBackUrl        String?
+  verificationHash   String?
+  status             String?   @default("PENDING")
+
+  instructorId String?
+  instructor   Instructor? @relation(fields: [instructorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([certificateId])
+  @@index([createdAt])
+  @@index([instructorId])
+}
+model CharterBoat {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  model       String
+  year        Int
+  cabins      Int
+  guestsLabel String
+  location    String
+  image       String
+  shortNote   String
+  description String
+  features    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  prices      CharterBoatPrice[]
+}
+
+model CharterBoatPrice {
+  id      String @id @default(cuid())
+  month   String
+  price   String
+
+  boatId  String
+  boat    CharterBoat @relation(fields: [boatId], references: [id], onDelete: Cascade)
+
+  @@unique([boatId, month])
+}
