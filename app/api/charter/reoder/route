@@ -1,0 +1,35 @@
+import { NextResponse } from "next/server";
+import prisma from "../../../../lib/prisma";
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const imageIds = Array.isArray(body.imageIds) ? body.imageIds : [];
+
+    if (!imageIds.length) {
+      return NextResponse.json(
+        { success: false, error: "imageIds gerekli" },
+        { status: 400 }
+      );
+    }
+
+    await prisma.$transaction(
+      imageIds.map((id: string, index: number) =>
+        prisma.charterGalleryImage.update({
+          where: { id },
+          data: { sortOrder: index },
+        })
+      )
+    );
+
+    return NextResponse.json({
+      success: true,
+    });
+  } catch (error) {
+    console.error("PUT /api/charter/gallery/reorder error:", error);
+    return NextResponse.json(
+      { success: false, error: "Galeri sıralama başarısız" },
+      { status: 500 }
+    );
+  }
+}

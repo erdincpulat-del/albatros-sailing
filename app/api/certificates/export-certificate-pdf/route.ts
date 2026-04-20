@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, StandardFonts, rgb, degrees } from "pdf-lib";
 import QRCode from "qrcode";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { generateVerificationHash } from "@/lib/generate-verification-hash";
 
 export const runtime = "nodejs";

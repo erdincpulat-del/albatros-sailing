@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import archiver from "archiver";
 
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

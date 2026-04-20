@@ -62,7 +62,6 @@ export default function MarineMeteorologyPage() {
         color: "#f8fafc",
       }}
     >
-    
       <section
         style={{
           padding: "120px 24px 90px",
@@ -117,6 +116,25 @@ export default function MarineMeteorologyPage() {
             etkisini birlikte okuyabilmektir. Güvenli seyir, çoğu zaman doğru hava
             yorumuyla başlar.
           </p>
+
+          <div
+            style={{
+              marginTop: 24,
+              padding: "18px 20px",
+              borderRadius: 18,
+              background: "rgba(103,211,255,0.05)",
+              border: "1px solid rgba(103,211,255,0.15)",
+              fontSize: 14,
+              lineHeight: 1.7,
+              color: "#cbd5f5",
+              fontWeight: 600,
+              maxWidth: 720,
+            }}
+          >
+            Bu sayfa tek başına bir konu değildir. Navigasyon, rota planlama ve
+            güvenlik ile birlikte çalışır. Albatros Sailing eğitimlerinde
+            meteoroloji, karar sisteminin merkezindedir.
+          </div>
 
           <div style={{ marginTop: 40, maxWidth: 760 }}>
             <h2
@@ -325,7 +343,42 @@ export default function MarineMeteorologyPage() {
           </div>
         </div>
 
-        <div style={{ marginTop: 70 }}>
+        <div
+          style={{
+            marginTop: 60,
+            padding: "22px 20px",
+            borderRadius: 18,
+            background: "rgba(66,189,248,0.05)",
+            border: "1px solid rgba(66,189,248,0.15)",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 12,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+              color: "#67d3ff",
+              fontWeight: 800,
+              marginBottom: 8,
+            }}
+          >
+            REAL ROUTE CONNECTION
+          </div>
+
+          <p
+            style={{
+              margin: 0,
+              color: "rgba(226,232,240,0.8)",
+              fontSize: 14,
+              lineHeight: 1.7,
+            }}
+          >
+            Bodrum – İstanbul gibi açık deniz ve yoğun trafik içeren rotalarda,
+            meteoroloji yalnızca hava değil; zamanlama, rota seçimi ve güvenlik
+            kararlarının temelidir.
+          </p>
+        </div>
+                <div style={{ marginTop: 70 }}>
           <h2
             style={{
               margin: 0,
@@ -362,41 +415,97 @@ export default function MarineMeteorologyPage() {
             ))}
           </div>
         </div>
-<section
-  style={{
-    marginTop: 80,
-    padding: 26,
-    borderRadius: 22,
-    background:
-      "linear-gradient(180deg, rgba(14,20,32,0.90), rgba(10,15,24,0.95))",
-    border: "1px solid rgba(255,255,255,0.08)",
-  }}
->
-  <h3 style={{ fontSize: 22, fontWeight: 900 }}>
-    Peki denizde yalnız değilsen?
-  </h3>
 
-  <p style={{ marginTop: 10, color: "rgba(226,232,240,0.78)" }}>
-    Hava ne olursa olsun, diğer teknelerle nasıl davranacağını bilmeden
-    güvenli seyir mümkün değildir.
-  </p>
+        <section
+          style={{
+            marginTop: 80,
+            padding: 26,
+            borderRadius: 22,
+            background:
+              "linear-gradient(180deg, rgba(14,20,32,0.90), rgba(10,15,24,0.95))",
+            border: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          <h3
+            style={{
+              margin: 0,
+              fontSize: 22,
+              fontWeight: 900,
+            }}
+          >
+            Peki denizde yalnız değilsen?
+          </h3>
 
-  <Link
-    href="/guide/denizde-catisma-onleme"
-    style={{
-      display: "inline-block",
-      marginTop: 16,
-      padding: "12px 18px",
-      borderRadius: 12,
-      background: "linear-gradient(180deg,#67d3ff,#42bdf8)",
-      color: "#04121c",
-      fontWeight: 800,
-      textDecoration: "none",
-    }}
-  >
-    COLREG öğren →
-  </Link>
-</section>
+          <p
+            style={{
+              marginTop: 10,
+              color: "rgba(226,232,240,0.78)",
+              fontSize: 14,
+              lineHeight: 1.7,
+            }}
+          >
+            Hava ne olursa olsun, diğer teknelerle nasıl davranacağını bilmeden
+            güvenli seyir mümkün değildir.
+          </p>
+
+          <Link
+            href="/guide/denizde-catisma-onleme"
+            style={{
+              display: "inline-block",
+              marginTop: 16,
+              padding: "12px 18px",
+              borderRadius: 12,
+              background: "linear-gradient(180deg,#67d3ff,#42bdf8)",
+              color: "#04121c",
+              fontWeight: 800,
+              textDecoration: "none",
+            }}
+          >
+            COLREG öğren →
+          </Link>
+        </section>
+
+        {/* 🔥 REAL CAPTAIN DIFFERENCE */}
+        <div
+          style={{
+            marginTop: 60,
+            padding: "26px 22px",
+            borderRadius: 22,
+            background:
+              "linear-gradient(180deg, rgba(14,20,32,0.9), rgba(10,15,24,0.95))",
+            border: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          <div
+            style={{
+              fontSize: 12,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+              color: "#67d3ff",
+              fontWeight: 800,
+              marginBottom: 10,
+            }}
+          >
+            REAL CAPTAIN DIFFERENCE
+          </div>
+
+          <h3 style={{ margin: 0, fontSize: 22, fontWeight: 900 }}>
+            Bu bilgiyi bilmek ile uygulamak arasında fark vardır.
+          </h3>
+
+          <p
+            style={{
+              marginTop: 12,
+              color: "rgba(226,232,240,0.78)",
+              fontSize: 15,
+              lineHeight: 1.7,
+            }}
+          >
+            Meteoroloji bilgisi kitapta öğrenilir. Ama gerçek kaptanlık, bu bilgiyi
+            doğru zamanda doğru karar haline getirebilmektir.
+          </p>
+        </div>
+
         <div
           style={{
             marginTop: 80,
@@ -473,6 +582,7 @@ export default function MarineMeteorologyPage() {
             </Link>
           </div>
         </div>
+
       </section>
     </main>
   );

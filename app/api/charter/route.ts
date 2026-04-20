@@ -1,30 +1,36 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
-// GET → tüm tekneleri getir
+/* =========================
+   GET → TÜM TEKNELER
+========================= */
 export async function GET() {
   try {
     const boats = await prisma.charterBoat.findMany({
-      include: {
-        prices: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({ boats });
+    return NextResponse.json({
+      success: true,
+      boats,
+    });
   } catch (error) {
     console.error("GET /api/charter error:", error);
+
     return NextResponse.json(
-      { error: "Tekneler alınamadı." },
+      {
+        success: false,
+        error: "Tekneler alınamadı.",
+      },
       { status: 500 }
     );
   }
 }
 
-// POST → yeni tekne ekle
-export async function POST(req: NextRequest) {
+/* =========================
+   POST → YENİ TEKNE EKLE
+========================= */
+export async function POST(req: Request) {
   try {
     const body = await req.json();
 
@@ -40,9 +46,9 @@ export async function POST(req: NextRequest) {
       shortNote,
       description,
       features,
-      prices,
     } = body;
 
+    // ZORUNLU ALAN KONTROLÜ
     if (
       !slug ||
       !name ||
@@ -50,70 +56,45 @@ export async function POST(req: NextRequest) {
       !year ||
       !cabins ||
       !guestsLabel ||
-      !location ||
-      !image ||
-      !shortNote ||
-      !description
+      !location
     ) {
       return NextResponse.json(
-        { error: "Zorunlu alanlar eksik." },
+        {
+          success: false,
+          error: "Zorunlu alanlar eksik.",
+        },
         { status: 400 }
-      );
-    }
-
-    const existing = await prisma.charterBoat.findUnique({
-      where: { slug },
-    });
-
-    if (existing) {
-      return NextResponse.json(
-        { error: "Bu slug zaten kullanılıyor." },
-        { status: 409 }
       );
     }
 
     const created = await prisma.charterBoat.create({
       data: {
-        slug,
-        name,
-        model,
+        slug: String(slug).trim(),
+        name: String(name).trim(),
+        model: String(model).trim(),
         year: Number(year),
         cabins: Number(cabins),
-        guestsLabel,
-        location,
-        image,
-        shortNote,
-        description,
-        features:
-          typeof features === "string"
-            ? features
-            : Array.isArray(features)
-              ? features.join("\n")
-              : "",
-        prices: {
-          create: Array.isArray(prices)
-            ? prices
-                .filter(
-                  (item: { month?: string; price?: string }) =>
-                    item?.month && item?.price
-                )
-                .map((item: { month: string; price: string }) => ({
-                  month: item.month,
-                  price: item.price,
-                }))
-            : [],
-        },
-      },
-      include: {
-        prices: true,
+        guestsLabel: String(guestsLabel).trim(),
+        location: String(location).trim(),
+        image: image || "",
+        shortNote: shortNote || "",
+        description: description || "",
+        features: features || "",
       },
     });
 
-    return NextResponse.json({ boat: created }, { status: 201 });
+    return NextResponse.json({
+      success: true,
+      boat: created,
+    });
   } catch (error) {
     console.error("POST /api/charter error:", error);
+
     return NextResponse.json(
-      { error: "Tekne oluşturulamadı." },
+      {
+        success: false,
+        error: "Tekne oluşturulamadı.",
+      },
       { status: 500 }
     );
   }

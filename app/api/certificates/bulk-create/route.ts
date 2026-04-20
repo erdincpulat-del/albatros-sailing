@@ -1,7 +1,7 @@
 // app/api/certificates/bulk-create/route.ts
 
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { generateVerificationHash } from "@/lib/generate-verification-hash";
 
 export async function POST(req: Request) {

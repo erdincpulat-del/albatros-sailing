@@ -1,7 +1,7 @@
 // app/api/certificates/[id]/status/route.ts
 
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 type RouteContext = {
   params: Promise<{

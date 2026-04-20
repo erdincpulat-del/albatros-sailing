@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { PDFDocument, rgb, degrees } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { generateVerificationHash } from "@/lib/generate-verification-hash";
 
 function cleanPublicPath(url?: string | null) {

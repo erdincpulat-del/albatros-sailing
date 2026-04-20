@@ -1,12 +1,11 @@
+import type { Metadata } from "next";
 import "./globals.css";
+import { LanguageProvider } from "../contexts/LanguageProvider";
 import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
-import FloatingContact from "@/components/ui/FloatingContact";
-import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Albatros Sailing",
-  description: "Official Sailing Training Platform",
+  description: "Professional sailing training platform",
 };
 
 export default function RootLayout({
@@ -16,30 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr">
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          background: "#050b14",
-          color: "#f8fafc",
-          fontFamily:
-            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        }}
-      >
-        <SiteHeader />
-
-        <main
-          style={{
-            paddingTop: 78,
-          }}
-        >
+      <body>
+        <LanguageProvider>
+          <SiteHeader />
           {children}
-        </main>
-
-        <SiteFooter />
-
-        <FloatingContact />
-        <FloatingWhatsApp />
+        </LanguageProvider>
       </body>
     </html>
   );

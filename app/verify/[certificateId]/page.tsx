@@ -1,7 +1,9 @@
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { generateVerificationHash } from "@/lib/generate-verification-hash";
+import ScanFrame from "@/components/verify/ScanFrame";
 
 type VerifyPageProps = {
   params: Promise<{
@@ -62,7 +64,7 @@ export default async function VerifyCertificatePage({
 }: VerifyPageProps) {
   const { certificateId } = await params;
 
-  const cleanId = decodeURIComponent(String(certificateId || "")).trim();
+  const cleanId = decodeURIComponent(certificateId).trim();
 
   if (!cleanId) {
     notFound();
@@ -83,26 +85,32 @@ export default async function VerifyCertificatePage({
   });
 
   if (!certificate) {
-    return (
-      <main style={styles.page}>
-        {styleTag}
+  return (
+    <main style={styles.page}>
+      <ScanFrame>
         <section style={styles.card}>
           <div style={styles.scanLine} />
           <div style={styles.securityGlow} />
           <div style={styles.hologram} />
 
           <div style={styles.notFoundWrap}>
-            <div style={styles.notFoundEyebrow}>Verification Failed</div>
-            <h1 style={styles.notFoundTitle}>Certificate Record Not Found</h1>
+            <div style={styles.notFoundEyebrow}>
+              Verification Failed
+            </div>
+
+            <h1 style={styles.notFoundTitle}>
+              Certificate Not Found
+            </h1>
+
             <p style={styles.notFoundText}>
-              The requested certificate could not be located in the official
-              Albatros Sailing registry.
+              The requested certificate could not be located in the Albatros Sailing registry.
             </p>
           </div>
         </section>
-      </main>
-    );
-  }
+      </ScanFrame>
+    </main>
+  );
+}
 
   const status = normalizeStatus(certificate.status);
   const isActive = status === "ACTIVE";

@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import QRCode from "qrcode";
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { generateCertificateCardFront } from "@/lib/generate-certificate-card-front";
 import { generateCertificateCardBack } from "@/lib/generate-certificate-card-back";
 

@@ -23,11 +23,49 @@ export default function SiteFooter() {
         position: "relative",
         overflow: "hidden",
         background:
-          "linear-gradient(180deg, #050b14 0%, #07111f 40%, #030712 100%)",
+          "radial-gradient(circle at top left, rgba(103,211,255,0.08), transparent 28%), radial-gradient(circle at bottom right, rgba(34,197,94,0.06), transparent 24%), linear-gradient(180deg, #050b14 0%, #07111f 40%, #030712 100%)",
         color: "#e2e8f0",
         borderTop: "1px solid rgba(255,255,255,0.08)",
       }}
     >
+      <style>{`
+        .footer-link {
+          color: rgba(226,232,240,0.86);
+          text-decoration: none;
+          font-size: 15px;
+          font-weight: 600;
+          transition: color .22s ease, transform .22s ease, opacity .22s ease;
+          display: inline-flex;
+          width: fit-content;
+        }
+
+        .footer-link:hover {
+          color: #7dd3fc;
+          transform: translateX(3px);
+        }
+
+        .footer-chip {
+          transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+        }
+
+        .footer-chip:hover {
+          transform: translateY(-2px);
+          border-color: rgba(125,211,252,0.24);
+          box-shadow: 0 10px 24px rgba(56,189,248,0.10);
+          background:
+            linear-gradient(180deg, rgba(56,189,248,0.16), rgba(56,189,248,0.06));
+        }
+
+        .footer-panel-title {
+          font-size: 13px;
+          font-weight: 800;
+          color: #7dd3fc;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 14px;
+        }
+      `}</style>
+
       <div
         style={{
           position: "absolute",
@@ -52,6 +90,16 @@ export default function SiteFooter() {
           borderRadius: "50%",
           background: "rgba(34,197,94,0.08)",
           filter: "blur(80px)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.02), transparent 18%, transparent 82%, rgba(255,255,255,0.02))",
           pointerEvents: "none",
         }}
       />
@@ -147,6 +195,7 @@ export default function SiteFooter() {
               ].map((item) => (
                 <div
                   key={item}
+                  className="footer-chip"
                   style={{
                     padding: "8px 12px",
                     borderRadius: 999,
@@ -165,18 +214,7 @@ export default function SiteFooter() {
           </div>
 
           <div>
-            <div
-              style={{
-                fontSize: 13,
-                fontWeight: 800,
-                color: "#7dd3fc",
-                textTransform: "uppercase",
-                letterSpacing: 1,
-                marginBottom: 14,
-              }}
-            >
-              Hızlı Menü
-            </div>
+            <div className="footer-panel-title">Hızlı Menü</div>
 
             <div
               style={{
@@ -185,16 +223,7 @@ export default function SiteFooter() {
               }}
             >
               {quickLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  style={{
-                    color: "rgba(226,232,240,0.86)",
-                    textDecoration: "none",
-                    fontSize: 15,
-                    fontWeight: 600,
-                  }}
-                >
+                <Link key={item.href} href={item.href} className="footer-link">
                   {item.label}
                 </Link>
               ))}
@@ -202,18 +231,7 @@ export default function SiteFooter() {
           </div>
 
           <div>
-            <div
-              style={{
-                fontSize: 13,
-                fontWeight: 800,
-                color: "#7dd3fc",
-                textTransform: "uppercase",
-                letterSpacing: 1,
-                marginBottom: 14,
-              }}
-            >
-              Programlar
-            </div>
+            <div className="footer-panel-title">Programlar</div>
 
             <div
               style={{
@@ -223,16 +241,7 @@ export default function SiteFooter() {
               }}
             >
               {programLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  style={{
-                    color: "rgba(226,232,240,0.86)",
-                    textDecoration: "none",
-                    fontSize: 15,
-                    fontWeight: 600,
-                  }}
-                >
+                <Link key={item.href} href={item.href} className="footer-link">
                   {item.label}
                 </Link>
               ))}
@@ -265,7 +274,9 @@ export default function SiteFooter() {
             color: "rgba(148,163,184,0.84)",
           }}
         >
-          <div>© {new Date().getFullYear()} Albatros Sailing. Tüm hakları saklıdır.</div>
+          <div>
+            © {new Date().getFullYear()} Albatros Sailing. Tüm hakları saklıdır.
+          </div>
           <div>Freedom • Open Sea • Leadership • Trust</div>
         </div>
       </div>

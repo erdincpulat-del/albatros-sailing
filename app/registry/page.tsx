@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageProvider";
+import { getMessages } from "@/messages";
 
 type RegistryCertificate = {
   id: string;
@@ -15,16 +17,103 @@ type RegistryCertificate = {
 };
 
 export default function RegistryPage() {
+  const { lang } = useLanguage();
+  const t = useMemo(() => getMessages(lang), [lang]);
+
+  const ui = {
+    badge:
+      lang === "tr"
+        ? "ALBATROS SAILING · RESMİ KAYIT SİSTEMİ"
+        : "ALBATROS SAILING · OFFICIAL REGISTRY",
+    title:
+      lang === "tr"
+        ? "Global sertifika kayıt sistemi"
+        : "Global certificate registry",
+    description:
+      lang === "tr"
+        ? "Sertifika ID girerek Albatros Sailing dijital kayıt sisteminde arama yapın ve resmi belge kaydını görüntüleyin."
+        : "Search the Albatros Sailing digital registry by entering a certificate ID and review the official document record.",
+    inputLabel: lang === "tr" ? "Sertifika ID" : "Certificate ID",
+    inputPlaceholder:
+      lang === "tr" ? "Örnek: AS-OFF-2026-1735" : "Example: AS-OFF-2026-1735",
+    search: lang === "tr" ? "Sertifika Ara" : "Search Certificate",
+    searching: lang === "tr" ? "Aranıyor..." : "Searching...",
+    emptyAlert:
+      lang === "tr"
+        ? "Lütfen sertifika ID girin."
+        : "Please enter a certificate ID.",
+    searchError:
+      lang === "tr"
+        ? "Arama sırasında hata oluştu."
+        : "An error occurred during search.",
+    notFound:
+      lang === "tr"
+        ? "Bu sertifika ID için kayıt bulunamadı."
+        : "No record was found for this certificate ID.",
+    resultTitle: lang === "tr" ? "Kayıt Sonucu" : "Registry Result",
+    fullName: lang === "tr" ? "Ad Soyad" : "Full Name",
+    certificateId: lang === "tr" ? "Sertifika ID" : "Certificate ID",
+    qualification: lang === "tr" ? "Yeterlilik" : "Qualification",
+    seaMiles: lang === "tr" ? "Deniz Mili" : "Sea Miles",
+    status: lang === "tr" ? "Durum" : "Status",
+    issueDate: lang === "tr" ? "Tarih" : "Issue Date",
+    verifyButton:
+      lang === "tr"
+        ? "Tam Doğrulama Sayfasını Aç"
+        : "Open Full Verify Page",
+    trustTitle: lang === "tr" ? "Kayıt Güveni" : "Registry Trust",
+    trustText:
+      lang === "tr"
+        ? "Kayıt sistemi, belgenin yalnızca basılı kart olmadığını; kurumsal yapının içinde yer alan doğrulanabilir resmi kayıt olduğunu gösterir."
+        : "The registry system shows that the document is not only a printed card, but a verifiable official record within the institutional structure.",
+    infoCards:
+      lang === "tr"
+        ? [
+            {
+              title: "Resmi Kayıt",
+              text: "Sertifika verisi sistem içinde saklanır ve arama sonucu ile görünür hale gelir.",
+            },
+            {
+              title: "Doğrulanabilir Yapı",
+              text: "Kayıt ekranı, belgenin sistem tarafından desteklendiğini ve kontrol edilebilir olduğunu gösterir.",
+            },
+            {
+              title: "Premium Güven",
+              text: "Bu akış, eğitim yapısının ciddiyetini ve marka güvenini daha görünür kılar.",
+            },
+          ]
+        : [
+            {
+              title: "Official Record",
+              text: "Certificate data is stored in the system and made visible through the search result.",
+            },
+            {
+              title: "Verifiable Structure",
+              text: "The registry screen shows that the document is supported by the system and can be checked.",
+            },
+            {
+              title: "Premium Trust",
+              text: "This flow makes the seriousness of the training structure and brand trust more visible.",
+            },
+          ],
+    systemBadge:
+      lang === "tr" ? "Kayıt Destekli Sistem" : "Registry-Backed Structure",
+    systemText:
+      lang === "tr"
+        ? "Bu ekran, sertifikanın sistem içinde yaşadığını ve tek başına basılı bir belge olmadığını gösterir."
+        : "This screen shows that the certificate lives within the system and is not a standalone printed document.",
+  };
+
   const [certificateId, setCertificateId] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RegistryCertificate | null>(null);
   const [notFound, setNotFound] = useState(false);
 
-  async function handleSearch() {
-    const value = certificateId.trim().toUpperCase();
+  const normalizedCertificateId = certificateId.trim().toUpperCase();
 
-    if (!value) {
-      alert("Certificate ID gir.");
+  async function handleSearch() {
+    if (!normalizedCertificateId) {
+      alert(ui.emptyAlert);
       return;
     }
 
@@ -34,7 +123,7 @@ export default function RegistryPage() {
       setNotFound(false);
 
       const res = await fetch(
-        `/api/registry?certificateId=${encodeURIComponent(value)}`,
+        `/api/registry?certificateId=${encodeURIComponent(normalizedCertificateId)}`,
         {
           cache: "no-store",
         }
@@ -43,7 +132,7 @@ export default function RegistryPage() {
       const data = await res.json();
 
       if (!res.ok || !data?.success) {
-        alert(data?.error || "Arama başarısız.");
+        alert(data?.error || ui.searchError);
         return;
       }
 
@@ -55,7 +144,7 @@ export default function RegistryPage() {
       setResult(data.certificate);
     } catch (error) {
       console.error(error);
-      alert("Arama sırasında hata oluştu.");
+      alert(ui.searchError);
     } finally {
       setLoading(false);
     }
@@ -66,187 +155,549 @@ export default function RegistryPage() {
     window.location.href = `/verify/${encodeURIComponent(result.certificateId)}`;
   }
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  }
+
   return (
     <main
+      className="text-white"
       style={{
         minHeight: "100vh",
         background:
-          "radial-gradient(circle at top, rgba(14,165,233,0.10), transparent 30%), #08111f",
-        color: "white",
-        padding: "40px 20px",
-        fontFamily: "Arial, sans-serif",
+          "radial-gradient(circle at top left, rgba(103,211,255,0.08), transparent 32%), linear-gradient(180deg, #020617 0%, #07111d 48%, #020617 100%)",
       }}
     >
-      <div style={{ maxWidth: 960, margin: "0 auto" }}>
+      <section
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          background:
+            "linear-gradient(180deg, rgba(8,14,24,0.62), rgba(8,14,24,0.42))",
+        }}
+      >
         <div
           style={{
-            width: "100%",
-            borderRadius: 28,
-            padding: 32,
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.28)",
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at top left, rgba(103,211,255,0.10), transparent 35%), radial-gradient(circle at bottom right, rgba(56,189,248,0.08), transparent 30%)",
+            pointerEvents: "none",
           }}
-        >
-          <div
-            style={{
-              fontSize: 12,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "#67e8f9",
-              marginBottom: 10,
-              fontWeight: 700,
-            }}
-          >
-            Albatros Sailing
-          </div>
+        />
 
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 36,
-              lineHeight: 1.15,
-            }}
-          >
-            Global Certificate Registry
-          </h1>
+        <div className="relative mx-auto max-w-7xl px-6 py-16 md:py-20">
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div className="max-w-3xl">
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  borderRadius: 999,
+                  padding: "8px 14px",
+                  background: "rgba(103,211,255,0.08)",
+                  border: "1px solid rgba(103,211,255,0.18)",
+                  color: "#8ed8ff",
+                  fontSize: 11,
+                  fontWeight: 800,
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  boxShadow: "0 10px 24px rgba(0,0,0,0.10)",
+                }}
+              >
+                {ui.badge}
+              </div>
 
-          <p
-            style={{
-              marginTop: 14,
-              color: "rgba(255,255,255,0.7)",
-              lineHeight: 1.7,
-              fontSize: 15,
-            }}
-          >
-            Certificate ID girerek Albatros Sailing dijital sertifika kaydını
-            ara ve doğrula.
-          </p>
+              <h1
+                style={{
+                  marginTop: 24,
+                  fontSize: "clamp(40px, 5vw, 70px)",
+                  fontWeight: 900,
+                  lineHeight: 1.04,
+                  letterSpacing: "-0.04em",
+                  color: "#f8fafc",
+                }}
+              >
+                {ui.title}
+              </h1>
 
-          <div
-            style={{
-              marginTop: 22,
-              display: "grid",
-              gap: 14,
-            }}
-          >
-            <input
-              value={certificateId}
-              onChange={(e) => setCertificateId(e.target.value)}
-              placeholder="Örnek: AS-OFF-2026-1735"
-              style={inputStyle}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch();
-                }
-              }}
-            />
+              <p
+                style={{
+                  marginTop: 20,
+                  maxWidth: "42rem",
+                  fontSize: 18,
+                  lineHeight: 1.85,
+                  color: "rgba(226,232,240,0.82)",
+                }}
+              >
+                {ui.description}
+              </p>
 
-            <button onClick={handleSearch} style={searchButtonStyle}>
-              {loading ? "Searching..." : "Search Certificate"}
-            </button>
-          </div>
-
-          {notFound && (
-            <div style={warningBoxStyle}>
-              Bu certificate ID için kayıt bulunamadı.
+              <div
+                style={{
+                  marginTop: 32,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 12,
+                  borderRadius: 18,
+                  padding: "14px 16px",
+                  background:
+                    "linear-gradient(180deg, rgba(14,20,32,0.90), rgba(10,15,24,0.92))",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  boxShadow: "0 18px 36px rgba(0,0,0,0.18)",
+                }}
+              >
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    background: "#8CFF7A",
+                    boxShadow: "0 0 14px rgba(140,255,122,0.85)",
+                    flexShrink: 0,
+                  }}
+                />
+                <div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 800,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      color: "rgba(226,232,240,0.62)",
+                    }}
+                  >
+                    {ui.systemBadge}
+                  </div>
+                  <div
+                    style={{
+                      marginTop: 2,
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "#e2e8f0",
+                    }}
+                  >
+                    {ui.systemText}
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
 
-          {result && (
             <div
               style={{
-                marginTop: 24,
-                borderRadius: 20,
-                padding: 20,
-                background: "#0a1627",
+                borderRadius: "2rem",
+                padding: 24,
+                background:
+                  "linear-gradient(180deg, rgba(14,20,32,0.92), rgba(10,15,24,0.96))",
                 border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.24)",
               }}
             >
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-                  gap: 14,
-                  marginBottom: 18,
+                  borderRadius: "1.5rem",
+                  padding: 24,
+                  background:
+                    "linear-gradient(180deg, rgba(12,18,30,0.94), rgba(8,12,20,0.92))",
+                  border: "1px solid rgba(255,255,255,0.08)",
                 }}
               >
-                <InfoCard label="Full Name" value={result.fullName || "-"} />
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 800,
+                    letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    color: "rgba(226,232,240,0.62)",
+                  }}
+                >
+                  {ui.resultTitle}
+                </div>
+
+                <div style={{ marginTop: 24 }}>
+                  <label
+                    htmlFor="registryCertificateId"
+                    style={{
+                      display: "block",
+                      marginBottom: 10,
+                      fontSize: 14,
+                      fontWeight: 700,
+                      color: "#e2e8f0",
+                    }}
+                  >
+                    {ui.inputLabel}
+                  </label>
+
+                  <input
+                    id="registryCertificateId"
+                    type="text"
+                    value={certificateId}
+                    onChange={(e) => setCertificateId(e.target.value.toUpperCase())}
+                    onKeyDown={handleKeyDown}
+                    placeholder={ui.inputPlaceholder}
+                    style={{
+                      width: "100%",
+                      borderRadius: 14,
+                      padding: "16px 18px",
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      color: "#f8fafc",
+                      fontSize: 15,
+                      outline: "none",
+                      transition:
+                        "border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease",
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor =
+                        "rgba(103,211,255,0.35)";
+                      e.currentTarget.style.boxShadow =
+                        "0 0 18px rgba(103,211,255,0.18)";
+                      e.currentTarget.style.background =
+                        "rgba(255,255,255,0.06)";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor =
+                        "rgba(255,255,255,0.10)";
+                      e.currentTarget.style.boxShadow = "none";
+                      e.currentTarget.style.background =
+                        "rgba(255,255,255,0.05)";
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginTop: 24 }}>
+                  <button
+                    onClick={handleSearch}
+                    style={{
+                      display: "inline-flex",
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 14,
+                      padding: "14px 22px",
+                      background: "linear-gradient(180deg, #67d3ff, #42bdf8)",
+                      color: "#04121c",
+                      fontWeight: 900,
+                      fontSize: 14,
+                      border: "none",
+                      cursor: "pointer",
+                      boxShadow: "0 10px 24px rgba(66,189,248,0.22)",
+                      transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 16px 30px rgba(66,189,248,0.32)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow =
+                        "0 10px 24px rgba(66,189,248,0.22)";
+                    }}
+                  >
+                    {loading ? ui.searching : ui.search}
+                  </button>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  marginTop: 20,
+                  borderRadius: "1.5rem",
+                  padding: "20px 22px",
+                  background:
+                    "linear-gradient(180deg, rgba(12,18,30,0.94), rgba(8,12,20,0.92))",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "#fff",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 800,
+                    letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    color: "rgba(226,232,240,0.62)",
+                  }}
+                >
+                  {ui.trustTitle}
+                </div>
+
+                <p
+                  style={{
+                    marginTop: 12,
+                    fontSize: 14,
+                    lineHeight: 1.85,
+                    color: "rgba(226,232,240,0.78)",
+                  }}
+                >
+                  {ui.trustText}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-12 md:py-16">
+        {notFound && (
+          <div
+            style={{
+              borderRadius: "1.5rem",
+              border: "1px solid rgba(248,113,113,0.24)",
+              background: "rgba(127,29,29,0.16)",
+              padding: 20,
+              fontSize: 14,
+              fontWeight: 600,
+              color: "#fecaca",
+            }}
+          >
+            {ui.notFound}
+          </div>
+        )}
+
+        {result && (
+          <div
+            style={{
+              borderRadius: "2rem",
+              padding: 24,
+              background:
+                "linear-gradient(180deg, rgba(14,20,32,0.92), rgba(10,15,24,0.96))",
+              border: "1px solid rgba(255,255,255,0.08)",
+              boxShadow: "0 18px 36px rgba(0,0,0,0.18)",
+            }}
+            className="md:p-8"
+          >
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 800,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                      color: "rgba(226,232,240,0.62)",
+                    }}
+                  >
+                    {ui.resultTitle}
+                  </div>
+                  <h2
+                    style={{
+                      marginTop: 8,
+                      fontSize: 30,
+                      fontWeight: 800,
+                      color: "#f8fafc",
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    {result.fullName || "-"}
+                  </h2>
+                </div>
+
+                {result.status ? (
+                  <div
+                    style={{
+                      borderRadius: 999,
+                      padding: "10px 16px",
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      color: "#e2e8f0",
+                      fontSize: 12,
+                      fontWeight: 800,
+                      letterSpacing: "0.18em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {result.status}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <InfoCard label={ui.fullName} value={result.fullName || "-"} />
                 <InfoCard
-                  label="Certificate ID"
+                  label={ui.certificateId}
                   value={result.certificateId || "-"}
                 />
                 <InfoCard
-                  label="Qualification"
+                  label={ui.qualification}
                   value={result.certificateLevel || result.program || "-"}
                 />
                 <InfoCard
-                  label="Sea Miles"
+                  label={ui.seaMiles}
                   value={
                     typeof result.seaMiles === "number"
                       ? `${result.seaMiles} NM`
                       : "-"
                   }
                 />
-                <InfoCard label="Status" value={result.status || "-"} />
+                <InfoCard label={ui.status} value={result.status || "-"} />
+                <InfoCard
+                  label={ui.issueDate}
+                  value={result.certifiedAt || "-"}
+                />
               </div>
 
               {result.cardFrontUrl ? (
-                <img
-                  src={result.cardFrontUrl}
-                  alt={result.fullName}
+                <div
                   style={{
-                    width: "100%",
-                    maxWidth: 620,
-                    display: "block",
-                    margin: "0 auto 18px",
-                    borderRadius: 16,
+                    borderRadius: "1.5rem",
+                    padding: 16,
+                    background:
+                      "linear-gradient(180deg, rgba(12,18,30,0.94), rgba(8,12,20,0.92))",
                     border: "1px solid rgba(255,255,255,0.08)",
                   }}
-                />
+                >
+                  <img
+                    src={result.cardFrontUrl}
+                    alt={result.fullName}
+                    className="mx-auto block w-full max-w-[620px]"
+                    style={{
+                      borderRadius: "1rem",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  />
+                </div>
               ) : null}
 
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <button onClick={handleOpenVerify} style={verifyButtonStyle}>
-                  Open Full Verify Page
+              <div className="flex justify-center">
+                <button
+                  onClick={handleOpenVerify}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 14,
+                    padding: "14px 22px",
+                    background: "linear-gradient(180deg, #67d3ff, #42bdf8)",
+                    color: "#04121c",
+                    fontWeight: 900,
+                    fontSize: 14,
+                    border: "none",
+                    cursor: "pointer",
+                    boxShadow: "0 10px 24px rgba(66,189,248,0.22)",
+                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow =
+                      "0 16px 30px rgba(66,189,248,0.32)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow =
+                      "0 10px 24px rgba(66,189,248,0.22)";
+                  }}
+                >
+                  {ui.verifyButton}
                 </button>
               </div>
             </div>
-          )}
+          </div>
+        )}
+      </section>
+
+      <section
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          background:
+            "linear-gradient(180deg, rgba(8,14,24,0.34), rgba(8,14,24,0.24))",
+        }}
+      >
+        <div className="mx-auto grid max-w-7xl gap-6 px-6 py-12 md:grid-cols-3">
+          {ui.infoCards.map((item) => (
+            <div
+              key={item.title}
+              style={{
+                borderRadius: "1.5rem",
+                padding: 24,
+                background:
+                  "linear-gradient(180deg, rgba(14,20,32,0.90), rgba(10,15,24,0.92))",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 18px 36px rgba(0,0,0,0.18)",
+                transition:
+                  "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-6px)";
+                e.currentTarget.style.boxShadow =
+                  "0 20px 40px rgba(66,189,248,0.12)";
+                e.currentTarget.style.borderColor = "rgba(103,211,255,0.18)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow =
+                  "0 18px 36px rgba(0,0,0,0.18)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: 22,
+                  fontWeight: 800,
+                  color: "#f8fafc",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {item.title}
+              </h3>
+              <p
+                style={{
+                  marginTop: 14,
+                  fontSize: 14,
+                  lineHeight: 1.85,
+                  color: "rgba(226,232,240,0.78)",
+                }}
+              >
+                {item.text}
+              </p>
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
     </main>
   );
 }
 
-function InfoCard({ label, value }: { label: string; value: string }) {
+function InfoCard({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
   return (
     <div
       style={{
-        borderRadius: 16,
-        padding: 16,
-        background: "#0f1d31",
+        borderRadius: "1.25rem",
+        padding: 20,
+        background:
+          "linear-gradient(180deg, rgba(12,18,30,0.94), rgba(8,12,20,0.92))",
         border: "1px solid rgba(255,255,255,0.08)",
       }}
     >
       <div
         style={{
           fontSize: 11,
-          letterSpacing: "0.12em",
+          fontWeight: 800,
+          letterSpacing: "0.16em",
           textTransform: "uppercase",
-          color: "rgba(255,255,255,0.42)",
-          marginBottom: 8,
+          color: "rgba(226,232,240,0.62)",
         }}
       >
         {label}
       </div>
-
       <div
         style={{
-          fontSize: 17,
-          fontWeight: 700,
-          color: "white",
+          marginTop: 12,
           wordBreak: "break-word",
+          fontSize: 16,
+          fontWeight: 700,
+          color: "#f8fafc",
         }}
       >
         {value}
@@ -254,46 +705,3 @@ function InfoCard({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "15px 16px",
-  borderRadius: 16,
-  border: "1px solid rgba(255,255,255,0.08)",
-  background: "#0a1627",
-  color: "white",
-  fontSize: 16,
-  outline: "none",
-};
-
-const searchButtonStyle: React.CSSProperties = {
-  border: "none",
-  borderRadius: 16,
-  padding: "14px 18px",
-  background: "#22c55e",
-  color: "#04130a",
-  fontWeight: 800,
-  cursor: "pointer",
-  fontSize: 15,
-};
-
-const verifyButtonStyle: React.CSSProperties = {
-  border: "1px solid rgba(96,165,250,0.35)",
-  borderRadius: 14,
-  padding: "12px 18px",
-  background: "rgba(59,130,246,0.12)",
-  color: "#bfdbfe",
-  fontWeight: 700,
-  cursor: "pointer",
-  fontSize: 14,
-};
-
-const warningBoxStyle: React.CSSProperties = {
-  marginTop: 20,
-  borderRadius: 16,
-  padding: 16,
-  background: "rgba(248,113,113,0.10)",
-  border: "1px solid rgba(248,113,113,0.20)",
-  color: "#fecaca",
-  fontWeight: 600,
-};

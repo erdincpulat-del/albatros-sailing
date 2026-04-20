@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
@@ -7,11 +7,19 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({ instructors });
+    return NextResponse.json({
+      success: true,
+      items: instructors,
+    });
   } catch (error) {
     console.error("GET /api/instructors error:", error);
+
     return NextResponse.json(
-      { error: "Failed to fetch instructors" },
+      {
+        success: false,
+        error: "Instructorlar alınamadı",
+        items: [],
+      },
       { status: 500 }
     );
   }

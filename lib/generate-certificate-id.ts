@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 function getProgramPrefix(program?: string | null) {
   const value = (program || "").toLowerCase();

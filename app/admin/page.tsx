@@ -196,6 +196,29 @@ export default function AdminPage() {
   const [qualificationLevel, setQualificationLevel] = useState(
     "INTERNATIONAL BAREBOAT SKIPPER"
   );
+
+  const OFFSHORE_LEVELS = [
+    "INTERNATIONAL BAREBOAT SKIPPER",
+    "OFFSHORE SKIPPER",
+    "YACHTMASTER",
+    "COMPETENT CREW",
+  ];
+
+  const YES_LEVELS = ["YY1", "YY2", "YY3", "YY4", "YY5", "YY6"];
+  const YES_LABELS: Record<string, string> = {
+  YY1: "Beginner Crew",
+  YY2: "Basic Crew",
+  YY3: "Intermediate Sailor",
+  YY4: "Advanced Sailor",
+  YY5: "Skipper Level",
+  YY6: "Master Skipper",
+};
+
+  const qualificationOptions =
+    program === "YELKENLI YAT EGITIMI (YES)"
+      ? YES_LEVELS
+      : OFFSHORE_LEVELS;
+
   const [issueDate, setIssueDate] = useState("");
   const [seaMiles, setSeaMiles] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
@@ -211,7 +234,7 @@ const [printingId, setPrintingId] = useState<string | null>(null);
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [loadingInstructors, setLoadingInstructors] = useState(false);
   const [updatingStatusId, setUpdatingStatusId] = useState<string | null>(null);
-  const [selectedInstructorId, setSelectedInstructorId] = useState<string>("");
+  const [selectedInstructorId, setSelectedInstructorId] = useState<string | null>(null);
 
 
 async function updateStatus(
@@ -316,7 +339,7 @@ async function updateStatus(
     const res = await fetch("/api/instructors");
     const data = await res.json();
 
-    setInstructors(data.instructors || []);
+    setInstructors(data.items || []);
   } catch (error) {
     console.error("Instructor load error:", error);
     setInstructors([]);
@@ -557,55 +580,55 @@ await loadLogs();
         <h2 style={panelTitleStyle}>Create Certificate</h2>
 
         <div style={formGridStyle}>
-          <div>
-            <label style={labelStyle}>Full Name</label>
-            <input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Student full name"
-              style={inputStyle}
-            />
-          </div>
+  <div>
+    <label style={labelStyle}>Full Name</label>
+    <input
+      value={fullName}
+      onChange={(e) => setFullName(e.target.value)}
+      placeholder="Student full name"
+      style={inputStyle}
+    />
+  </div>
 
-          <div>
-            <label style={labelStyle}>Program</label>
-            <select
-              value={program}
-              onChange={(e) => setProgram(e.target.value)}
-              style={inputStyle}
-            >
-              {programOptions.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </div>
+  <div>
+    <label style={labelStyle}>Program</label>
+    <select
+      value={program}
+      onChange={(e) => setProgram(e.target.value)}
+      style={inputStyle}
+    >
+      {programOptions.map((item) => (
+        <option key={item} value={item}>
+          {item}
+        </option>
+      ))}
+    </select>
+  </div>
 
-          <div>
-            <label style={labelStyle}>Qualification Level</label>
-            <select
-              value={qualificationLevel}
-              onChange={(e) => setQualificationLevel(e.target.value)}
-              style={inputStyle}
-            >
-              {qualificationOptions.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </div>
+  <div>
+    <label style={labelStyle}>Qualification Level</label>
+    <select
+      value={qualificationLevel}
+      onChange={(e) => setQualificationLevel(e.target.value)}
+      style={inputStyle}
+    >
+      {qualificationOptions.map((level) => (
+        <option key={level} value={level}>
+          {level}
+        </option>
+      ))}
+    </select>
+  </div>
 
-          <div>
-            <label style={labelStyle}>Issue Date</label>
-            <input
-              type="date"
-              value={issueDate}
-              onChange={(e) => setIssueDate(e.target.value)}
-              style={inputStyle}
-            />
-          </div>
+  <div>
+    <label style={labelStyle}>Issue Date</label>
+    <input
+      type="date"
+      value={issueDate}
+      onChange={(e) => setIssueDate(e.target.value)}
+      style={inputStyle}
+    />
+  </div>
 
           <div>
             <label style={labelStyle}>Sea Miles</label>
@@ -649,7 +672,7 @@ await loadLogs();
           <div>
             <label style={labelStyle}>Instructor</label>
             <select
-              value={selectedInstructorId}
+              value={selectedInstructorId || ""}
 onChange={(e) => setSelectedInstructorId(e.target.value)}
               style={inputStyle}
             >

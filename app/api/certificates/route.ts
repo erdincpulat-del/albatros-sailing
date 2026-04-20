@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
@@ -22,14 +22,6 @@ export async function GET() {
         status: true,
         createdAt: true,
         updatedAt: true,
-        instructorId: true,
-        instructor: {
-          select: {
-            id: true,
-            fullName: true,
-            title: true,
-          },
-        },
       },
     });
 
@@ -44,7 +36,7 @@ export async function GET() {
     return NextResponse.json(
       {
         success: false,
-        error: "Sertifikalar alınamadı.",
+        error: "Sertifikalar alınamadı",
         items: [],
         total: 0,
       },

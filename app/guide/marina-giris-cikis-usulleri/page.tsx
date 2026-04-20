@@ -399,21 +399,12 @@ export default function MarinaGuidePage() {
     arıyorsun. Kaptanlık; bu kararları gerçek şartlarda vermekle gelişir.
   </p>
 
-  <Link
-    href="/training/offshore-skipper"
-    style={{
-      display: "inline-block",
-      marginTop: 16,
-      padding: "12px 18px",
-      borderRadius: 12,
-      background: "linear-gradient(180deg,#67d3ff,#42bdf8)",
-      color: "#04121c",
-      fontWeight: 800,
-      textDecoration: "none",
-    }}
-  >
-    Offshore eğitime katıl →
-  </Link>
+  <a
+  href="/training/offshore-skipper"
+  className="inline-flex min-w-[170px] items-center justify-center rounded-2xl bg-[linear-gradient(180deg,#67d3ff,#42bdf8)] px-5 py-4 text-sm font-black text-[#082032] shadow-[0_10px_24px_rgba(66,189,248,0.22)] transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_16px_40px_rgba(66,189,248,0.45)]"
+>
+  Offshore Eğitime Katıl
+</a>
 </section>
         <section
           style={{
