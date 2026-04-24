@@ -26,8 +26,8 @@ type TrustItem = {
 };
 
 export default function AboutPage() {
-  const { lang } = useLanguage();
-  const isTR = lang === "tr";
+  const { locale } = useLanguage();
+  const isTR = locale === "tr";
 
   const content = {
     eyebrowTr: "ALBATROS SAILING",
@@ -227,7 +227,8 @@ export default function AboutPage() {
         "Field experience is combined with formal training systems and real operational knowledge.",
     },
   ];
-    return (
+
+  return (
     <main className="relative overflow-hidden bg-[#07111f] text-white">
       <style>{`
         @keyframes aboutSlowZoom {
@@ -298,7 +299,11 @@ export default function AboutPage() {
           >
             <Image
               src="/images/about/instructor-erdinc-bw.jpg"
-              alt={isTR ? "Erdinç Pulat siyah beyaz denizci portresi" : "Black and white portrait of Erdinç Pulat"}
+              alt={
+                isTR
+                  ? "Erdinç Pulat siyah beyaz denizci portresi"
+                  : "Black and white portrait of Erdinç Pulat"
+              }
               width={1400}
               height={1800}
               className="h-[680px] w-full object-cover"
@@ -380,7 +385,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-            <section className="relative border-y border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))]">
+
+      <section className="relative border-y border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))]">
         <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 md:py-24 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
           <div
             className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 shadow-[0_28px_70px_rgba(0,0,0,0.24)] backdrop-blur-md"
@@ -388,7 +394,11 @@ export default function AboutPage() {
           >
             <Image
               src="/images/about/yy6-certificate.jpg"
-              alt={isTR ? "YY6 Usta Eğitmen Sertifikası" : "YY6 Master Instructor Certificate"}
+              alt={
+                isTR
+                  ? "YY6 Usta Eğitmen Sertifikası"
+                  : "YY6 Master Instructor Certificate"
+              }
               width={1600}
               height={1200}
               className="h-auto w-full rounded-[1.4rem] object-cover"

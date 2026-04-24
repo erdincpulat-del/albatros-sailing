@@ -2,23 +2,35 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageProvider";
+
 export default function OffshoreYachtCoursePage() {
-  const { lang } = useLanguage();
+  const { locale } = useLanguage();
 
   const ui = {
-    badge: lang === "tr" ? "Program" : "Program",
+    badge: locale === "tr" ? "Program" : "Program",
     title: "Offshore Yacht Course",
     subtitle:
-      lang === "tr"
+      locale === "tr"
         ? "Açık deniz geçişleri, daha yüksek sorumluluk ve güçlü komuta disiplini için ileri seviye eğitim programı."
         : "An advanced training program for offshore passages, higher responsibility, and stronger command discipline.",
 
+    introNote:
+      locale === "tr"
+        ? "Offshore eğitim, teorik bilgi değildir. Bodrum – İstanbul gibi gerçek rotalarda, yoğun gemi trafiği, Boğaz geçişi ve TSS içinde karar verebilme disiplinidir."
+        : "Offshore training is not theoretical knowledge. It is the discipline of making sound decisions on real routes such as Bodrum–Istanbul, within dense vessel traffic, Bosphorus passage, and TSS conditions.",
+
     realityTitle:
-      lang === "tr"
+      locale === "tr"
         ? "Bu eğitim neyi farklı yapar?"
         : "What makes this training different?",
+
+    realityHeadline:
+      locale === "tr"
+        ? "Gerçek açık denizde gerçek karar pratiği."
+        : "Real decision practice in real offshore conditions.",
+
     realityItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Gerçek açık deniz mantığı ile eğitim",
             "Bodrum – İstanbul hattı, yoğun gemi trafiği ve TSS farkındalığı",
@@ -32,21 +44,32 @@ export default function OffshoreYachtCoursePage() {
             "Weather-based decision-making and route adjustment mindset",
           ],
 
-    overviewTitle: lang === "tr" ? "Programın Amacı" : "Program Purpose",
+    overviewTitle:
+      locale === "tr" ? "Programın Amacı" : "Program Purpose",
+
+    overviewHeadline:
+      locale === "tr"
+        ? "Açık denizde daha güçlü kararlar."
+        : "Stronger decisions in offshore conditions.",
+
     overviewText:
-      lang === "tr"
+      locale === "tr"
         ? "Offshore Yacht Course; kıyı seyri seviyesini aşmış katılımcıların açık deniz düşüncesini, uzun rota planlamasını, vardiya disiplinini, gece seyri yaklaşımını ve daha güçlü komuta reflekslerini geliştirmek için tasarlanmıştır. Amaç, katılımcıyı yalnızca daha fazla bilgiye değil, daha yüksek deniz sorumluluğuna taşımaktır."
         : "The Offshore Yacht Course is designed for participants beyond the coastal level to develop offshore thinking, longer route planning, watchkeeping discipline, night navigation awareness, and stronger command reflexes. The goal is to move the participant not only toward more knowledge, but toward greater responsibility at sea.",
 
-    systemTitle: lang === "tr" ? "Eğitim sistemi" : "Training system",
+    systemTitle:
+      locale === "tr" ? "Eğitim sistemi" : "Training system",
+
     systemText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu programda meteoroloji, COLREG, navigasyon ve rota planlama ayrı ayrı başlıklar gibi ele alınmaz. Hepsi birlikte çalışır. Amaç, açık denizde doğru zamanda doğru karar verebilen kaptan yaklaşımını inşa etmektir."
         : "In this program, meteorology, COLREG, navigation, and route planning are not treated as isolated topics. They work together. The goal is to build a captaincy mindset capable of making the right decisions at the right time offshore.",
 
-    forWhomTitle: lang === "tr" ? "Kimler İçin Uygun?" : "Who Is It For?",
+    forWhomTitle:
+      locale === "tr" ? "Kimler İçin Uygun?" : "Who Is It For?",
+
     forWhomItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Kıyı seyri seviyesini aşmış ve açık denize geçmek isteyenler",
             "Daha uzun rota, vardiya disiplini ve gece seyri tecrübesi kazanmak isteyenler",
@@ -58,9 +81,16 @@ export default function OffshoreYachtCoursePage() {
             "Those who want to advance their command level and prepare for top-tier training",
           ],
 
-    gainsTitle: lang === "tr" ? "Bu Programda Ne Kazanırsınız?" : "What Do You Gain?",
+    gainsTitle:
+      locale === "tr" ? "Bu Programda Ne Kazanırsınız?" : "What Do You Gain?",
+
+    gainsHeadline:
+      locale === "tr"
+        ? "Programın temel kazanımları"
+        : "Core outcomes of the program",
+
     gains:
-      lang === "tr"
+      locale === "tr"
         ? [
             {
               title: "Açık deniz farkındalığı",
@@ -90,25 +120,36 @@ export default function OffshoreYachtCoursePage() {
             },
           ],
 
-    detailsTitle: lang === "tr" ? "Program Detayları" : "Program Details",
+    detailsTitle:
+      locale === "tr" ? "Program Detayları" : "Program Details",
+
     details:
-      lang === "tr"
+      locale === "tr"
         ? [
+            ["Süre", "7–10 Gün"],
             ["Seviye", "İleri Seviye"],
             ["TYF / YES Uyumu", "YY3 / YY4"],
             ["Odak", "Açık deniz, vardiya, gece seyri, komuta"],
             ["Çıktı", "Güçlü offshore pratiği ve üst seviyeye hazırlık"],
           ]
         : [
+            ["Duration", "7–10 Days"],
             ["Level", "Advanced"],
             ["TYF / YES Alignment", "YY3 / YY4"],
             ["Focus", "Offshore sailing, watchkeeping, night sailing, command"],
             ["Outcome", "Strong offshore practice and readiness for top level"],
           ],
 
-    resultTitle: lang === "tr" ? "Program sonunda" : "At the end of the program",
+    resultTitle:
+      locale === "tr" ? "Program sonunda" : "At the end of the program",
+
+    resultHeadline:
+      locale === "tr"
+        ? "Bu program seni nereye taşır?"
+        : "Where does this program take you?",
+
     resultItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Gerçek denizde daha yüksek karar gücü",
             "Daha oturmuş rota ve risk düşüncesi",
@@ -122,16 +163,41 @@ export default function OffshoreYachtCoursePage() {
             "Clearer confidence for offshore conditions",
           ],
 
-    nextTitle: lang === "tr" ? "Sonraki mantıklı adım" : "The logical next step",
+    nextTitle:
+      locale === "tr" ? "Sonraki mantıklı adım" : "The logical next step",
+
+    nextHeadline:
+      locale === "tr"
+        ? "Üst seviyeye stratejik geçin."
+        : "Move strategically into the top level.",
+
     nextText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu programı tamamlayan katılımcılar için doğal sonraki aşama Yachtmaster Track seviyesidir."
         : "For participants completing this program, the natural next stage is the Yachtmaster Track level.",
 
-    ctaPrimary: lang === "tr" ? "Offshore Eğitime Katıl" : "Join Offshore Training",
-    ctaSecondary: lang === "tr" ? "Tüm Programları Gör" : "View All Programs",
+    foundationBadge: "REAL OFFSHORE EXPERIENCE",
+
+    foundationHeadline:
+      locale === "tr"
+        ? "Gerçek kaptanlık yoluna hazır mısın?"
+        : "Ready for real captaincy?",
+
+    foundationText:
+      locale === "tr"
+        ? "Bu program, seni açık denizde daha yüksek sorumluluk taşıyabilen, daha doğru karar verebilen ve bir üst seviyeye stratejik şekilde hazırlanmış bir kaptan adayına dönüştürür."
+        : "This program prepares you to become a candidate captain capable of carrying greater responsibility offshore, making stronger decisions, and progressing strategically into the next level.",
+
+    ctaPrimary:
+      locale === "tr"
+        ? "Offshore Eğitime Katıl"
+        : "Join Offshore Training",
+
+    ctaSecondary:
+      locale === "tr" ? "Tüm Programları Gör" : "View All Programs",
+
     nextProgram:
-      lang === "tr"
+      locale === "tr"
         ? "Yachtmaster Track'e Geç"
         : "Continue to Yachtmaster Track",
   };
@@ -177,9 +243,7 @@ export default function OffshoreYachtCoursePage() {
                 boxShadow: "0 20px 50px rgba(0,0,0,0.18)",
               }}
             >
-              {lang === "tr"
-                ? "Offshore eğitim, teorik bilgi değildir. Bodrum – İstanbul gibi gerçek rotalarda, yoğun gemi trafiği, Boğaz geçişi ve TSS içinde karar verebilme disiplinidir."
-                : "Offshore training is not theoretical knowledge. It is the discipline of making sound decisions on real routes such as Bodrum–Istanbul, within dense vessel traffic, Bosphorus passage, and TSS conditions."}
+              {ui.introNote}
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -216,9 +280,7 @@ export default function OffshoreYachtCoursePage() {
           </p>
 
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-            {lang === "tr"
-              ? "Gerçek açık denizde gerçek karar pratiği."
-              : "Real decision practice in real offshore conditions."}
+            {ui.realityHeadline}
           </h2>
         </div>
 
@@ -247,9 +309,7 @@ export default function OffshoreYachtCoursePage() {
             </p>
 
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-              {lang === "tr"
-                ? "Açık denizde daha güçlü kararlar."
-                : "Stronger decisions in offshore conditions."}
+              {ui.overviewHeadline}
             </h2>
 
             <p className="mt-5 text-base leading-8 text-slate-300">
@@ -294,9 +354,7 @@ export default function OffshoreYachtCoursePage() {
             </p>
 
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-              {lang === "tr"
-                ? "Programın temel kazanımları"
-                : "Core outcomes of the program"}
+              {ui.gainsHeadline}
             </h2>
           </div>
 
@@ -349,9 +407,7 @@ export default function OffshoreYachtCoursePage() {
               </p>
 
               <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">
-                {lang === "tr"
-                  ? "Üst seviyeye stratejik geçin."
-                  : "Move strategically into the top level."}
+                {ui.nextHeadline}
               </h3>
 
               <p className="mt-4 text-sm leading-7 text-slate-300">
@@ -403,9 +459,7 @@ export default function OffshoreYachtCoursePage() {
             </p>
 
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-              {lang === "tr"
-                ? "Bu program seni nereye taşır?"
-                : "Where does this program take you?"}
+              {ui.resultHeadline}
             </h2>
           </div>
 
@@ -433,21 +487,15 @@ export default function OffshoreYachtCoursePage() {
 
           <div className="relative max-w-3xl">
             <p className="text-xs uppercase tracking-[0.22em] text-white/60">
-              {lang === "tr"
-                ? "REAL OFFSHORE EXPERIENCE"
-                : "REAL OFFSHORE EXPERIENCE"}
+              {ui.foundationBadge}
             </p>
 
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
-              {lang === "tr"
-                ? "Gerçek kaptanlık yoluna hazır mısın?"
-                : "Ready for real captaincy?"}
+              {ui.foundationHeadline}
             </h2>
 
             <p className="mt-4 text-base leading-8 text-white/75">
-              {lang === "tr"
-                ? "Bu program, seni açık denizde daha yüksek sorumluluk taşıyabilen, daha doğru karar verebilen ve bir üst seviyeye stratejik şekilde hazırlanmış bir kaptan adayına dönüştürür."
-                : "This program prepares you to become a candidate captain capable of carrying greater responsibility offshore, making stronger decisions, and progressing strategically into the next level."}
+              {ui.foundationText}
             </p>
           </div>
 

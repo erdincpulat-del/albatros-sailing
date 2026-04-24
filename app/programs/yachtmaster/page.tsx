@@ -4,20 +4,33 @@ import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageProvider";
 
 export default function YachtmasterPage() {
-  const { lang } = useLanguage();
+  const { locale } = useLanguage();
 
   const ui = {
-    badge: lang === "tr" ? "Program" : "Program",
+    badge: locale === "tr" ? "Program" : "Program",
     title: "Yachtmaster Track",
     subtitle:
-      lang === "tr"
+      locale === "tr"
         ? "Komuta, sorumluluk ve profesyonel denizcilik duruşunu üst seviyeye taşıyan premium gelişim programı."
         : "A premium development program that elevates command, responsibility, and professional maritime presence to the highest level.",
 
+    introNote:
+      locale === "tr"
+        ? "Yachtmaster Track, sadece ileri eğitim değildir. Bu seviye; komutayı temsil gücüne, pratiği profesyonel duruşa ve deniz tecrübesini daha yüksek otoriteye dönüştüren üst düzey gelişim hattıdır."
+        : "Yachtmaster Track is not only advanced training. It is a high-level development path that transforms command into representational strength, practice into professional presence, and sea experience into higher authority.",
+
     realityTitle:
-      lang === "tr" ? "Bu eğitim neyi farklı yapar?" : "What makes this training different?",
+      locale === "tr"
+        ? "Bu eğitim neyi farklı yapar?"
+        : "What makes this training different?",
+
+    realityHeadline:
+      locale === "tr"
+        ? "Bu seviye kurs değil, konum kazandırır."
+        : "This level builds position, not only completion.",
+
     realityItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Komuta refleksini daha yüksek sorumluluk seviyesine taşır.",
             "Offshore pratiğini profesyonel denizcilik duruşuna dönüştürür.",
@@ -32,23 +45,31 @@ export default function YachtmasterPage() {
           ],
 
     overviewTitle:
-      lang === "tr" ? "Programın Amacı" : "Program Purpose",
+      locale === "tr" ? "Programın Amacı" : "Program Purpose",
+
+    overviewHeadline:
+      locale === "tr"
+        ? "Komutayı daha yüksek seviyeye taşıyın."
+        : "Take command to a higher level.",
+
     overviewText:
-      lang === "tr"
+      locale === "tr"
         ? "Yachtmaster Track; açık deniz pratiğini daha ileri noktaya taşımak, komuta reflekslerini güçlendirmek, daha yüksek sorumluluk düzeyine çıkmak ve profesyonel seviyeye yaklaşan bir duruş inşa etmek için tasarlanmıştır. Amaç yalnızca daha fazla deniz yapmak değil; denizde daha yüksek otorite, daha net karar ve daha güçlü liderlik kazandırmaktır."
         : "The Yachtmaster Track is designed to take offshore practice to a higher level, strengthen command reflexes, raise the level of responsibility, and build a presence that approaches professional maritime standards. The goal is not only to spend more time at sea, but to develop higher authority, clearer decisions, and stronger leadership on the water.",
 
     systemTitle:
-      lang === "tr" ? "Eğitim sistemi" : "Training system",
+      locale === "tr" ? "Eğitim sistemi" : "Training system",
+
     systemText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu programda liderlik, komuta, ileri sorumluluk, operasyon disiplini ve profesyonel denizcilik yaklaşımı birlikte çalışır. Amaç yalnızca daha ileri gitmek değil; denizde daha yüksek güven, otorite ve temsil gücü oluşturmaktır."
         : "In this program, leadership, command, advanced responsibility, operational discipline, and professional maritime approach work together. The goal is not only to move further, but to build greater trust, authority, and representational strength at sea.",
 
     forWhomTitle:
-      lang === "tr" ? "Kimler İçin Uygun?" : "Who Is It For?",
+      locale === "tr" ? "Kimler İçin Uygun?" : "Who Is It For?",
+
     forWhomItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Açık deniz seviyesini geçmiş ve komuta gücünü ileri taşımak isteyenler",
             "Daha ciddi deniz sorumluluğu ve daha yüksek profesyonel standart hedefleyenler",
@@ -61,9 +82,15 @@ export default function YachtmasterPage() {
           ],
 
     gainsTitle:
-      lang === "tr" ? "Bu Programda Ne Kazanırsınız?" : "What Do You Gain?",
+      locale === "tr" ? "Bu Programda Ne Kazanırsınız?" : "What Do You Gain?",
+
+    gainsHeadline:
+      locale === "tr"
+        ? "Programın temel kazanımları"
+        : "Core outcomes of the program",
+
     gains:
-      lang === "tr"
+      locale === "tr"
         ? [
             {
               title: "Üst düzey komuta disiplini",
@@ -94,16 +121,19 @@ export default function YachtmasterPage() {
           ],
 
     detailsTitle:
-      lang === "tr" ? "Program Detayları" : "Program Details",
+      locale === "tr" ? "Program Detayları" : "Program Details",
+
     details:
-      lang === "tr"
+      locale === "tr"
         ? [
+            ["Süre", "Modüler / Etaplı"],
             ["Seviye", "Üst Seviye / Premium"],
             ["TYF / YES Uyumu", "YY4 / YY5"],
             ["Odak", "Komuta, liderlik, ileri seviye sorumluluk"],
             ["Çıktı", "Üst düzey denizcilik duruşu ve profesyonel yaklaşım"],
           ]
         : [
+            ["Duration", "Modular / Staged"],
             ["Level", "Top Level / Premium"],
             ["TYF / YES Alignment", "YY4 / YY5"],
             ["Focus", "Command, leadership, advanced responsibility"],
@@ -111,9 +141,15 @@ export default function YachtmasterPage() {
           ],
 
     resultTitle:
-      lang === "tr" ? "Program sonunda" : "At the end of the program",
+      locale === "tr" ? "Program sonunda" : "At the end of the program",
+
+    resultHeadline:
+      locale === "tr"
+        ? "Bu program seni nereye taşır?"
+        : "Where does this program take you?",
+
     resultItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Daha yüksek komuta ve liderlik refleksi",
             "Daha ciddi sorumluluk taşıyabilen denizcilik yaklaşımı",
@@ -128,20 +164,42 @@ export default function YachtmasterPage() {
           ],
 
     nextTitle:
-      lang === "tr" ? "Programın pozisyonu" : "Program position",
+      locale === "tr" ? "Programın pozisyonu" : "Program position",
+
+    nextHeadline:
+      locale === "tr"
+        ? "Bu seviye bir sonuç değil, bir konumdur."
+        : "This level is not just an outcome, but a position.",
+
     nextText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu program, eğitim yolculuğunun üst seviyesini temsil eder. Katılımcıyı yalnızca bir sonraki kursa değil, daha ciddi bir denizcilik duruşuna taşır."
         : "This program represents the upper stage of the training journey. It moves the participant not only toward the next course, but toward a more serious maritime posture.",
 
     ctaPrimary:
-      lang === "tr" ? "Yachtmaster Track'e Katıl" : "Join Yachtmaster Track",
+      locale === "tr"
+        ? "Yachtmaster Track'e Katıl"
+        : "Join Yachtmaster Track",
+
     ctaSecondary:
-      lang === "tr" ? "Tüm Programları Gör" : "View All Programs",
+      locale === "tr" ? "Tüm Programları Gör" : "View All Programs",
+
     backProgram:
-      lang === "tr"
+      locale === "tr"
         ? "Offshore Yacht Course'a Dön"
         : "Back to Offshore Yacht Course",
+
+    foundationBadge: "REAL PROFESSIONAL POSITIONING",
+
+    foundationHeadline:
+      locale === "tr"
+        ? "Denizde daha yüksek otorite ve temsil gücü ister misin?"
+        : "Do you want greater authority and representational strength at sea?",
+
+    foundationText:
+      locale === "tr"
+        ? "Yachtmaster Track, seni yalnızca daha deneyimli yapmaz. Bu program; komuta gücünü, liderlik kapasiteni ve profesyonel denizcilik duruşunu daha görünür, daha güçlü ve daha üst seviyeye taşır."
+        : "Yachtmaster Track does not only make you more experienced. It elevates your command power, leadership capacity, and professional maritime presence to a more visible, stronger, and higher level.",
   };
 
   return (
@@ -231,9 +289,7 @@ export default function YachtmasterPage() {
                 maxWidth: 700,
               }}
             >
-              {lang === "tr"
-                ? "Yachtmaster Track, sadece ileri eğitim değildir. Bu seviye; komutayı temsil gücüne, pratiği profesyonel duruşa ve deniz tecrübesini daha yüksek otoriteye dönüştüren üst düzey gelişim hattıdır."
-                : "Yachtmaster Track is not only advanced training. It is a high-level development path that transforms command into representational strength, practice into professional presence, and sea experience into higher authority."}
+              {ui.introNote}
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -280,7 +336,8 @@ export default function YachtmasterPage() {
           </div>
         </div>
       </section>
-            <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+
+      <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
         <div className="max-w-3xl">
           <p
             style={{
@@ -304,9 +361,7 @@ export default function YachtmasterPage() {
               color: "#f8fafc",
             }}
           >
-            {lang === "tr"
-              ? "Bu seviye kurs değil, konum kazandırır."
-              : "This level builds position, not only completion."}
+            {ui.realityHeadline}
           </h2>
         </div>
 
@@ -364,9 +419,7 @@ export default function YachtmasterPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Komutayı daha yüksek seviyeye taşıyın."
-                : "Take command to a higher level."}
+              {ui.overviewHeadline}
             </h2>
 
             <p
@@ -462,7 +515,8 @@ export default function YachtmasterPage() {
           </div>
         </div>
       </section>
-            <section
+
+      <section
         style={{
           borderTop: "1px solid rgba(255,255,255,0.06)",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -494,9 +548,7 @@ export default function YachtmasterPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Programın temel kazanımları"
-                : "Core outcomes of the program"}
+              {ui.gainsHeadline}
             </h2>
           </div>
 
@@ -636,9 +688,7 @@ export default function YachtmasterPage() {
                   color: "#f8fafc",
                 }}
               >
-                {lang === "tr"
-                  ? "Bu seviye bir sonuç değil, bir konumdur."
-                  : "This level is not just an outcome, but a position."}
+                {ui.nextHeadline}
               </h3>
 
               <p
@@ -712,7 +762,8 @@ export default function YachtmasterPage() {
           </div>
         </div>
       </section>
-            <section
+
+      <section
         style={{
           borderTop: "1px solid rgba(255,255,255,0.06)",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -744,9 +795,7 @@ export default function YachtmasterPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Bu program seni nereye taşır?"
-                : "Where does this program take you?"}
+              {ui.resultHeadline}
             </h2>
           </div>
 
@@ -803,9 +852,7 @@ export default function YachtmasterPage() {
                 fontWeight: 800,
               }}
             >
-              {lang === "tr"
-                ? "REAL PROFESSIONAL POSITIONING"
-                : "REAL PROFESSIONAL POSITIONING"}
+              {ui.foundationBadge}
             </p>
 
             <h2
@@ -818,9 +865,7 @@ export default function YachtmasterPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Denizde daha yüksek otorite ve temsil gücü ister misin?"
-                : "Do you want greater authority and representational strength at sea?"}
+              {ui.foundationHeadline}
             </h2>
 
             <p
@@ -831,9 +876,7 @@ export default function YachtmasterPage() {
                 color: "rgba(226,232,240,0.78)",
               }}
             >
-              {lang === "tr"
-                ? "Yachtmaster Track, seni yalnızca daha deneyimli yapmaz. Bu program; komuta gücünü, liderlik kapasiteni ve profesyonel denizcilik duruşunu daha görünür, daha güçlü ve daha üst seviyeye taşır."
-                : "Yachtmaster Track does not only make you more experienced. It elevates your command power, leadership capacity, and professional maritime presence to a more visible, stronger, and higher level."}
+              {ui.foundationText}
             </p>
           </div>
 

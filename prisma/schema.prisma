@@ -8,25 +8,10 @@ datasource db {
 }
 
 model Reservation {
-  id                 String    @id @default(cuid())
-  fullName           String
-  certificateId      String    @unique
-  program            String?
-  qualificationLevel String?
-  issueDate          DateTime?
-  seaMiles           Int?
-  photoUrl           String?
-  cardFrontUrl       String?
-  cardBackUrl        String?
-  qrCodeUrl          String?
-  verificationHash   String?
-  status             String?   @default("PENDING")
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
-  @@index([certificateId])
-  @@index([createdAt])
-  @@index([status])
+  id        String   @id @default(cuid())
+  fullName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AdminLog {
@@ -66,8 +51,9 @@ model Certificate {
   photoUrl           String?
   cardFrontUrl       String?
   cardBackUrl        String?
-  verificationHash   String?
-  status             String?   @default("PENDING")
+  qrCodeUrl          String?
+  verificationHash   String?   @unique
+  status             String    @default("PENDING")
 
   instructorId String?
   instructor   Instructor? @relation(fields: [instructorId], references: [id])
@@ -78,11 +64,12 @@ model Certificate {
   @@index([certificateId])
   @@index([createdAt])
   @@index([instructorId])
+  @@index([status])
 }
 
 model CharterBoat {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String @id @default(cuid())
+  slug        String @unique
   name        String
   model       String
   year        Int
@@ -94,24 +81,18 @@ model CharterBoat {
   description String
   features    String
 
-  captainFee    String?
-  transitlogFee String?
-  cleaningFee   String?
-  extrasNote    String?
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   prices       CharterBoatPrice[]
-  gallery      CharterGalleryImage[]
   inquiries    Inquiry[]
   availability CharterAvailability[]
 }
 
 model CharterBoatPrice {
-  id     String @id @default(cuid())
-  month  String
-  price  String
+  id    String @id @default(cuid())
+  month String
+  price String
 
   boatId String
   boat   CharterBoat @relation(fields: [boatId], references: [id], onDelete: Cascade)
@@ -148,7 +129,7 @@ model Inquiry {
   id String @id @default(cuid())
 
   fullName String
-  email    String?
+  email    String
   phone    String?
   message  String?
   notes    String?
@@ -156,24 +137,20 @@ model Inquiry {
   type   String @default("CHARTER")
   status String @default("NEW")
 
-  // CHARTER
   guestCount           Int?
   routePreference      String?
   skipperRequired      Boolean @default(false)
   charterDurationWeeks Int?
 
-  // TRAINING
   trainingProgram  String?
   participantCount Int?
 
-  // RELATIONS
   boatId String?
   boat   CharterBoat? @relation(fields: [boatId], references: [id])
 
   weekId String?
   week   CharterAvailability? @relation(fields: [weekId], references: [id])
 
-  // BUSINESS
   leadScore      Int?
   estimatedValue Float?
 
@@ -184,17 +161,4 @@ model Inquiry {
   @@index([type])
   @@index([boatId])
   @@index([weekId])
-}
-
-model CharterGalleryImage {
-  id        String      @id @default(cuid())
-  boatId    String
-  boat      CharterBoat @relation(fields: [boatId], references: [id], onDelete: Cascade)
-
-  imageUrl  String
-  sortOrder Int         @default(0)
-
-  createdAt DateTime @default(now())
-
-  @@index([boatId])
 }

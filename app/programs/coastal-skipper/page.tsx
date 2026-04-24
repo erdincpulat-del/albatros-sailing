@@ -4,20 +4,33 @@ import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageProvider";
 
 export default function CoastalSkipperPage() {
-  const { lang } = useLanguage();
+  const { locale } = useLanguage();
 
   const ui = {
-    badge: lang === "tr" ? "Program" : "Program",
+    badge: locale === "tr" ? "Program" : "Program",
     title: "Coastal Skipper",
     subtitle:
-      lang === "tr"
+      locale === "tr"
         ? "Kıyı seyri, komuta disiplini ve daha güçlü tekne yönetimi için gelişim programı."
         : "A development program for coastal passage skills, command discipline, and stronger boat management.",
 
+    introNote:
+      locale === "tr"
+        ? "Coastal Skipper, temel denizcilik bilgisi ile gerçek komuta disiplini arasındaki geçiş seviyesidir. Amaç yalnızca kıyıda seyretmek değil, daha bilinçli karar verebilen bir skipper yapısı oluşturmaktır."
+        : "Coastal Skipper is the transition level between basic seamanship knowledge and real command discipline. The aim is not merely to sail along the coast, but to build a skipper structure capable of more conscious decisions.",
+
     realityTitle:
-      lang === "tr" ? "Bu eğitim neyi farklı yapar?" : "What makes this training different?",
+      locale === "tr"
+        ? "Bu eğitim neyi farklı yapar?"
+        : "What makes this training different?",
+
+    realityHeadline:
+      locale === "tr"
+        ? "Temelden komutaya geçiş burada başlar."
+        : "The transition from basics to command starts here.",
+
     realityItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Kıyı seyri içinde daha bilinçli rota ve komuta disiplini kurar.",
             "Marina manevraları, planlama ve ekip yönetimini birlikte geliştirir.",
@@ -31,21 +44,29 @@ export default function CoastalSkipperPage() {
             "Creates the transition from basic level to real captaincy progression.",
           ],
 
-    overviewTitle: lang === "tr" ? "Programın Amacı" : "Program Purpose",
+    overviewTitle: locale === "tr" ? "Programın Amacı" : "Program Purpose",
+
+    overviewHeadline:
+      locale === "tr"
+        ? "Kıyı seyri ve komutaya geçiş."
+        : "A transition into coastal command and passage discipline.",
+
     overviewText:
-      lang === "tr"
+      locale === "tr"
         ? "Coastal Skipper programı; temel seviyeyi aşmış katılımcıların kıyı seyri, tekne yönetimi, manevra, planlama ve karar alma becerilerini ileri taşımak için tasarlanmıştır. Amaç, adayın yalnızca tekne üzerinde bulunmasını değil, tekneye daha bilinçli şekilde liderlik etmesini sağlamaktır."
         : "The Coastal Skipper program is designed to advance the coastal navigation, boat handling, maneuvering, planning, and decision-making abilities of participants who have moved beyond the basic level. The goal is not only to place the candidate on a boat, but to help them lead it more consciously.",
 
-    systemTitle: lang === "tr" ? "Eğitim sistemi" : "Training system",
+    systemTitle: locale === "tr" ? "Eğitim sistemi" : "Training system",
+
     systemText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu programda kıyı seyri, rota planlama, güvenlik ve komuta yaklaşımı birlikte çalışır. Amaç yalnızca tekne kullanmak değil; kıyı koşullarında doğru karar verebilen, daha güvenli ve daha disiplinli bir skipper yapısı oluşturmaktır."
         : "In this program, coastal passage, route planning, safety, and command approach work together. The aim is not only to handle a boat, but to build a safer, more disciplined skipper structure capable of making sound decisions in coastal conditions.",
 
-    forWhomTitle: lang === "tr" ? "Kimler İçin Uygun?" : "Who Is It For?",
+    forWhomTitle: locale === "tr" ? "Kimler İçin Uygun?" : "Who Is It For?",
+
     forWhomItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Temel seviyeyi geçmiş ve daha fazla sorumluluk almak isteyenler",
             "Kıyı seyri ve rota planlamasında güven kazanmak isteyenler",
@@ -57,9 +78,15 @@ export default function CoastalSkipperPage() {
             "Those who want to establish command discipline before moving into offshore level",
           ],
 
-    gainsTitle: lang === "tr" ? "Bu Programda Ne Kazanırsınız?" : "What Do You Gain?",
+    gainsTitle: locale === "tr" ? "Bu Programda Ne Kazanırsınız?" : "What Do You Gain?",
+
+    gainsHeadline:
+      locale === "tr"
+        ? "Programın temel kazanımları"
+        : "Core outcomes of the program",
+
     gains:
-      lang === "tr"
+      locale === "tr"
         ? [
             {
               title: "Kıyı seyri güveni",
@@ -89,25 +116,34 @@ export default function CoastalSkipperPage() {
             },
           ],
 
-    detailsTitle: lang === "tr" ? "Program Detayları" : "Program Details",
+    detailsTitle: locale === "tr" ? "Program Detayları" : "Program Details",
+
     details:
-      lang === "tr"
+      locale === "tr"
         ? [
+            ["Süre", "6–7 Gün"],
             ["Seviye", "Orta Seviye"],
             ["TYF / YES Uyumu", "YY2 / YY3"],
             ["Odak", "Kıyı seyri, komuta, manevra, rota planlama"],
             ["Çıktı", "Daha bilinçli yönetim ve offshore hazırlığı"],
           ]
         : [
+            ["Duration", "6–7 Days"],
             ["Level", "Intermediate"],
             ["TYF / YES Alignment", "YY2 / YY3"],
             ["Focus", "Coastal passage, command, maneuvering, route planning"],
             ["Outcome", "More conscious management and offshore readiness"],
           ],
 
-    resultTitle: lang === "tr" ? "Program sonunda" : "At the end of the program",
+    resultTitle: locale === "tr" ? "Program sonunda" : "At the end of the program",
+
+    resultHeadline:
+      locale === "tr"
+        ? "Bu program seni nereye taşır?"
+        : "Where does this program take you?",
+
     resultItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Kıyı seyri içinde daha güçlü karar verebilme",
             "Manevra ve tekne yönetiminde daha yüksek özgüven",
@@ -121,18 +157,36 @@ export default function CoastalSkipperPage() {
             "A stronger foundation for transition into offshore level",
           ],
 
-    nextTitle: lang === "tr" ? "Sonraki mantıklı adım" : "The logical next step",
+    nextTitle: locale === "tr" ? "Sonraki mantıklı adım" : "The logical next step",
+
+    nextHeadline:
+      locale === "tr"
+        ? "Bir üst seviyeye planlı geçin."
+        : "Move into the next level with structure.",
+
     nextText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu programı tamamlayan katılımcılar için bir sonraki güçlü aşama Offshore Yacht Course seviyesidir."
         : "For participants completing this program, the next strong stage is the Offshore Yacht Course level.",
 
+    foundationBadge: "REAL COASTAL DISCIPLINE",
+
+    foundationHeadline:
+      locale === "tr"
+        ? "Kıyı seyri seviyesinde gerçekten güçlenmek ister misin?"
+        : "Do you want to become truly stronger at coastal level?",
+
+    foundationText:
+      locale === "tr"
+        ? "Coastal Skipper, temel bilgiyi gerçek yönetim disiplinine dönüştürür. Bu program, seni daha bilinçli karar veren, daha güvenli rota kuran ve offshore seviyesine daha sağlam geçen bir skipper adayına dönüştürür."
+        : "Coastal Skipper transforms basic knowledge into real management discipline. This program helps you become a candidate skipper who makes more conscious decisions, builds safer routes, and transitions more solidly into offshore level.",
+
     ctaPrimary:
-      lang === "tr" ? "Coastal Skipper'a Katıl" : "Join Coastal Skipper",
+      locale === "tr" ? "Coastal Skipper'a Katıl" : "Join Coastal Skipper",
     ctaSecondary:
-      lang === "tr" ? "Tüm Programları Gör" : "View All Programs",
+      locale === "tr" ? "Tüm Programları Gör" : "View All Programs",
     nextProgram:
-      lang === "tr"
+      locale === "tr"
         ? "Offshore Yacht Course'a Geç"
         : "Continue to Offshore Yacht Course",
   };
@@ -146,7 +200,6 @@ export default function CoastalSkipperPage() {
           "radial-gradient(circle at top left, rgba(103,211,255,0.08), transparent 32%), linear-gradient(180deg, #020617 0%, #07111d 48%, #020617 100%)",
       }}
     >
-      {/* HERO */}
       <section
         className="relative overflow-hidden"
         style={{
@@ -155,7 +208,6 @@ export default function CoastalSkipperPage() {
             "linear-gradient(180deg, rgba(8,14,24,0.62), rgba(8,14,24,0.42))",
         }}
       >
-        {/* GLOW EKLENDİ */}
         <div
           style={{
             position: "absolute",
@@ -225,9 +277,7 @@ export default function CoastalSkipperPage() {
                 maxWidth: 700,
               }}
             >
-              {lang === "tr"
-                ? "Coastal Skipper, temel denizcilik bilgisi ile gerçek komuta disiplini arasındaki geçiş seviyesidir. Amaç yalnızca kıyıda seyretmek değil, daha bilinçli karar verebilen bir skipper yapısı oluşturmaktır."
-                : "Coastal Skipper is the transition level between basic seamanship knowledge and real command discipline. The aim is not merely to sail along the coast, but to build a skipper structure capable of more conscious decisions."}
+              {ui.introNote}
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -274,7 +324,8 @@ export default function CoastalSkipperPage() {
           </div>
         </div>
       </section>
-            <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+
+      <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
         <div className="max-w-3xl">
           <p
             style={{
@@ -298,9 +349,7 @@ export default function CoastalSkipperPage() {
               color: "#f8fafc",
             }}
           >
-            {lang === "tr"
-              ? "Temelden komutaya geçiş burada başlar."
-              : "The transition from basics to command starts here."}
+            {ui.realityHeadline}
           </h2>
         </div>
 
@@ -358,9 +407,7 @@ export default function CoastalSkipperPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Kıyı seyri ve komutaya geçiş."
-                : "A transition into coastal command and passage discipline."}
+              {ui.overviewHeadline}
             </h2>
 
             <p
@@ -457,7 +504,8 @@ export default function CoastalSkipperPage() {
           </div>
         </div>
       </section>
-            <section
+
+      <section
         style={{
           borderTop: "1px solid rgba(255,255,255,0.06)",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -489,9 +537,7 @@ export default function CoastalSkipperPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Programın temel kazanımları"
-                : "Core outcomes of the program"}
+              {ui.gainsHeadline}
             </h2>
           </div>
 
@@ -598,7 +644,8 @@ export default function CoastalSkipperPage() {
                 ))}
               </div>
             </div>
-                        <div
+
+            <div
               className="card-hover"
               style={{
                 borderRadius: "1.75rem",
@@ -630,9 +677,7 @@ export default function CoastalSkipperPage() {
                   color: "#f8fafc",
                 }}
               >
-                {lang === "tr"
-                  ? "Bir üst seviyeye planlı geçin."
-                  : "Move into the next level with structure."}
+                {ui.nextHeadline}
               </h3>
 
               <p
@@ -706,7 +751,8 @@ export default function CoastalSkipperPage() {
           </div>
         </div>
       </section>
-            <section
+
+      <section
         style={{
           borderTop: "1px solid rgba(255,255,255,0.06)",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -738,9 +784,7 @@ export default function CoastalSkipperPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Bu program seni nereye taşır?"
-                : "Where does this program take you?"}
+              {ui.resultHeadline}
             </h2>
           </div>
 
@@ -797,7 +841,7 @@ export default function CoastalSkipperPage() {
                 color: "rgba(226,232,240,0.62)",
               }}
             >
-              {lang === "tr" ? "REAL COASTAL DISCIPLINE" : "REAL COASTAL DISCIPLINE"}
+              {ui.foundationBadge}
             </p>
 
             <h2
@@ -810,9 +854,7 @@ export default function CoastalSkipperPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Kıyı seyri seviyesinde gerçekten güçlenmek ister misin?"
-                : "Do you want to become truly stronger at coastal level?"}
+              {ui.foundationHeadline}
             </h2>
 
             <p
@@ -823,9 +865,7 @@ export default function CoastalSkipperPage() {
                 color: "rgba(226,232,240,0.78)",
               }}
             >
-              {lang === "tr"
-                ? "Coastal Skipper, temel bilgiyi gerçek yönetim disiplinine dönüştürür. Bu program, seni daha bilinçli karar veren, daha güvenli rota kuran ve offshore seviyesine daha sağlam geçen bir skipper adayına dönüştürür."
-                : "Coastal Skipper transforms basic knowledge into real management discipline. This program helps you become a candidate skipper who makes more conscious decisions, builds safer routes, and transitions more solidly into offshore level."}
+              {ui.foundationText}
             </p>
           </div>
 

@@ -51,10 +51,10 @@ export default function SiteHeader() {
           label: "Ana Sayfa",
           href: "/",
           items: [
-            { label: "Ana Sayfa", href: "/", desc: "Marka girişi ve ana vitrin" },
-            { label: "Programlar Bölümü", href: "/#programlar", desc: "Eğitim programlarına hızlı geçiş" },
-            { label: "Eğitim Modülleri", href: "/#egitim", desc: "Eğitim sistemini keşfet" },
-            { label: "Charter Bölümü", href: "/#charter", desc: "Premium deneyim katmanı" },
+            { label: "Ana Sayfa", href: "/" },
+            { label: "Programlar Bölümü", href: "/#programlar" },
+            { label: "Eğitim Modülleri", href: "/#egitim" },
+            { label: "Charter Bölümü", href: "/#charter" },
           ],
         },
         {
@@ -65,50 +65,49 @@ export default function SiteHeader() {
             {
               title: "Temel Denizcilik",
               items: [
-                { label: "Güvenlik", href: "/guide/guvenlik", desc: "Temel deniz güvenliği ve refleks sistemi" },
-                { label: "Demirleme ve Demir Alma", href: "/guide/demirleme-ve-demir-alma", desc: "Demir operasyonları ve kontrol" },
-                { label: "Marina Giriş Çıkış Usulleri", href: "/guide/marina-giris-cikis-usulleri", desc: "Marina yaklaşımı ve usul bilgisi" },
-                { label: "Tekne Hakimiyeti", href: "/guide/tekne-hakimiyeti", desc: "Teknenin kontrolü ve manevra disiplini" },
+                { label: "Güvenlik", href: "/guide/guvenlik" },
+                { label: "Demirleme ve Demir Alma", href: "/guide/demirleme-ve-demir-alma" },
+                { label: "Marina Giriş Çıkış Usulleri", href: "/guide/marina-giris-cikis-usulleri" },
+                { label: "Tekne Hakimiyeti", href: "/guide/tekne-hakimiyeti" },
               ],
             },
             {
-              
-  title: "Navigasyon",
-  items: [
-    { label: "Navigasyon", href: "/guide/navigasyon", desc: "Seyir düşüncesinin omurgası" },
-    { label: "Rota Planlama", href: "/guide/rota-planlama", desc: "Rota kurma ve karar verme mantığı" },
-    { label: "Paper Chart Navigation", href: "/guide/paper-chart-navigation", desc: "Kâğıt harita ile navigasyon" },
-    { label: "Almanac", href: "/guide/almanac", desc: "Göksel navigasyonun veri kaynağı ve zaman mantığı" },
-    { label: "Sextant", href: "/guide/sextant", desc: "Klasik denizcilik ölçüm aracı" },
-    { label: "Sextant Nedir", href: "/guide/sextant-nedir", desc: "Sextant mantığı ve kullanım girişi" },
-  ],
-},
+              title: "Navigasyon",
+              items: [
+                { label: "Navigasyon", href: "/guide/navigasyon" },
+                { label: "Rota Planlama", href: "/guide/rota-planlama" },
+                { label: "Paper Chart Navigation", href: "/guide/paper-chart-navigation" },
+                { label: "Almanac", href: "/guide/almanac" },
+                { label: "Sextant", href: "/guide/sextant" },
+                { label: "Sextant Nedir", href: "/guide/sextant-nedir" },
+              ],
+            },
             {
               title: "Trafik ve Kurallar",
               items: [
-                { label: "COLREG", href: "/guide/colreg", desc: "Denizde çatışmayı önleme kuralları" },
-                { label: "Denizde Çatışma Önleme", href: "/guide/denizde-catisma-onleme", desc: "Çarpışma riskini yorumlama ve önleme" },
-                { label: "AIS / VTS", href: "/guide/ais-ve-vts", desc: "Trafik farkındalığı ve sistem okuması" },
-                { label: "AIS / VTS Nedir", href: "/guide/ais-ve-vts-nedir", desc: "AIS ve VTS temel mantığı" },
-                { label: "TSS Nedir", href: "/guide/tss-nedir", desc: "Trafik ayırım düzeni mantığı" },
+                { label: "COLREG", href: "/guide/colreg" },
+                { label: "Denizde Çatışma Önleme", href: "/guide/denizde-catisma-onleme" },
+                { label: "AIS / VTS", href: "/guide/ais-ve-vts" },
+                { label: "AIS / VTS Nedir", href: "/guide/ais-ve-vts-nedir" },
+                { label: "TSS Nedir", href: "/guide/tss-nedir" },
               ],
             },
             {
-  title: "Hava ve Seyir",
-  items: [
-    { label: "Denizde Meteoroloji", href: "/guide/denizde-meteoroloji", desc: "Hava okuma ve karar desteği" },
-    { label: "Gece Seyri Fenerleri", href: "/guide/gece-seyri-fenerleri", desc: "Gece görünürlük ve ışık disiplini" },
-    { label: "Signals", href: "/guide/signals", desc: "İşaret ve eğitim modülü" },
-    { label: "Wind Engine", href: "/guide/wind-engine", desc: "Rüzgâr sistemi ve eğitim motoru" },
-    { label: "Yelkenin Çalışma Prensibi", href: "/guide/yelkenin-calisma-prensibi", desc: "Rüzgârın yelken üzerindeki etkisi ve güç üretimi" },
-  ],
-},
+              title: "Hava ve Seyir",
+              items: [
+                { label: "Denizde Meteoroloji", href: "/guide/denizde-meteoroloji" },
+                { label: "Gece Seyri Fenerleri", href: "/guide/gece-seyri-fenerleri" },
+                { label: "Signals", href: "/guide/signals" },
+                { label: "Wind Engine", href: "/guide/wind-engine" },
+                { label: "Yelkenin Çalışma Prensibi", href: "/guide/yelkenin-calisma-prensibi" },
+              ],
+            },
             {
               title: "İleri ve Kariyer",
               items: [
-                { label: "Yat Kaptanı Nasıl Olunur", href: "/guide/yat-kaptani-nasil-olunur", desc: "Kaptanlık yol haritası" },
-                { label: "Denizde Acil Durumlar", href: "/guide/denizde-acil-durumlar", desc: "Kriz yönetimi ve öncelik sırası" },
-                { label: "Anchored Alcohol", href: "/guide/anchored-alcohol", desc: "Demirde alkol ve hukuki çerçeve" },
+                { label: "Yat Kaptanı Nasıl Olunur", href: "/guide/yat-kaptani-nasil-olunur" },
+                { label: "Denizde Acil Durumlar", href: "/guide/denizde-acil-durumlar" },
+                { label: "Anchored Alcohol", href: "/guide/anchored-alcohol" },
               ],
             },
           ],
@@ -118,43 +117,45 @@ export default function SiteHeader() {
           label: "Programlar",
           href: "/programs",
           items: [
-            { label: "Tüm Programlar", href: "/programs", desc: "Tüm eğitim yolunu gör" },
-            { label: "Başlangıç Yelken Eğitimi", href: "/programs/basic-sailing", desc: "Temel yelken ve güvenlik" },
-            { label: "Coastal Skipper", href: "/programs/coastal-skipper", desc: "Kıyı seyri ve komuta geçişi" },
-            { label: "Offshore Yacht Course", href: "/programs/offshore-yacht-course", desc: "Açık deniz disiplini" },
+            { label: "Tüm Programlar", href: "/programs" },
+            { label: "Başlangıç Yelken Eğitimi", href: "/programs/basic-sailing" },
+            { label: "Coastal Skipper", href: "/programs/coastal-skipper" },
+            { label: "Offshore Yacht Course", href: "/programs/offshore-yacht-course" },
           ],
         },
         {
-          key: "charter",
-          label: "Charter",
-          href: "/charter",
-          items: [
-            { label: "Charter Sayfası", href: "/charter", desc: "Tekne ve rota deneyimi" },
-            { label: "Tekne Kiralama", href: "/charter", desc: "Premium charter seçenekleri" },
-            { label: "Charter Yönetimi", href: "/charter-admin", desc: "Operasyon yönetim alanı" },
-          ],
-        },
-        {
-          key: "verify",
-          label: "Doğrula",
-          href: "/verify",
-          items: [
-            { label: "Sertifika Doğrula", href: "/verify", desc: "QR / kayıt doğrulama" },
-            { label: "Kayıt Sistemi", href: "/registry", desc: "Resmi kayıt ekranı" },
-            { label: "Sertifika", href: "/certificate", desc: "Sertifika alanı" },
-            { label: "Kartlar", href: "/cards", desc: "Kart ve belge erişimi" },
-          ],
-        },
+          
+  key: "about",
+  label: "Eğitmen",
+  href: "/about",
+  items: [{ label: "Eğitmen Hakkında", href: "/about" }],
+},
+
+  {
+  key: "charter",
+  label: "Charter",
+  href: "/charter",
+},
+{
+  key: "verify",
+  label: "Doğrula",
+  href: "/verify",
+  items: [
+    { label: "Sertifika Doğrula", href: "/verify" },
+    { label: "Kayıt Sistemi", href: "/registry" },
+    { label: "Sertifika", href: "/verify" },
+    { label: "Kartlar", href: "/cards" },
+  ],
+},
         {
           key: "contact",
           label: "İletişim",
           href: "/contact",
           items: [
-            { label: "İletişim Sayfası", href: "/contact", desc: "Doğrudan iletişim" },
+            { label: "İletişim Sayfası", href: "/contact" },
             {
               label: "WhatsApp",
               href: waLink("Merhaba, eğitim hakkında bilgi almak istiyorum."),
-              desc: "Hızlı başvuru ve bilgi alma",
               external: true,
             },
           ],
@@ -168,10 +169,10 @@ export default function SiteHeader() {
         label: "Home",
         href: "/",
         items: [
-          { label: "Homepage", href: "/", desc: "Main brand entrance" },
-          { label: "Programs Section", href: "/#programlar", desc: "Jump to training programs" },
-          { label: "Education Modules", href: "/#egitim", desc: "Explore the education system" },
-          { label: "Charter Section", href: "/#charter", desc: "Premium experience layer" },
+          { label: "Homepage", href: "/" },
+          { label: "Programs Section", href: "/#programlar" },
+          { label: "Education Modules", href: "/#egitim" },
+          { label: "Charter Section", href: "/#charter" },
         ],
       },
       {
@@ -182,49 +183,49 @@ export default function SiteHeader() {
           {
             title: "Core Seamanship",
             items: [
-              { label: "Safety", href: "/guide/guvenlik", desc: "Core maritime safety and reflex system" },
-              { label: "Anchoring", href: "/guide/demirleme-ve-demir-alma", desc: "Anchoring operations and control" },
-              { label: "Marina Entry / Exit", href: "/guide/marina-giris-cikis-usulleri", desc: "Marina approach and procedures" },
-              { label: "Boat Handling", href: "/guide/tekne-hakimiyeti", desc: "Control and maneuver discipline" },
+              { label: "Safety", href: "/guide/guvenlik" },
+              { label: "Anchoring", href: "/guide/demirleme-ve-demir-alma" },
+              { label: "Marina Entry / Exit", href: "/guide/marina-giris-cikis-usulleri" },
+              { label: "Boat Handling", href: "/guide/tekne-hakimiyeti" },
             ],
           },
           {
-  title: "Navigation",
-  items: [
-    { label: "Navigation", href: "/guide/navigasyon", desc: "The backbone of seamanship thinking" },
-    { label: "Route Planning", href: "/guide/rota-planlama", desc: "Route logic and decisions" },
-    { label: "Paper Chart Navigation", href: "/guide/paper-chart-navigation", desc: "Navigation with paper charts" },
-    { label: "Almanac", href: "/guide/almanac", desc: "Astronomical navigation data and time logic" },
-    { label: "Sextant", href: "/guide/sextant", desc: "Classical maritime instrument" },
-    { label: "What is Sextant?", href: "/guide/sextant-nedir", desc: "Sextant logic and basics" },
-  ],
-},
+            title: "Navigation",
+            items: [
+              { label: "Navigation", href: "/guide/navigasyon" },
+              { label: "Route Planning", href: "/guide/rota-planlama" },
+              { label: "Paper Chart Navigation", href: "/guide/paper-chart-navigation" },
+              { label: "Almanac", href: "/guide/almanac" },
+              { label: "Sextant", href: "/guide/sextant" },
+              { label: "What is Sextant?", href: "/guide/sextant-nedir" },
+            ],
+          },
           {
             title: "Traffic & Rules",
             items: [
-              { label: "COLREG", href: "/guide/colreg", desc: "Collision prevention rules" },
-              { label: "Collision Prevention", href: "/guide/denizde-catisma-onleme", desc: "Reading and preventing collision risk" },
-              { label: "AIS / VTS", href: "/guide/ais-ve-vts", desc: "Traffic awareness and system reading" },
-              { label: "What is AIS / VTS?", href: "/guide/ais-ve-vts-nedir", desc: "AIS and VTS basics" },
-              { label: "What is TSS?", href: "/guide/tss-nedir", desc: "Traffic separation scheme logic" },
+              { label: "COLREG", href: "/guide/colreg" },
+              { label: "Collision Prevention", href: "/guide/denizde-catisma-onleme" },
+              { label: "AIS / VTS", href: "/guide/ais-ve-vts" },
+              { label: "What is AIS / VTS?", href: "/guide/ais-ve-vts-nedir" },
+              { label: "What is TSS?", href: "/guide/tss-nedir" },
             ],
           },
           {
-  title: "Weather & Sailing",
-  items: [
-    { label: "Meteorology at Sea", href: "/guide/denizde-meteoroloji", desc: "Weather reading and decision support" },
-    { label: "Night Lights", href: "/guide/gece-seyri-fenerleri", desc: "Night visibility and lights" },
-    { label: "Signals", href: "/guide/signals", desc: "Signals training module" },
-    { label: "Wind Engine", href: "/guide/wind-engine", desc: "Wind system training engine" },
-    { label: "How Sails Work", href: "/guide/yelkenin-calisma-prensibi", desc: "Wind effect on sails and force generation" },
-  ],
-},
+            title: "Weather & Sailing",
+            items: [
+              { label: "Meteorology at Sea", href: "/guide/denizde-meteoroloji" },
+              { label: "Night Lights", href: "/guide/gece-seyri-fenerleri" },
+              { label: "Signals", href: "/guide/signals" },
+              { label: "Wind Engine", href: "/guide/wind-engine" },
+              { label: "How Sails Work", href: "/guide/yelkenin-calisma-prensibi" },
+            ],
+          },
           {
             title: "Advanced & Career",
             items: [
-              { label: "How to Become a Yacht Captain", href: "/guide/yat-kaptani-nasil-olunur", desc: "Captaincy roadmap" },
-              { label: "Emergency at Sea", href: "/guide/denizde-acil-durumlar", desc: "Crisis management priorities" },
-              { label: "Anchored Alcohol", href: "/guide/anchored-alcohol", desc: "Legal context at anchor" },
+              { label: "How to Become a Yacht Captain", href: "/guide/yat-kaptani-nasil-olunur" },
+              { label: "Emergency at Sea", href: "/guide/denizde-acil-durumlar" },
+              { label: "Anchored Alcohol", href: "/guide/anchored-alcohol" },
             ],
           },
         ],
@@ -234,20 +235,26 @@ export default function SiteHeader() {
         label: "Programs",
         href: "/programs",
         items: [
-          { label: "All Programs", href: "/programs", desc: "See the full training path" },
-          { label: "Basic Sailing", href: "/programs/basic-sailing", desc: "Fundamentals and safety" },
-          { label: "Coastal Skipper", href: "/programs/coastal-skipper", desc: "Coastal command transition" },
-          { label: "Offshore Yacht Course", href: "/programs/offshore-yacht-course", desc: "Open-sea discipline" },
+          { label: "All Programs", href: "/programs" },
+          { label: "Basic Sailing", href: "/programs/basic-sailing" },
+          { label: "Coastal Skipper", href: "/programs/coastal-skipper" },
+          { label: "Offshore Yacht Course", href: "/programs/offshore-yacht-course" },
         ],
+      },
+      {
+        key: "about",
+        label: "Instructor",
+        href: "/about",
+        items: [{ label: "About the Instructor", href: "/about" }],
       },
       {
         key: "charter",
         label: "Charter",
         href: "/charter",
         items: [
-          { label: "Charter Page", href: "/charter", desc: "Boats and route experience" },
-          { label: "Boat Charter", href: "/charter", desc: "Premium charter options" },
-          { label: "Charter Admin", href: "/charter-admin", desc: "Operations area" },
+          { label: "Charter Page", href: "/charter" },
+          { label: "Boat Charter", href: "/charter" },
+          { label: "Charter Admin", href: "/charter-admin" },
         ],
       },
       {
@@ -255,10 +262,10 @@ export default function SiteHeader() {
         label: "Verify",
         href: "/verify",
         items: [
-          { label: "Verify Certificate", href: "/verify", desc: "QR / registry verification" },
-          { label: "Registry", href: "/registry", desc: "Official records" },
-          { label: "Certificate", href: "/certificate", desc: "Certificate area" },
-          { label: "Cards", href: "/cards", desc: "Cards and document access" },
+          { label: "Verify Certificate", href: "/verify" },
+          { label: "Registry", href: "/registry" },
+          { label: "Certificate", href: "/certificate" },
+          { label: "Cards", href: "/cards" },
         ],
       },
       {
@@ -266,11 +273,10 @@ export default function SiteHeader() {
         label: "Contact",
         href: "/contact",
         items: [
-          { label: "Contact Page", href: "/contact", desc: "Direct communication" },
+          { label: "Contact Page", href: "/contact" },
           {
             label: "WhatsApp",
             href: waLink("Hello, I would like information about the training."),
-            desc: "Fast application and contact",
             external: true,
           },
         ],
@@ -480,7 +486,8 @@ export default function SiteHeader() {
                   {group.label}
                 </Link>
 
-                {(group.items?.length || group.sections?.length) && openMenu === group.key ? (
+                {(group.items?.length || group.sections?.length) &&
+                openMenu === group.key ? (
                   <div
                     style={{
                       position: "absolute",
@@ -536,7 +543,7 @@ export default function SiteHeader() {
                                   className="dropdown-item-card"
                                   style={{
                                     borderRadius: 14,
-                                    padding: "10px 12px",
+                                    padding: "12px 14px",
                                   }}
                                 >
                                   <div
@@ -550,19 +557,6 @@ export default function SiteHeader() {
                                   >
                                     {item.label}
                                   </div>
-
-                                  {item.desc ? (
-                                    <div
-                                      style={{
-                                        marginTop: 4,
-                                        color: "rgba(226,232,240,0.66)",
-                                        fontSize: 12,
-                                        lineHeight: 1.55,
-                                      }}
-                                    >
-                                      {item.desc}
-                                    </div>
-                                  ) : null}
                                 </div>
                               );
 
@@ -572,7 +566,10 @@ export default function SiteHeader() {
                                   href={item.href}
                                   target="_blank"
                                   rel="noreferrer"
-                                  style={{ textDecoration: "none", display: "block" }}
+                                  style={{
+                                    textDecoration: "none",
+                                    display: "block",
+                                  }}
                                 >
                                   {content}
                                 </a>
@@ -580,7 +577,10 @@ export default function SiteHeader() {
                                 <Link
                                   key={item.label}
                                   href={item.href}
-                                  style={{ textDecoration: "none", display: "block" }}
+                                  style={{
+                                    textDecoration: "none",
+                                    display: "block",
+                                  }}
                                 >
                                   {content}
                                 </Link>
@@ -611,19 +611,6 @@ export default function SiteHeader() {
                               >
                                 {item.label}
                               </div>
-
-                              {item.desc ? (
-                                <div
-                                  style={{
-                                    marginTop: 4,
-                                    color: "rgba(226,232,240,0.66)",
-                                    fontSize: 12,
-                                    lineHeight: 1.6,
-                                  }}
-                                >
-                                  {item.desc}
-                                </div>
-                              ) : null}
                             </div>
                           );
 

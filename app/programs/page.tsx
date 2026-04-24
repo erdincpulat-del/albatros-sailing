@@ -1,57 +1,145 @@
 "use client";
+
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageProvider";
 
-const programs = [
-  {
-  slug: "hisaronu-gulf-training",
-  title: "Hisarönü Körfezi Eğitimi",
+export default function ProgramsPage() {
+  const { locale } = useLanguage();
+
+  const content =
+    locale === "tr"
+      ? {
+          heroBadge: "ALBATROS SAILING · EĞİTİM PROGRAMLARI",
+          heroTitle1: "Albatros Sailing",
+          heroTitle2: "Eğitim Programları",
+          heroDescription:
+            "Denizde güven, disiplin, liderlik ve gerçek tecrübe kazandıran sistemli eğitim programları. Başlangıç seviyesinden açık deniz kaptanlığına uzanan yapılandırılmış gelişim hattı.",
+          sectionBadge: "YAPILANDIRILMIŞ GELİŞİM",
+          sectionTitle: "Doğru program, doğru seviyede başlar.",
+          sectionDescription:
+            "Her program bir sonrakine hazırlık oluşturur. Amaç yalnızca eğitim vermek değil; kontrollü şekilde denizde daha güçlü karar veren kaptanlık yapısı kurmaktır.",
+          detailButton: "Detayı Gör",
+          featured: "Öne Çıkan",
+          programs: [
+            {
+              slug: "hisaronu-gulf-training",
+              title: "Hisarönü Körfezi Eğitimi",
+              duration: "7 Gün",
+              level: "İleri Seviye",
+              description:
+                "Gerçek denizde, rota planlama, demirleme, gece seyri ve ekip koordinasyonu ile yoğun eğitim deneyimi.",
+              highlight: "Gerçek deniz deneyimi",
+            },
+            {
+              slug: "basic-sailing",
+              title: "Başlangıç Yelken Eğitimi",
+              duration: "7 Gün",
+              level: "Başlangıç",
+              description:
+                "Denizle ilk tanışma, temel yelken bilgisi, güvenlik ve başlangıç seviyesinde uygulamalı eğitim.",
+              highlight: "Doğru başlangıç zemini",
+            },
+            {
+              slug: "coastal-skipper",
+              title: "Coastal Skipper Programı",
+              duration: "7 Gün",
+              level: "Orta Seviye",
+              description:
+                "Kıyı seyri, liman manevraları, rota takibi ve kaptanlık disiplinine güçlü bir geçiş programı.",
+              highlight: "Komutaya geçiş seviyesi",
+            },
+            {
+              slug: "offshore-yacht-course",
+              title: "Offshore Yacht Course",
+              duration: "7 Gün",
+              level: "İleri Seviye",
+              description:
+                "Açık deniz, gece seyri, vardiya yönetimi, trafik okuma ve gerçek karar verme becerileri üzerine yoğun eğitim.",
+              highlight: "Gerçek açık deniz disiplini",
+            },
+            {
+              slug: "yachtmaster",
+              title: "Yachtmaster Track",
+              duration: "İleri Hat",
+              level: "Üst Seviye",
+              description:
+                "Daha yüksek sorumluluk, liderlik, ileri seviye komuta yaklaşımı ve profesyonel denizcilik çizgisine geçiş.",
+              highlight: "Üst düzey kaptanlık yolu",
+            },
+            {
+  slug: "offshore-route-discipline",
+  title: "Offshore Route Discipline",
   duration: "7 Gün",
   level: "İleri Seviye",
   description:
-    "Gerçek denizde, rota planlama, demirleme, gece seyri ve ekip koordinasyonu ile yoğun eğitim deneyimi.",
-  highlight: "Gerçek deniz deneyimi",
+    "Bodrum – İstanbul – Çanakkale rotalarında TSS (Traffic Separation Scheme), VTS iletişimi ve gece seyri disiplinlerini kapsayan ileri seviye uygulamalı eğitim.",
+  highlight: "Gerçek rota üzerinde deniz disiplini",
 },
-  {
-    slug: "basic-sailing",
-    title: "Başlangıç Yelken Eğitimi",
-    duration: "2 Gün",
-    level: "Başlangıç",
-    description:
-      "Denizle ilk tanışma, temel yelken bilgisi, güvenlik ve başlangıç seviyesinde uygulamalı eğitim.",
-    highlight: "Doğru başlangıç zemini",
-  },
-  {
-    slug: "coastal-skipper",
-    title: "Coastal Skipper Programı",
-    duration: "4 Gün",
-    level: "Orta Seviye",
-    description:
-      "Kıyı seyri, liman manevraları, rota takibi ve kaptanlık disiplinine güçlü bir geçiş programı.",
-    highlight: "Komutaya geçiş seviyesi",
-  },
-  {
-    slug: "offshore-yacht-course",
-    title: "Offshore Yacht Course",
-    duration: "6 Gün",
-    level: "İleri Seviye",
-    description:
-      "Açık deniz, gece seyri, vardiya yönetimi, trafik okuma ve gerçek karar verme becerileri üzerine yoğun eğitim.",
-    highlight: "Gerçek açık deniz disiplini",
-  },
-  {
-    slug: "yachtmaster",
-    title: "Yachtmaster Track",
-    duration: "İleri Hat",
-    level: "Üst Seviye",
-    description:
-      "Daha yüksek sorumluluk, liderlik, ileri seviye komuta yaklaşımı ve profesyonel denizcilik çizgisine geçiş.",
-    highlight: "Üst düzey kaptanlık yolu",
-  },
-];
+          ],
+        }
+      : {
+          heroBadge: "ALBATROS SAILING · TRAINING PROGRAMS",
+          heroTitle1: "Albatros Sailing",
+          heroTitle2: "Training Programs",
+          heroDescription:
+            "Structured training programs that build safety, discipline, leadership, and real sea experience. A progressive path from entry level to open-sea captaincy.",
+          sectionBadge: "STRUCTURED DEVELOPMENT",
+          sectionTitle: "The right program starts at the right level.",
+          sectionDescription:
+            "Each program prepares you for the next stage. The goal is not only to teach, but to build a captaincy structure that makes stronger decisions at sea in a controlled progression.",
+          detailButton: "View Details",
+          featured: "Featured",
+          programs: [
+            {
+              slug: "hisaronu-gulf-training",
+              title: "Hisarönü Gulf Training",
+              duration: "7 Days",
+              level: "Advanced",
+              description:
+                "An intensive training experience at sea with route planning, anchoring, night sailing, and crew coordination.",
+              highlight: "Real sea experience",
+            },
+            {
+              slug: "basic-sailing",
+              title: "Basic Sailing Training",
+              duration: "2 Days",
+              level: "Beginner",
+              description:
+                "First contact with the sea, core sailing knowledge, safety, and hands-on entry-level training.",
+              highlight: "The right foundation",
+            },
+            {
+              slug: "coastal-skipper",
+              title: "Coastal Skipper Program",
+              duration: "4 Days",
+              level: "Intermediate",
+              description:
+                "A strong transition into coastal sailing, harbor maneuvers, route tracking, and captaincy discipline.",
+              highlight: "Command transition level",
+            },
+            {
+              slug: "offshore-yacht-course",
+              title: "Offshore Yacht Course",
+              duration: "6 Days",
+              level: "Advanced",
+              description:
+                "Intensive training focused on open sea, night sailing, watchkeeping, traffic awareness, and real decision-making ability.",
+              highlight: "Real open-sea discipline",
+            },
+            {
+              slug: "yachtmaster",
+              title: "Yachtmaster Track",
+              duration: "Advanced Track",
+              level: "Upper Level",
+              description:
+                "A route toward higher responsibility, leadership, advanced command approach, and professional seamanship.",
+              highlight: "Top-level captaincy path",
+            },
+          ],
+        };
 
-export default function ProgramsPage() {
   return (
     <>
       <SiteHeader />
@@ -106,7 +194,7 @@ export default function ProgramsPage() {
                 color: "#aee8ff",
               }}
             >
-              ALBATROS SAILING · TRAINING PROGRAMS
+              {content.heroBadge}
             </div>
 
             <h1
@@ -119,9 +207,9 @@ export default function ProgramsPage() {
                 color: "#f8fafc",
               }}
             >
-              Albatros Sailing
+              {content.heroTitle1}
               <br />
-              Eğitim Programları
+              {content.heroTitle2}
             </h1>
 
             <p
@@ -133,13 +221,12 @@ export default function ProgramsPage() {
                 color: "rgba(226,232,240,0.82)",
               }}
             >
-              Denizde güven, disiplin, liderlik ve gerçek tecrübe kazandıran
-              sistemli eğitim programları. Başlangıç seviyesinden açık deniz
-              kaptanlığına uzanan yapılandırılmış gelişim hattı.
+              {content.heroDescription}
             </p>
           </div>
         </section>
-                <section
+
+        <section
           style={{
             padding: "80px 20px 36px",
           }}
@@ -165,7 +252,7 @@ export default function ProgramsPage() {
                   marginBottom: "10px",
                 }}
               >
-                STRUCTURED DEVELOPMENT
+                {content.sectionBadge}
               </div>
 
               <h2
@@ -177,7 +264,7 @@ export default function ProgramsPage() {
                   color: "#f8fafc",
                 }}
               >
-                Doğru program, doğru seviyede başlar.
+                {content.sectionTitle}
               </h2>
 
               <p
@@ -188,9 +275,7 @@ export default function ProgramsPage() {
                   color: "rgba(226,232,240,0.78)",
                 }}
               >
-                Her program bir sonrakine hazırlık oluşturur. Amaç yalnızca
-                eğitim vermek değil; kontrollü şekilde denizde daha güçlü karar
-                veren kaptanlık yapısı kurmaktır.
+                {content.sectionDescription}
               </p>
             </div>
           </div>
@@ -210,7 +295,7 @@ export default function ProgramsPage() {
               gap: "24px",
             }}
           >
-            {programs.map((program) => (
+            {content.programs.map((program) => (
               <article
                 key={program.slug}
                 className="group"
@@ -231,7 +316,6 @@ export default function ProgramsPage() {
                     "transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease",
                 }}
               >
-                {/* normal glow */}
                 <div
                   style={{
                     position: "absolute",
@@ -241,7 +325,7 @@ export default function ProgramsPage() {
                     pointerEvents: "none",
                   }}
                 />
-                                {/* hover glow */}
+
                 <div
                   className="opacity-0 group-hover:opacity-100"
                   style={{
@@ -255,7 +339,6 @@ export default function ProgramsPage() {
                   }}
                 />
 
-                {/* border light */}
                 <div
                   className="opacity-0 group-hover:opacity-100"
                   style={{
@@ -354,7 +437,8 @@ export default function ProgramsPage() {
                     {program.description}
                   </p>
                 </div>
-                                <div
+
+                <div
                   style={{
                     position: "relative",
                     zIndex: 2,
@@ -399,7 +483,7 @@ export default function ProgramsPage() {
                       }}
                     />
                     <span style={{ position: "relative", zIndex: 2 }}>
-                      Detayı Gör
+                      {content.detailButton}
                     </span>
                   </Link>
 
@@ -417,7 +501,7 @@ export default function ProgramsPage() {
                         border: "1px solid rgba(103,211,255,0.18)",
                       }}
                     >
-                      Featured
+                      {content.featured}
                     </span>
                   ) : null}
                 </div>
@@ -426,7 +510,8 @@ export default function ProgramsPage() {
           </div>
         </section>
       </main>
-            <SiteFooter />
+
+      <SiteFooter />
     </>
   );
 }

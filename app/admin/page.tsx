@@ -578,6 +578,9 @@ await loadLogs();
 
       <section id="create-certificate-section" style={panelStyle}>
         <h2 style={panelTitleStyle}>Create Certificate</h2>
+<p style={{ marginTop: 8, color: "rgba(226,232,240,0.58)", lineHeight: 1.6 }}>
+  Öğrenci bilgilerini, eğitmen eşleşmesini ve sertifika üretim akışını tek panelden yönetin.
+</p>
 
         <div style={formGridStyle}>
   <div>
@@ -845,6 +848,9 @@ onChange={(e) => setSelectedInstructorId(e.target.value)}
 <section style={panelStyle}>
         <div style={sectionHeaderStyle}>
           <h2 style={panelTitleStyle}>Certificates</h2>
+<p style={{ margin: "8px 0 0", color: "rgba(226,232,240,0.58)", lineHeight: 1.6 }}>
+  Kayıtlı sertifikaları inceleyin, kart ön/arka yüzlerini açın, doğrulama bağlantılarını yönetin ve durum değiştirin.
+</p>
           <div style={sectionMetaTextStyle}>
             {counts.filtered} kayıt gösteriliyor
           </div>
@@ -1196,60 +1202,75 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 const pageStyle: CSSProperties = {
-  maxWidth: 1200,
+  maxWidth: 1320,
   margin: "0 auto",
-  padding: 24,
-  fontFamily: "Arial, sans-serif",
+  padding: "28px 24px 56px",
+  fontFamily:
+    'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   background:
-    "radial-gradient(circle at top, #12253f 0%, #0b1220 38%, #070c14 100%)",
+    "radial-gradient(circle at top, rgba(56,189,248,0.11) 0%, transparent 24%), linear-gradient(180deg, #07101d 0%, #0a1426 38%, #09111d 100%)",
   minHeight: "100vh",
-  color: "#e2e8f0",
+  color: "#e8f1ff",
 };
 
 const heroSectionStyle: CSSProperties = {
-  border: "1px solid rgba(148,163,184,0.18)",
-  borderRadius: 24,
-  padding: 24,
+  border: "1px solid rgba(148,163,184,0.16)",
+  borderRadius: 28,
+  padding: 28,
   marginBottom: 28,
-  background: "linear-gradient(135deg, #0b2742 0%, #102f52 55%, #143d69 100%)",
-  color: "#fff",
-  boxShadow: "0 20px 50px rgba(0,0,0,0.25)",
+  background:
+    "linear-gradient(180deg, rgba(14,25,45,0.92) 0%, rgba(10,21,39,0.94) 100%)",
+  boxShadow:
+    "0 30px 80px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.04)",
+  backdropFilter: "blur(14px)",
 };
 
 const heroTopStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "flex-start",
-  gap: 16,
+  gap: 18,
   flexWrap: "wrap",
-  marginBottom: 18,
+  marginBottom: 22,
 };
 
 const heroEyebrowStyle: CSSProperties = {
-  fontSize: 12,
-  fontWeight: 700,
-  letterSpacing: 1.3,
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "8px 14px",
+  borderRadius: 999,
+  border: "1px solid rgba(125,211,252,0.22)",
+  background: "rgba(56,189,248,0.10)",
+  color: "#bff4ff",
+  fontSize: 11,
+  fontWeight: 800,
+  letterSpacing: 1.8,
   textTransform: "uppercase",
-  color: "#cbd5e1",
-  marginBottom: 8,
+  marginBottom: 14,
+  boxShadow: "0 0 24px rgba(56,189,248,0.08)",
 };
 
 const heroTitleStyle: CSSProperties = {
   margin: 0,
-  fontSize: 30,
-  lineHeight: 1.1,
+  fontSize: 42,
+  lineHeight: 1.02,
+  letterSpacing: -1.4,
+  fontWeight: 900,
+  color: "#f8fbff",
+  textShadow: "0 10px 40px rgba(0,0,0,0.28)",
 };
 
 const heroTextStyle: CSSProperties = {
-  margin: "10px 0 0",
-  color: "#dbe7f3",
-  maxWidth: 720,
-  lineHeight: 1.6,
+  margin: "14px 0 0",
+  color: "rgba(226,232,240,0.78)",
+  maxWidth: 760,
+  lineHeight: 1.7,
+  fontSize: 15,
 };
 
 const heroStatsWrapStyle: CSSProperties = {
   display: "flex",
-  gap: 10,
+  gap: 12,
   flexWrap: "wrap",
 };
 
@@ -1260,25 +1281,29 @@ const heroButtonsRowStyle: CSSProperties = {
 };
 
 const panelStyle: CSSProperties = {
-  border: "1px solid rgba(148,163,184,0.16)",
-  borderRadius: 20,
-  padding: 20,
-  marginBottom: 24,
-  background: "rgba(15,23,42,0.88)",
-  backdropFilter: "blur(6px)",
-  boxShadow: "0 18px 40px rgba(0,0,0,0.18)",
+  border: "1px solid rgba(148,163,184,0.14)",
+  borderRadius: 28,
+  padding: 24,
+  marginBottom: 26,
+  background:
+    "linear-gradient(180deg, rgba(15,23,42,0.84) 0%, rgba(10,18,34,0.90) 100%)",
+  backdropFilter: "blur(16px)",
+  boxShadow:
+    "0 28px 80px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.04)",
 };
 
 const panelTitleStyle: CSSProperties = {
   margin: 0,
-  color: "#f8fafc",
-  fontSize: 22,
+  color: "#f8fbff",
+  fontSize: 28,
+  fontWeight: 850,
+  letterSpacing: -0.6,
 };
 
 const formGridStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-  gap: 16,
+  gap: 18,
 };
 
 const filtersGridStyle: CSSProperties = {
@@ -1289,7 +1314,7 @@ const filtersGridStyle: CSSProperties = {
 };
 
 const summaryWrapStyle: CSSProperties = {
-  marginTop: 18,
+  marginTop: 20,
   display: "flex",
   gap: 12,
   flexWrap: "wrap",
@@ -1299,21 +1324,23 @@ const sectionHeaderStyle: CSSProperties = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  gap: 12,
+  gap: 14,
   flexWrap: "wrap",
-  marginBottom: 16,
+  marginBottom: 18,
 };
 
 const sectionMetaTextStyle: CSSProperties = {
-  color: "#94a3b8",
+  color: "rgba(226,232,240,0.60)",
   fontSize: 14,
 };
 
 const logCardStyle: CSSProperties = {
-  border: "1px solid rgba(148,163,184,0.14)",
-  borderRadius: 14,
-  padding: 14,
-  background: "rgba(30,41,59,0.6)",
+  border: "1px solid rgba(148,163,184,0.12)",
+  borderRadius: 18,
+  padding: 16,
+  background:
+    "linear-gradient(180deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.03) 100%)",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.16)",
 };
 
 const logTopStyle: CSSProperties = {
@@ -1321,32 +1348,35 @@ const logTopStyle: CSSProperties = {
   justifyContent: "space-between",
   gap: 12,
   flexWrap: "wrap",
-  marginBottom: 8,
+  marginBottom: 10,
 };
 
 const logTimeStyle: CSSProperties = {
-  color: "#94a3b8",
+  color: "rgba(226,232,240,0.52)",
   fontSize: 13,
 };
 
 const logContentStyle: CSSProperties = {
   fontSize: 14,
-  color: "#cbd5e1",
-  lineHeight: 1.6,
+  color: "#d9e6f5",
+  lineHeight: 1.65,
 };
 
 const certificateCardStyle: CSSProperties = {
-  border: "1px solid rgba(148,163,184,0.16)",
-  borderRadius: 20,
-  padding: 20,
-  background: "rgba(15,23,42,0.9)",
-  boxShadow: "0 18px 40px rgba(0,0,0,0.18)",
+  border: "1px solid rgba(148,163,184,0.14)",
+  borderRadius: 28,
+  padding: 22,
+  background:
+    "linear-gradient(180deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.03) 100%)",
+  boxShadow:
+    "0 24px 60px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.035)",
+  backdropFilter: "blur(12px)",
 };
 
 const certificateTopStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "1fr auto",
-  gap: 16,
+  gap: 18,
   alignItems: "start",
 };
 
@@ -1355,13 +1385,15 @@ const badgesRowStyle: CSSProperties = {
   gap: 12,
   flexWrap: "wrap",
   alignItems: "center",
-  marginBottom: 14,
+  marginBottom: 16,
 };
 
 const cardTitleStyle: CSSProperties = {
   margin: 0,
-  color: "#f8fafc",
-  fontSize: 22,
+  color: "#ffffff",
+  fontSize: 24,
+  fontWeight: 850,
+  letterSpacing: -0.5,
 };
 
 const detailsGridStyle: CSSProperties = {
@@ -1371,17 +1403,18 @@ const detailsGridStyle: CSSProperties = {
 };
 
 const detailBoxStyle: CSSProperties = {
-  border: "1px solid rgba(148,163,184,0.12)",
-  borderRadius: 12,
-  padding: "12px 14px",
-  background: "rgba(30,41,59,0.55)",
+  border: "1px solid rgba(148,163,184,0.11)",
+  borderRadius: 18,
+  padding: "14px 16px",
+  background:
+    "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.022) 100%)",
 };
 
 const detailLabelStyle: CSSProperties = {
-  fontSize: 11,
-  fontWeight: 700,
-  color: "#94a3b8",
-  letterSpacing: 1,
+  fontSize: 10,
+  fontWeight: 800,
+  color: "rgba(191,219,254,0.62)",
+  letterSpacing: 1.6,
   textTransform: "uppercase",
   marginBottom: 8,
 };
@@ -1389,156 +1422,171 @@ const detailLabelStyle: CSSProperties = {
 const detailValueStyle: CSSProperties = {
   fontSize: 14,
   fontWeight: 700,
-  color: "#e2e8f0",
-  lineHeight: 1.5,
+  color: "#edf5ff",
+  lineHeight: 1.55,
   wordBreak: "break-word",
 };
 
 const buttonsWrapStyle: CSSProperties = {
-  marginTop: 18,
+  marginTop: 20,
   display: "flex",
   gap: 12,
   flexWrap: "wrap",
 };
 
 const previewGridStyle: CSSProperties = {
-  marginTop: 20,
+  marginTop: 22,
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
   gap: 18,
 };
 
 const photoStyle: CSSProperties = {
-  width: 120,
-  height: 150,
+  width: 126,
+  height: 156,
   objectFit: "cover",
-  borderRadius: 12,
+  borderRadius: 18,
   border: "1px solid rgba(148,163,184,0.18)",
-  background: "#0f172a",
+  background: "#0b1220",
+  boxShadow: "0 16px 30px rgba(0,0,0,0.20)",
 };
 
 const topStatusCardStyle: CSSProperties = {
-  minWidth: 110,
-  padding: "12px 14px",
-  borderRadius: 14,
-  background: "rgba(255,255,255,0.08)",
-  border: "1px solid rgba(255,255,255,0.12)",
+  minWidth: 120,
+  padding: "14px 16px",
+  borderRadius: 18,
+  background:
+    "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.04) 100%)",
+  border: "1px solid rgba(255,255,255,0.10)",
+  boxShadow: "0 10px 28px rgba(0,0,0,0.16)",
 };
 
 const topStatusLabelStyle: CSSProperties = {
-  fontSize: 11,
-  color: "#cbd5e1",
+  fontSize: 10,
+  color: "rgba(226,232,240,0.72)",
   textTransform: "uppercase",
-  letterSpacing: 1,
-  marginBottom: 6,
-  fontWeight: 700,
+  letterSpacing: 1.8,
+  marginBottom: 8,
+  fontWeight: 800,
 };
 
 const topStatusValueStyle: CSSProperties = {
-  fontSize: 16,
+  fontSize: 18,
   color: "#ffffff",
-  fontWeight: 700,
+  fontWeight: 800,
 };
 
 const summaryBadgeStyle: CSSProperties = {
   padding: "10px 14px",
-  borderRadius: 12,
-  background: "rgba(30,41,59,0.7)",
-  border: "1px solid rgba(148,163,184,0.16)",
+  borderRadius: 14,
+  background: "rgba(255,255,255,0.045)",
+  border: "1px solid rgba(148,163,184,0.14)",
   fontSize: 14,
-  color: "#e2e8f0",
+  color: "#e8f1ff",
 };
 
 const labelStyle: CSSProperties = {
   display: "block",
-  marginBottom: 8,
-  fontWeight: 700,
-  fontSize: 14,
-  color: "#cbd5e1",
+  marginBottom: 9,
+  fontWeight: 800,
+  fontSize: 11,
+  color: "rgba(226,232,240,0.72)",
+  letterSpacing: 1.4,
+  textTransform: "uppercase",
 };
 
 const inputStyle: CSSProperties = {
   width: "100%",
-  padding: "12px 14px",
-  borderRadius: 12,
-  border: "1px solid rgba(148,163,184,0.22)",
-  background: "rgba(15,23,42,0.75)",
-  color: "#f8fafc",
+  padding: "14px 16px",
+  borderRadius: 18,
+  border: "1px solid rgba(148,163,184,0.18)",
+  background: "rgba(255,255,255,0.045)",
+  color: "#f8fbff",
   fontSize: 14,
   boxSizing: "border-box",
+  outline: "none",
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03)",
 };
 
 const primaryButtonStyle: CSSProperties = {
-  padding: "12px 16px",
-  borderRadius: 12,
-  border: "none",
-  background: "#0ea5e9",
-  color: "#fff",
+  padding: "13px 18px",
+  borderRadius: 16,
+  border: "1px solid rgba(103,232,249,0.30)",
+  background:
+    "linear-gradient(135deg, rgba(103,232,249,0.95) 0%, rgba(59,130,246,0.92) 100%)",
+  color: "#03111d",
   cursor: "pointer",
-  fontWeight: 700,
+  fontWeight: 800,
+  boxShadow: "0 12px 30px rgba(56,189,248,0.20)",
 };
 
 const secondaryButtonStyle: CSSProperties = {
-  padding: "12px 16px",
-  borderRadius: 12,
+  padding: "13px 18px",
+  borderRadius: 16,
   border: "1px solid rgba(148,163,184,0.18)",
-  background: "rgba(30,41,59,0.7)",
+  background: "rgba(255,255,255,0.045)",
   color: "#f8fafc",
   cursor: "pointer",
   fontWeight: 700,
+  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.025)",
 };
 
 const heroPrimaryButtonStyle: CSSProperties = {
-  padding: "12px 16px",
-  borderRadius: 12,
-  border: "none",
-  background: "#ffffff",
-  color: "#0b2742",
+  padding: "13px 18px",
+  borderRadius: 16,
+  border: "1px solid rgba(103,232,249,0.30)",
+  background:
+    "linear-gradient(135deg, rgba(103,232,249,0.95) 0%, rgba(59,130,246,0.92) 100%)",
+  color: "#03111d",
   cursor: "pointer",
-  fontWeight: 700,
+  fontWeight: 800,
+  boxShadow: "0 12px 30px rgba(56,189,248,0.22)",
 };
 
 const heroSecondaryButtonStyle: CSSProperties = {
-  padding: "12px 16px",
-  borderRadius: 12,
-  border: "1px solid rgba(255,255,255,0.18)",
-  background: "rgba(255,255,255,0.08)",
+  padding: "13px 18px",
+  borderRadius: 16,
+  border: "1px solid rgba(255,255,255,0.14)",
+  background: "rgba(255,255,255,0.05)",
   color: "#ffffff",
   cursor: "pointer",
   fontWeight: 700,
 };
 
 const heroDangerButtonStyle: CSSProperties = {
-  padding: "12px 16px",
-  borderRadius: 12,
-  border: "1px solid rgba(254,202,202,0.28)",
-  background: "rgba(127,29,29,0.25)",
+  padding: "13px 18px",
+  borderRadius: 16,
+  border: "1px solid rgba(254,202,202,0.22)",
+  background: "rgba(127,29,29,0.24)",
   color: "#fecaca",
   cursor: "pointer",
   fontWeight: 700,
 };
 
 const statusActionButtonStyle: CSSProperties = {
-  padding: "12px 16px",
-  borderRadius: 12,
+  padding: "13px 18px",
+  borderRadius: 16,
   cursor: "pointer",
-  fontWeight: 700,
+  fontWeight: 800,
   background: "transparent",
+  boxShadow: "none",
 };
 
 const previewTitleStyle: CSSProperties = {
-  marginBottom: 8,
-  fontWeight: 700,
-  fontSize: 14,
-  color: "#e2e8f0",
+  marginBottom: 10,
+  fontWeight: 800,
+  fontSize: 13,
+  color: "#ecf6ff",
+  letterSpacing: 0.3,
 };
 
 const previewBoxStyle: CSSProperties = {
-  border: "1px solid rgba(148,163,184,0.16)",
-  borderRadius: 12,
-  padding: 10,
-  background: "rgba(15,23,42,0.72)",
-  minHeight: 180,
+  border: "1px solid rgba(148,163,184,0.14)",
+  borderRadius: 18,
+  padding: 12,
+  background:
+    "linear-gradient(180deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.02) 100%)",
+  minHeight: 190,
   display: "grid",
   placeItems: "center",
 };
@@ -1547,15 +1595,15 @@ const previewImageStyle: CSSProperties = {
   width: "100%",
   height: "auto",
   objectFit: "contain",
-  borderRadius: 8,
+  borderRadius: 12,
 };
 
 const emptyPreviewStyle: CSSProperties = {
-  color: "#94a3b8",
+  color: "rgba(226,232,240,0.46)",
   fontSize: 14,
 };
 
 const emptyTextStyle: CSSProperties = {
   margin: 0,
-  color: "#94a3b8",
+  color: "rgba(226,232,240,0.52)",
 };

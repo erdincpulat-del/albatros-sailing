@@ -4,22 +4,33 @@ import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageProvider";
 
 export default function BasicSailingPage() {
-  const { lang } = useLanguage();
+  const { locale } = useLanguage();
 
   const ui = {
-    badge: lang === "tr" ? "Program" : "Program",
-    title: "Basic Sailing",
+    badge: locale === "tr" ? "Program" : "Program",
+    title: locale === "tr" ? "Başlangıç Yelken Eğitimi" : "Basic Sailing",
     subtitle:
-      lang === "tr"
-        ? "Yelkene güçlü ve doğru bir başlangıç yapmak isteyenler için temel eğitim programı."
-        : "A foundational training program for those who want a strong and correct start in sailing.",
+      locale === "tr"
+        ? "Yelkene güçlü ve doğru bir başlangıç yapmak isteyenler için 7 günlük temel eğitim programı."
+        : "A 7-day foundational training program for those who want a strong and correct start in sailing.",
+
+    introNote:
+      locale === "tr"
+        ? "Başlangıç Yelken Eğitimi yalnızca ilk adım değildir. Doğru güvenlik alışkanlıklarını, tekne disiplinini ve denizde temel farkındalığı kuran kritik başlangıç seviyesidir."
+        : "Basic Sailing is not just a first step. It is the critical starting level where correct safety habits, boat discipline, and basic awareness at sea are established.",
 
     realityTitle:
-      lang === "tr"
+      locale === "tr"
         ? "Bu eğitim neyi farklı yapar?"
         : "What makes this training different?",
+
+    realityHeadline:
+      locale === "tr"
+        ? "Doğru başlangıç, geleceği belirler."
+        : "The right start shapes everything that follows.",
+
     realityItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Yelkene sadece teoriyle değil, gerçek uygulama ile giriş sağlar.",
             "Güvenlik, tekne disiplini ve temel görev mantığını birlikte kurar.",
@@ -34,22 +45,31 @@ export default function BasicSailingPage() {
           ],
 
     overviewTitle:
-      lang === "tr" ? "Programın Amacı" : "Program Purpose",
+      locale === "tr" ? "Programın Amacı" : "Program Purpose",
+
+    overviewHeadline:
+      locale === "tr"
+        ? "Temelden sağlam bir başlangıç."
+        : "A strong start from the fundamentals.",
+
     overviewText:
-      lang === "tr"
-        ? "Basic Sailing programı; temel yelken mantığını, güvenlik disiplinini, tekne üzerindeki ana görevleri ve denizde kontrollü hareket etmeyi öğretmek için tasarlanmıştır. Amaç, katılımcıyı yalnızca teorik bilgiyle değil, gerçek uygulama ile sağlam bir başlangıç seviyesine taşımaktır."
+      locale === "tr"
+        ? "Başlangıç Yelken Eğitimi programı; temel yelken mantığını, güvenlik disiplinini, tekne üzerindeki ana görevleri ve denizde kontrollü hareket etmeyi öğretmek için tasarlanmıştır. Amaç, katılımcıyı yalnızca teorik bilgiyle değil, gerçek uygulama ile sağlam bir başlangıç seviyesine taşımaktır."
         : "The Basic Sailing program is designed to teach core sailing logic, safety discipline, primary onboard roles, and controlled movement at sea. The goal is to move the participant to a solid starting level not only through theory, but through real practical experience.",
 
-    systemTitle: lang === "tr" ? "Eğitim sistemi" : "Training system",
+    systemTitle:
+      locale === "tr" ? "Eğitim sistemi" : "Training system",
+
     systemText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu programda güvenlik, temel tekne kullanımı, görev paylaşımı ve denizcilik disiplini birlikte ilerler. Amaç yalnızca yelkene başlamak değil; doğru başlangıç alışkanlıkları oluşturarak gelecekteki tüm seviyeler için sağlam bir yapı kurmaktır."
         : "In this program, safety, basic boat handling, role awareness, and seamanship discipline progress together. The goal is not only to start sailing, but to build correct habits that create a strong base for every future level.",
 
     forWhomTitle:
-      lang === "tr" ? "Kimler İçin Uygun?" : "Who Is It For?",
+      locale === "tr" ? "Kimler İçin Uygun?" : "Who Is It For?",
+
     forWhomItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Yelkene ilk kez başlayacak katılımcılar",
             "Temel güvenlik ve tekne kullanım bilgisi edinmek isteyenler",
@@ -62,17 +82,23 @@ export default function BasicSailingPage() {
           ],
 
     gainsTitle:
-      lang === "tr" ? "Bu Programda Ne Kazanırsınız?" : "What Do You Gain?",
+      locale === "tr" ? "Bu Programda Ne Kazanırsınız?" : "What Do You Gain?",
+
+    gainsHeadline:
+      locale === "tr"
+        ? "Programın temel kazanımları"
+        : "Core outcomes of the program",
+
     gains:
-      lang === "tr"
+      locale === "tr"
         ? [
             {
               title: "Temel denizcilik farkındalığı",
-              text: "Tekne üzerindeki düzen, güvenlik ve temel yelken mantığına giriş.",
+              text: "Tekne üzerindeki düzen, güvenlik ve temel yelken mantığına güçlü bir giriş.",
             },
             {
               title: "Kontrollü uygulama",
-              text: "Gerçek ortamda, temel manevra ve görevleri deneyimleme.",
+              text: "Gerçek ortamda, temel manevra ve görevleri deneyimleme fırsatı.",
             },
             {
               title: "Sonraki seviyeye hazırlık",
@@ -82,11 +108,11 @@ export default function BasicSailingPage() {
         : [
             {
               title: "Fundamental seamanship awareness",
-              text: "An introduction to onboard order, safety, and core sailing logic.",
+              text: "A strong introduction to onboard order, safety, and core sailing logic.",
             },
             {
               title: "Controlled practice",
-              text: "Experience basic maneuvers and onboard tasks in a real environment.",
+              text: "The opportunity to experience basic maneuvers and onboard tasks in a real environment.",
             },
             {
               title: "Preparation for the next level",
@@ -95,26 +121,35 @@ export default function BasicSailingPage() {
           ],
 
     detailsTitle:
-      lang === "tr" ? "Program Detayları" : "Program Details",
+      locale === "tr" ? "Program Detayları" : "Program Details",
+
     details:
-      lang === "tr"
+      locale === "tr"
         ? [
+            ["Süre", "7 Gün"],
             ["Seviye", "Başlangıç"],
-            ["TYF / YES Uyumu", "YY1 / YY2"],
+            ["TYF / YES Uyumu", "YY1"],
             ["Odak", "Temel yelken, güvenlik, tekne disiplini"],
             ["Çıktı", "Güçlü başlangıç ve ileri seviyeye hazırlık"],
           ]
         : [
+            ["Duration", "7 Days"],
             ["Level", "Beginner"],
-            ["TYF / YES Alignment", "YY1 / YY2"],
+            ["TYF / YES Alignment", "YY1"],
             ["Focus", "Basic sailing, safety, boat discipline"],
             ["Outcome", "Strong foundation and readiness for advanced levels"],
           ],
 
     resultTitle:
-      lang === "tr" ? "Program sonunda" : "At the end of the program",
+      locale === "tr" ? "Program sonunda" : "At the end of the program",
+
+    resultHeadline:
+      locale === "tr"
+        ? "Bu program seni nereye taşır?"
+        : "Where does this program take you?",
+
     resultItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Temel seviyede daha bilinçli ve güvenli hareket etme",
             "Tekne üzerindeki rol ve görevleri daha iyi anlama",
@@ -129,20 +164,40 @@ export default function BasicSailingPage() {
           ],
 
     nextTitle:
-      lang === "tr"
-        ? "Sonraki mantıklı adım"
-        : "The logical next step",
+      locale === "tr" ? "Sonraki mantıklı adım" : "The logical next step",
+
+    nextHeadline:
+      locale === "tr"
+        ? "İlerleme rotasını erken kurun."
+        : "Build the progression route early.",
+
     nextText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu programı tamamlayan katılımcılar için en doğal ilerleme rotası Coastal Skipper seviyesidir."
         : "For participants completing this program, the most natural progression route is the Coastal Skipper level.",
 
+    foundationBadge: "REAL STARTING FOUNDATION",
+
+    foundationHeadline:
+      locale === "tr"
+        ? "Yelkene gerçekten doğru başlamak ister misin?"
+        : "Do you want to start sailing the right way?",
+
+    foundationText:
+      locale === "tr"
+        ? "Başlangıç Yelken Eğitimi, seni yalnızca ilk kez tekneye çıkan biri yapmaz. Bu program, güvenlik, disiplin ve temel denizcilik mantığını doğru kurarak seni bir sonraki seviyelere sağlam şekilde hazırlar."
+        : "Basic Sailing does not merely put you on a boat for the first time. It builds safety, discipline, and core seamanship logic correctly, preparing you solidly for the levels ahead.",
+
     ctaPrimary:
-      lang === "tr" ? "Basic Sailing'e Katıl" : "Join Basic Sailing",
+      locale === "tr"
+        ? "Başlangıç Yelken Eğitimine Katıl"
+        : "Join Basic Sailing",
+
     ctaSecondary:
-      lang === "tr" ? "Tüm Programları Gör" : "View All Programs",
+      locale === "tr" ? "Tüm Programları Gör" : "View All Programs",
+
     nextProgram:
-      lang === "tr"
+      locale === "tr"
         ? "Coastal Skipper'a Geç"
         : "Continue to Coastal Skipper",
   };
@@ -234,9 +289,7 @@ export default function BasicSailingPage() {
                 maxWidth: 700,
               }}
             >
-              {lang === "tr"
-                ? "Basic Sailing, yalnızca ilk adım değildir. Doğru güvenlik alışkanlıklarını, tekne disiplinini ve denizde temel farkındalığı kuran kritik başlangıç seviyesidir."
-                : "Basic Sailing is not just a first step. It is the critical starting level where correct safety habits, boat discipline, and basic awareness at sea are established."}
+              {ui.introNote}
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -283,7 +336,8 @@ export default function BasicSailingPage() {
           </div>
         </div>
       </section>
-            <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
+
+      <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
         <div className="max-w-3xl">
           <p
             style={{
@@ -307,9 +361,7 @@ export default function BasicSailingPage() {
               color: "#f8fafc",
             }}
           >
-            {lang === "tr"
-              ? "Doğru başlangıç, geleceği belirler."
-              : "The right start shapes everything that follows."}
+            {ui.realityHeadline}
           </h2>
         </div>
 
@@ -367,9 +419,7 @@ export default function BasicSailingPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Temelden sağlam bir başlangıç."
-                : "A strong start from the fundamentals."}
+              {ui.overviewHeadline}
             </h2>
 
             <p
@@ -465,7 +515,8 @@ export default function BasicSailingPage() {
           </div>
         </div>
       </section>
-            <section
+
+      <section
         style={{
           borderTop: "1px solid rgba(255,255,255,0.06)",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -497,9 +548,7 @@ export default function BasicSailingPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Programın temel kazanımları"
-                : "Core outcomes of the program"}
+              {ui.gainsHeadline}
             </h2>
           </div>
 
@@ -606,7 +655,8 @@ export default function BasicSailingPage() {
                 ))}
               </div>
             </div>
-                        <div
+
+            <div
               className="card-hover"
               style={{
                 borderRadius: "1.75rem",
@@ -638,9 +688,7 @@ export default function BasicSailingPage() {
                   color: "#f8fafc",
                 }}
               >
-                {lang === "tr"
-                  ? "İlerleme rotasını erken kurun."
-                  : "Build the progression route early."}
+                {ui.nextHeadline}
               </h3>
 
               <p
@@ -714,7 +762,8 @@ export default function BasicSailingPage() {
           </div>
         </div>
       </section>
-            <section
+
+      <section
         style={{
           borderTop: "1px solid rgba(255,255,255,0.06)",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -746,9 +795,7 @@ export default function BasicSailingPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Bu program seni nereye taşır?"
-                : "Where does this program take you?"}
+              {ui.resultHeadline}
             </h2>
           </div>
 
@@ -805,9 +852,7 @@ export default function BasicSailingPage() {
                 color: "rgba(226,232,240,0.62)",
               }}
             >
-              {lang === "tr"
-                ? "REAL STARTING FOUNDATION"
-                : "REAL STARTING FOUNDATION"}
+              {ui.foundationBadge}
             </p>
 
             <h2
@@ -820,9 +865,7 @@ export default function BasicSailingPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "Yelkene gerçekten doğru başlamak ister misin?"
-                : "Do you want to start sailing the right way?"}
+              {ui.foundationHeadline}
             </h2>
 
             <p
@@ -833,9 +876,7 @@ export default function BasicSailingPage() {
                 color: "rgba(226,232,240,0.78)",
               }}
             >
-              {lang === "tr"
-                ? "Basic Sailing, seni yalnızca ilk kez tekneye çıkan biri yapmaz. Bu program, güvenlik, disiplin ve temel denizcilik mantığını doğru kurarak seni bir sonraki seviyelere sağlam şekilde hazırlar."
-                : "Basic Sailing does not merely put you on a boat for the first time. It builds safety, discipline, and core seamanship logic correctly, preparing you solidly for the levels ahead."}
+              {ui.foundationText}
             </p>
           </div>
 

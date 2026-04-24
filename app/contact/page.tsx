@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageProvider";
-import { getMessages } from "@/messages";
 
 const WHATSAPP_NUMBER = "905324873813";
 
@@ -12,40 +10,48 @@ function buildWhatsAppUrl(message: string) {
 }
 
 export default function ContactPage() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
 
   const ui = {
-    badge: lang === "tr" ? "İletişim" : "Contact",
+    badge: locale === "tr" ? "İletişim" : "Contact",
     title:
-      lang === "tr"
+      locale === "tr"
         ? "Doğru programa birlikte karar verelim."
         : "Let’s decide on the right program together.",
     description:
-      lang === "tr"
+      locale === "tr"
         ? "Seviyeniz, hedefiniz ve uygun tarihleriniz doğrultusunda size en uygun eğitim rotasını birlikte belirleyebiliriz."
         : "Based on your level, goals, and available dates, we can help you identify the most suitable training route.",
     whatsappTitle:
-      lang === "tr" ? "WhatsApp ile Hızlı İletişim" : "Quick Contact via WhatsApp",
+      locale === "tr" ? "WhatsApp ile Hızlı İletişim" : "Quick Contact via WhatsApp",
     whatsappText:
-      lang === "tr"
+      locale === "tr"
         ? "En hızlı dönüş için doğrudan WhatsApp üzerinden bize yazabilirsiniz."
         : "For the fastest response, you can contact us directly via WhatsApp.",
     whatsappButton:
-      lang === "tr" ? "WhatsApp'tan Yaz" : "Message on WhatsApp",
+      locale === "tr" ? "WhatsApp'tan Yaz" : "Message on WhatsApp",
 
-    emailTitle: lang === "tr" ? "E-posta" : "Email",
+    emailTitle: locale === "tr" ? "E-posta" : "Email",
     emailText:
-      lang === "tr"
+      locale === "tr"
         ? "Daha detaylı kurumsal iletişim için e-posta kullanabilirsiniz."
         : "For more detailed or formal communication, you can use email.",
 
-    locationTitle: lang === "tr" ? "Konum" : "Location",
+    locationTitle: locale === "tr" ? "Konum" : "Location",
     locationText: "Bodrum / Türkiye",
 
-    guidanceTitle: lang === "tr" ? "Nasıl yardımcı olabiliriz?" : "How can we help?",
+    locationNote:
+      locale === "tr"
+        ? "Görüşme ve program yönlendirmesi için önce iletişim kurulması önerilir."
+        : "Initial contact is recommended for consultation and program guidance.",
+
+    guidanceTitle: locale === "tr" ? "Nasıl yardımcı olabiliriz?" : "How can we help?",
+    guidanceHeadline:
+      locale === "tr"
+        ? "İletişim sonrası süreç"
+        : "What happens after contact",
     guidanceItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Seviyenize uygun program seçimi",
             "TYF / YES ve açık deniz eğitim yapısı hakkında yönlendirme",
@@ -57,19 +63,21 @@ export default function ContactPage() {
             "Available dates, capacity, and route planning",
           ],
 
+    directionLabel: locale === "tr" ? "Yönlendirme" : "Direction",
+
     ctaTitle:
-      lang === "tr"
+      locale === "tr"
         ? "İsterseniz önce programları da inceleyebilirsiniz."
         : "You can also review the programs first.",
     ctaText:
-      lang === "tr"
+      locale === "tr"
         ? "Karar vermeden önce eğitim rotalarını ve yapılarını incelemek isterseniz, programlar sayfasından devam edebilirsiniz."
         : "If you would like to review the training routes and structures before deciding, you can continue from the programs page.",
-    ctaPrimary: lang === "tr" ? "Programları Gör" : "View Programs",
-    ctaSecondary: lang === "tr" ? "Rezervasyon Sayfası" : "Reservation Page",
+    ctaPrimary: locale === "tr" ? "Programları Gör" : "View Programs",
+    ctaSecondary: locale === "tr" ? "Rezervasyon Sayfası" : "Reservation Page",
 
     whatsappMessage:
-      lang === "tr"
+      locale === "tr"
         ? "Merhaba, Albatros Sailing eğitim programları hakkında bilgi almak istiyorum. Seviyeme ve hedefime göre en uygun programı öğrenebilir miyim?"
         : "Hello, I would like to get information about Albatros Sailing training programs. Could you help me find the most suitable option for my level and goals?",
   };
@@ -360,9 +368,7 @@ export default function ContactPage() {
                 fontWeight: 600,
               }}
             >
-              {lang === "tr"
-                ? "Görüşme ve program yönlendirmesi için önce iletişim kurulması önerilir."
-                : "Initial contact is recommended for consultation and program guidance."}
+              {ui.locationNote}
             </div>
           </div>
         </div>
@@ -400,9 +406,7 @@ export default function ContactPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
-                ? "İletişim sonrası süreç"
-                : "What happens after contact"}
+              {ui.guidanceHeadline}
             </h2>
           </div>
 
@@ -490,7 +494,7 @@ export default function ContactPage() {
                   color: "rgba(226,232,240,0.62)",
                 }}
               >
-                {lang === "tr" ? "Yönlendirme" : "Direction"}
+                {ui.directionLabel}
               </p>
 
               <h2

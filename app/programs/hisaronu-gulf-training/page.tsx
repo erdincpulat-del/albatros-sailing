@@ -20,8 +20,8 @@ type HighlightStat = {
 };
 
 export default function HisaronuGulfTrainingPage() {
-  const { lang } = useLanguage();
-  const isTR = lang === "tr";
+  const { locale } = useLanguage();
+  const isTR = locale === "tr";
 
   const content = {
     eyebrow: isTR ? "ROTALI EĞİTİM DENEYİMİ" : "ROUTE-BASED TRAINING EXPERIENCE",
@@ -244,7 +244,8 @@ export default function HisaronuGulfTrainingPage() {
         "Final cleaning",
         "Personal expenses",
       ];
-        return (
+
+  return (
     <main className="relative overflow-hidden bg-[#07111f] text-white">
       <style>{`
         @keyframes hisaronuHeroFloat {
@@ -403,7 +404,6 @@ export default function HisaronuGulfTrainingPage() {
                   loop
                   playsInline
                   preload="auto"
-                  
                   className="h-full w-full object-cover contrast-110 brightness-[0.84] saturate-[1.05]"
                   style={{
                     transform: "scale(1.05)",
@@ -488,7 +488,8 @@ export default function HisaronuGulfTrainingPage() {
           </div>
         </div>
       </section>
-            <section className="relative mx-auto max-w-7xl px-6 py-16 md:py-24">
+
+      <section className="relative mx-auto max-w-7xl px-6 py-16 md:py-24">
         <div className="grid gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
           <div className="relative overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.24)]">
             <div className="absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(7,17,31,0.10)_0%,rgba(7,17,31,0.28)_50%,rgba(7,17,31,0.78)_100%)]" />
