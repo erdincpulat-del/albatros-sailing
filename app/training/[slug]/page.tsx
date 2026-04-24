@@ -1,4 +1,4 @@
-"use client";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -83,7 +83,9 @@ const trainingData = {
 type TrainingSlug = keyof typeof trainingData;
 
 export function generateStaticParams() {
-  return Object.keys(trainingData).map((slug) => ({ slug }));
+  return Object.keys(trainingData).map((slug) => ({
+    slug,
+  }));
 }
 
 export default async function TrainingDetailPage({
@@ -97,7 +99,6 @@ export default async function TrainingDetailPage({
   if (!training) {
     notFound();
   }
-
   return (
     <main className="max-w-5xl mx-auto px-6 py-16">
       <section className="mb-12">

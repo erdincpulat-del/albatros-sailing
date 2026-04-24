@@ -9,7 +9,7 @@ type PageProps = {
 export default async function CertificatePackagePage({ params }: PageProps) {
   const { certificateId } = params;
 
-  const reservation = await prisma.reservation.findFirst({
+  const certificate = await prisma.certificate.findFirst({
     where: {
       certificateId,
     },
@@ -24,7 +24,7 @@ export default async function CertificatePackagePage({ params }: PageProps) {
     },
   });
 
-  if (!reservation) {
+  if (!certificate) {
     return (
       <main
         style={{
@@ -88,7 +88,7 @@ export default async function CertificatePackagePage({ params }: PageProps) {
     );
   }
 
-  const data = reservation;
+  const data = certificate;
 
   const verifyUrl = `/verify/${encodeURIComponent(data.certificateId)}`;
 

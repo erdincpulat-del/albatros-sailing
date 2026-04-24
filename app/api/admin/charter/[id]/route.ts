@@ -81,8 +81,8 @@ function sanitizeGallery(value: unknown): GalleryInput[] {
     if (!item || typeof item !== "object") return;
 
     const row = item as Record<string, unknown>;
-    const imageUrl = requiredString(row.imageUrl);
-    if (!imageUrl) return;
+    const imageUrl = String(row.imageUrl || row.image || "").trim();
+if (!imageUrl) return;
 
     const rawSort = Number(row.sortOrder);
 
@@ -162,56 +162,28 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       );
     }
 
-    await prisma.charterBoatPrice.deleteMany({
-      where: { boatId: id },
-    });
+          await prisma.charterBoatPrice.deleteMany({
+        where: { boatId: id },
+      });
 
-    await prisma.galleryImage.deleteMany({
-      where: { boatId: id },
-    });
-
-    const boat = await prisma.charterBoat.update({
-      where: { id },
-      data: {
-        slug,
-        name,
-        model,
-        year,
-        cabins,
-        guestsLabel,
-        location,
-        image,
-        shortNote,
-        description,
-        features,
-        prices: {
-          create: prices.map((price) => ({
-            month: price.month,
-            price: price.price,
-          })),
-        },
-        gallery: {
-          create: gallery.map((item, index) => ({
-            imageUrl: item.imageUrl,
-            sortOrder: typeof item.sortOrder === "number" ? item.sortOrder : index,
-          })),
-        },
-      },
-      include: {
-        prices: {
-          orderBy: {
-            month: "asc",
+      const boat = await prisma.charterBoat.update({
+        where: { id },
+        data: {
+          slug,
+          name,
+          model,
+          year,
+          cabins,
+          guestsLabel,
+          location,
+          image,
+          shortNote,
+          description,
+          features,
           },
-        },
-        gallery: {
-          orderBy: {
-            sortOrder: "asc",
-          },
-        },
-      },
-    });
+      });
 
-    return NextResponse.json({ boat });
+      return NextResponse.json({ boat });
   } catch (error) {
     console.error("PUT /api/admin/charter/[id] error:", error);
     return NextResponse.json(
@@ -271,9 +243,7 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
       where: { boatId: id },
     });
 
-    await prisma.galleryImage.deleteMany({
-      where: { boatId: id },
-    });
+    
 
     await prisma.charterBoat.delete({
       where: { id },

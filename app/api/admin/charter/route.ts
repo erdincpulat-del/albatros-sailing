@@ -65,26 +65,27 @@ function sanitizePrices(value: unknown): PriceInput[] {
     })
     .filter((item): item is PriceInput => Boolean(item));
 }
-
 function sanitizeGallery(value: unknown): GalleryInput[] {
   if (!Array.isArray(value)) return [];
 
-  return value
-    .map((item, index) => {
-      if (!item || typeof item !== "object") return null;
-      const row = item as Record<string, unknown>;
-      const imageUrl = requiredString(row.imageUrl);
-      if (!imageUrl) return null;
+  const result: GalleryInput[] = [];
 
-      const rawSort = Number(row.sortOrder);
-      return {
-        imageUrl,
-        sortOrder: Number.isFinite(rawSort) ? rawSort : index,
-      };
-    })
-    .filter((item): item is GalleryInput => Boolean(item));
+  value.forEach((item, index) => {
+    if (!item || typeof item !== "object") return;
+
+    const row = item as Record<string, unknown>;
+    const imageUrl = String(row.imageUrl || "").trim();
+
+    if (!imageUrl) return;
+
+    result.push({
+      imageUrl,
+      sortOrder: index,
+    });
+  });
+
+  return result;
 }
-
 export async function GET() {
   try {
     const boats = await prisma.charterBoat.findMany({
