@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
 
 type PageProps = {
-  params: Promise<{
+  params: {
     certificateId: string;
-  }>;
+  }
 };
 
 export default async function CertificatePackagePage({ params }: PageProps) {
