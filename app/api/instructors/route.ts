@@ -1,15 +1,23 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET() {
   try {
-    const instructors = await prisma.instructor.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const { data, error } = await supabase
+      .from("Instructor")
+      .select("*")
+      .order("createdAt", { ascending: false });
+
+    if (error) throw error;
 
     return NextResponse.json({
       success: true,
-      items: instructors,
+      items: data,
     });
   } catch (error) {
     console.error("GET /api/instructors error:", error);
