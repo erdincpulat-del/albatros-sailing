@@ -41,3 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 /generated/prisma
+# sqlite database for temporary Vercel build
+!prisma/dev.db
