@@ -21,8 +21,8 @@ type NavItem =
     };
 
 function DesktopNavLinks() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   const navItems: NavItem[] = [
     { href: "/", label: t.nav.home },
@@ -133,8 +133,8 @@ function DesktopNavLinks() {
 }
 
 function MobileNavLinks() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
 
   const navItems: NavItem[] = [
@@ -247,15 +247,15 @@ function MobileNavLinks() {
 }
 
 function LanguageSwitch() {
-  const { lang, setLang } = useLanguage();
+  const { locale, setLocale } = useLanguage();
 
   return (
     <div className="inline-flex items-center rounded-full border border-white/10 bg-black/40 p-1 shadow-sm backdrop-blur">
       <button
         type="button"
-        onClick={() => setLang("tr")}
+        onClick={() => setLocale("tr")}
         className={`rounded-full px-3 py-2 text-[11px] font-semibold tracking-[0.08em] transition md:px-4 md:text-xs ${
-          lang === "tr"
+          locale === "tr"
             ? "bg-white text-black shadow-sm"
             : "text-gray-300 hover:text-white"
         }`}
@@ -265,9 +265,9 @@ function LanguageSwitch() {
 
       <button
         type="button"
-        onClick={() => setLang("en")}
+        onClick={() => setLocale("en")}
         className={`rounded-full px-3 py-2 text-[11px] font-semibold tracking-[0.08em] transition md:px-4 md:text-xs ${
-          lang === "en"
+          locale === "en"
             ? "bg-white text-black shadow-sm"
             : "text-gray-300 hover:text-white"
         }`}
@@ -279,8 +279,8 @@ function LanguageSwitch() {
 }
 
 function Header() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   return (
     <>
@@ -417,8 +417,8 @@ function Header() {
 }
 
 function Footer() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-[#06111c] text-white">

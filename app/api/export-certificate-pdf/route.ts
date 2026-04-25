@@ -1,16 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 import prisma from "@/lib/prisma";
 
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 
-function formatDate(dateValue?: Date | string | null) {
-  if (!dateValue) return "-";
+function formatDate(value: Date | string | null | undefined) {
+  if (!value) return "-";
 
-  const date = new Date(dateValue);
+  const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "-";
 
   const day = String(date.getDate()).padStart(2, "0");
@@ -20,55 +19,35 @@ function formatDate(dateValue?: Date | string | null) {
   return `${day}.${month}.${year}`;
 }
 
+function safeText(value: string | number | null | undefined) {
+  if (value === null || value === undefined || value === "") return "-";
+  return String(value);
+}
+
 async function buildPdfBuffer({
   fullName,
   qualificationLevel,
   certificateId,
+  program,
   issueDate,
+  seaMiles,
+  instructorName,
+  instructorTitle,
 }: {
   fullName: string;
   qualificationLevel: string;
   certificateId: string;
+  program: string;
   issueDate: string;
+  seaMiles: string;
+  instructorName: string;
+  instructorTitle: string;
 }) {
   return new Promise<Buffer>((resolve, reject) => {
     try {
-      const templatePath = path.join(
-        process.cwd(),
-        "public",
-        "certificate-templates",
-        "certificate-a4.png"
-      );
-
-      const fontPath = path.join(
-        process.cwd(),
-        "public",
-        "fonts",
-        "Roboto-Regular.ttf"
-      );
-
-      if (!fs.existsSync(templatePath)) {
-        throw new Error(
-          "Template not found: public/certificate-templates/certificate-a4.png"
-        );
-      }
-
-      if (!fs.existsSync(fontPath)) {
-        throw new Error(
-          "Font not found: public/fonts/Roboto-Regular.ttf"
-        );
-      }
-
       const doc = new PDFDocument({
         size: "A4",
-        margins: {
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-        },
-        autoFirstPage: false,
-        font: fontPath,
+        margin: 0,
       });
 
       const chunks: Buffer[] = [];
@@ -77,61 +56,82 @@ async function buildPdfBuffer({
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
-      const pageWidth = 595.28;
-      const pageHeight = 841.89;
+      const templatePath = path.join(
+        process.cwd(),
+        "public",
+        "certificate-templates",
+        "certificate-a4.png"
+      );
 
-      doc.addPage({
-        size: "A4",
-        margins: {
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-        },
+      if (fs.existsSync(templatePath)) {
+        doc.image(templatePath, 0, 0, {
+          width: 595.28,
+          height: 841.89,
+        });
+      } else {
+        doc.rect(0, 0, 595.28, 841.89).fill("#f7f1df");
+        doc.fillColor("#111827");
+      }
+
+      doc.fillColor("#111827");
+
+      doc.fontSize(26).text("ALBATROS SAILING", 0, 95, {
+        align: "center",
+        width: 595.28,
       });
 
-      doc.image(templatePath, 0, 0, {
-        width: pageWidth,
-        height: pageHeight,
+      doc.fontSize(14).text("Certificate of Completion", 0, 130, {
+        align: "center",
+        width: 595.28,
       });
 
-      doc.font(fontPath);
+      doc.moveTo(90, 170).lineTo(505, 170).strokeColor("#c8a85a").stroke();
 
-      // FULL NAME
-      doc
-        .fontSize(24)
-        .fillColor("#1f3f75")
-        .text(fullName || "-", 140, 357, {
-          width: 320,
-          align: "center",
+      doc.fillColor("#111827").fontSize(13);
+
+      const left = 120;
+      const labelWidth = 150;
+      const valueLeft = 280;
+      let y = 230;
+
+      function row(label: string, value: string) {
+        doc.fillColor("#6b7280").fontSize(11).text(label, left, y, {
+          width: labelWidth,
         });
 
-      // QUALIFICATION TITLE
-      doc
-        .fontSize(18)
-        .fillColor("#1f3f75")
-        .text(qualificationLevel || "-", 130, 451, {
-          width: 340,
-          align: "center",
+        doc.fillColor("#111827").fontSize(13).text(value, valueLeft, y, {
+          width: 240,
         });
 
-      // VERIFY / CERTIFICATE ID LINE
-      doc
-        .fontSize(10)
-        .fillColor("#1f3f75")
-        .text(certificateId || "-", 238, 676, {
-          width: 120,
-          align: "center",
-        });
+        y += 42;
+      }
 
-      // DATE
-      doc
-        .fontSize(11)
-        .fillColor("#1f3f75")
-        .text(issueDate || "-", 430, 598, {
-          width: 85,
+      row("Full Name", fullName);
+      row("Program", program);
+      row("Qualification Level", qualificationLevel);
+      row("Issue Date", issueDate);
+      row("Sea Miles", seaMiles);
+      row("Certificate ID", certificateId);
+
+      y += 40;
+
+      doc.fillColor("#111827").fontSize(12).text("Instructor", left, y);
+      y += 22;
+
+      doc.fontSize(13).text(instructorName, left, y);
+      y += 18;
+
+      doc.fillColor("#6b7280").fontSize(11).text(instructorTitle, left, y);
+
+      doc.fillColor("#111827").fontSize(10).text(
+        "This certificate can be verified through the official Albatros Sailing verification system.",
+        90,
+        745,
+        {
           align: "center",
-        });
+          width: 415,
+        }
+      );
 
       doc.end();
     } catch (error) {
@@ -140,68 +140,91 @@ async function buildPdfBuffer({
   });
 }
 
-export async function GET(req: NextRequest) {
+async function handleExport(certificateId: string | null) {
+  if (!certificateId) {
+    return NextResponse.json(
+      { success: false, error: "certificateId is required." },
+      { status: 400 }
+    );
+  }
+
+  const certificate = await prisma.certificate.findFirst({
+    where: { certificateId },
+    select: {
+      id: true,
+      certificateId: true,
+      fullName: true,
+      program: true,
+      qualificationLevel: true,
+      issueDate: true,
+      seaMiles: true,
+      status: true,
+      instructor: {
+        select: {
+          fullName: true,
+          title: true,
+        },
+      },
+    },
+  });
+
+  if (!certificate) {
+    return NextResponse.json(
+      { success: false, error: "Certificate not found." },
+      { status: 404 }
+    );
+  }
+
+  const pdfBuffer = await buildPdfBuffer({
+    fullName: safeText(certificate.fullName),
+    qualificationLevel: safeText(certificate.qualificationLevel),
+    certificateId: safeText(certificate.certificateId),
+    program: safeText(certificate.program),
+    issueDate: formatDate(certificate.issueDate),
+    seaMiles:
+      typeof certificate.seaMiles === "number"
+        ? `${certificate.seaMiles} NM`
+        : "-",
+    instructorName: safeText(certificate.instructor?.fullName),
+    instructorTitle: safeText(certificate.instructor?.title),
+  });
+
+  return new NextResponse(new Uint8Array(pdfBuffer), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename="${certificate.certificateId}.pdf"`,
+    },
+  });
+}
+
+export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const certificateId = searchParams.get("certificateId")?.trim();
+    const certificateId = searchParams.get("certificateId");
 
-    if (!certificateId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "certificateId is required.",
-        },
-        { status: 400 }
-      );
-    }
-
-    const reservation = await prisma.reservation.findFirst({
-      where: {
-        certificateId,
-      },
-      select: {
-        fullName: true,
-        certificateId: true,
-        certificateLevel: true,
-        certifiedAt: true,
-        createdAt: true,
-      },
-    });
-
-    if (!reservation || !reservation.certificateId) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Certificate record not found.",
-        },
-        { status: 404 }
-      );
-    }
-
-    const pdfBuffer = await buildPdfBuffer({
-      fullName: reservation.fullName || "-",
-      qualificationLevel: reservation.certificateLevel || "-",
-      certificateId: reservation.certificateId,
-      issueDate: formatDate(reservation.certifiedAt || reservation.createdAt),
-    });
-
-    return new NextResponse(pdfBuffer, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `inline; filename="${reservation.certificateId}-certificate.pdf"`,
-        "Cache-Control": "no-store",
-      },
-    });
+    return await handleExport(certificateId);
   } catch (error) {
-    console.error("EXPORT_CERTIFICATE_PDF_ROUTE_ERROR:", error);
+    console.error("GET /api/export-certificate-pdf error:", error);
 
     return NextResponse.json(
-      {
-        success: false,
-        error: "Certificate PDF export failed.",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
+      { success: false, error: "PDF could not be generated." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const certificateId = String(body?.certificateId || "").trim();
+
+    return await handleExport(certificateId);
+  } catch (error) {
+    console.error("POST /api/export-certificate-pdf error:", error);
+
+    return NextResponse.json(
+      { success: false, error: "PDF could not be generated." },
       { status: 500 }
     );
   }

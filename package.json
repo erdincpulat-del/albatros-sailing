@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
+    "@types/archiver": "^7.0.0",
     "@types/node": "^20.19.37",
     "@types/pdfkit": "^0.17.5",
     "@types/qrcode": "^1.5.6",

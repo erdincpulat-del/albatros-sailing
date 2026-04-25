@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import fs from "fs";
 import path from "path";
-import archiver from "archiver";
+import * as archiver from "archiver"; 
 
 import prisma from "@/lib/prisma";
 
@@ -63,7 +63,7 @@ function createZipStream({
   frontPath: string | null;
   backPath: string | null;
 }) {
-  const archive = archiver("zip", {
+  const archive = archiver.default("zip", {
     zlib: { level: 9 },
   });
 
@@ -106,52 +106,57 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const reservation = await prisma.reservation.findFirst({
-      where: { certificateId },
-      select: {
-        certificateId: true,
-        cardFrontUrl: true,
-        cardBackUrl: true,
-      },
-    });
+    const certificate = await prisma.certificate.findFirst({
+  where: { certificateId },
+  select: {
+    id: true,
+    certificateId: true,
+    fullName: true,
+    program: true,
+    qualificationLevel: true,
+    issueDate: true,
+    seaMiles: true,
+    cardFrontUrl: true,
+    cardBackUrl: true,
+  },
+});
 
-    if (!reservation || !reservation.certificateId) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: "Certificate not found.",
-        }),
-        { status: 404 }
-      );
-    }
+if (!certificate) {
+  return new Response(
+    JSON.stringify({
+      success: false,
+      error: "Certificate not found.",
+    }),
+    { status: 404 }
+  );
+}
 
-    const frontPath = resolvePublicFile(reservation.cardFrontUrl);
-    const backPath = resolvePublicFile(reservation.cardBackUrl);
+const frontPath = resolvePublicFile(certificate.cardFrontUrl);
+const backPath = resolvePublicFile(certificate.cardBackUrl);
 
-    if (!frontPath && !backPath) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: "Card images were not found for this certificate.",
-        }),
-        { status: 404 }
-      );
-    }
+if (!frontPath && !backPath) {
+  return new Response(
+    JSON.stringify({
+      success: false,
+      error: "Card images were not found for this certificate.",
+    }),
+    { status: 404 }
+  );
+}
 
-    const certificatePdfUrl =
-      `${origin}/api/certificates/export-certificate-pdf?certificateId=` +
-      encodeURIComponent(reservation.certificateId);
+const certificatePdfUrl =
+  `${origin}/api/export-certificate-pdf?certificateId=` +
+  encodeURIComponent(certificate.certificateId);
 
-    const cardPdfUrl =
-      `${origin}/api/export-pdf?certificateId=` +
-      encodeURIComponent(reservation.certificateId);
-
+const cardPdfUrl =
+  `${origin}/api/export-card-pdf?certificateId=` +
+  encodeURIComponent(certificate.certificateId);
     const [certificatePdfBuffer, cardPdfBuffer] = await Promise.all([
       fetchFileBuffer(certificatePdfUrl),
       fetchFileBuffer(cardPdfUrl),
     ]);
 
-    const zipName = `${reservation.certificateId}-package.zip`;
+    const zipName = `${certificate.certificateId}-package.zip`;
 
     const stream = createZipStream({
       certificatePdfBuffer,

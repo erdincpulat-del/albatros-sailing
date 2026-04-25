@@ -13,8 +13,8 @@ function NavLinks({
   mobile?: boolean;
   onNavigate?: () => void;
 }) {
-  const { lang } = useLanguage();
-  const t = useMemo(() => (lang === "tr" ? tr : en), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => (locale === "tr" ? tr : en), [locale]);
 
   const baseClass = mobile
     ? "block rounded-xl px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-100 hover:text-gray-900"
@@ -46,15 +46,15 @@ function NavLinks({
 }
 
 function LanguageSwitch() {
-  const { lang, setLang } = useLanguage();
+  const { locale, setLocale } = useLanguage();
 
   return (
     <div className="inline-flex rounded-2xl border border-gray-200 bg-white p-1 shadow-sm">
       <button
         type="button"
-        onClick={() => setLang("tr")}
+        onClick={() => setLocale("tr")}
         className={`rounded-xl px-3 py-2 text-xs font-semibold transition md:px-4 md:text-sm ${
-          lang === "tr"
+          locale === "tr"
             ? "bg-gray-900 text-white"
             : "text-gray-600 hover:bg-gray-100"
         }`}
@@ -64,9 +64,9 @@ function LanguageSwitch() {
 
       <button
         type="button"
-        onClick={() => setLang("en")}
+        onClick={() => setLocale("en")}
         className={`rounded-xl px-3 py-2 text-xs font-semibold transition md:px-4 md:text-sm ${
-          lang === "en"
+          locale === "en"
             ? "bg-gray-900 text-white"
             : "text-gray-600 hover:bg-gray-100"
         }`}
@@ -82,8 +82,8 @@ export default function SiteChrome({
 }: {
   children: React.ReactNode;
 }) {
-  const { lang } = useLanguage();
-  const t = useMemo(() => (lang === "tr" ? tr : en), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => (locale === "tr" ? tr : en), [locale]);
 
   return (
     <div className="flex min-h-screen flex-col">

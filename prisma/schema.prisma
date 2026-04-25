@@ -8,10 +8,12 @@ datasource db {
 }
 
 model Reservation {
-  id        String   @id @default(cuid())
-  fullName  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  fullName    String
+  certificateId String?   // 🔥 EKLE
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model AdminLog {
@@ -111,6 +113,7 @@ model CharterAvailability {
   endDate       DateTime
   status        String   @default("AVAILABLE")
   inquiryCount  Int      @default(0)
+  hasConflict Boolean? @default(false)
   overridePrice String?
   notes         String?
 
@@ -129,7 +132,7 @@ model Inquiry {
   id String @id @default(cuid())
 
   fullName String
-  email    String
+  email    String?
   phone    String?
   message  String?
   notes    String?

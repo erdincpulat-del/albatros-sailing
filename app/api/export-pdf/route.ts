@@ -167,9 +167,9 @@ export async function GET(req: NextRequest) {
       return new Response("certificateId gerekli", { status: 400 });
     }
 
-    const certificate = await prisma.reservation.findFirst({
-      where: { certificateId },
-    });
+    const certificate = await prisma.certificate.findFirst({
+  where: { certificateId },
+});
 
     if (!certificate) {
       return new Response("Sertifika bulunamadı", { status: 404 });

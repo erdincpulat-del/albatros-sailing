@@ -25,47 +25,43 @@ export async function PATCH(req: NextRequest) {
         { status: 400 }
       );
     }
+if (!ALLOWED_STATUSES.includes(status as CertificateStatus)) {
+  return NextResponse.json(
+    {
+      success: false,
+      error: "Invalid status. Allowed: ACTIVE, REVOKED, EXPIRED.",
+    },
+    { status: 400 }
+  );
+}
 
-    if (!ALLOWED_STATUSES.includes(status as CertificateStatus)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid status. Allowed: ACTIVE, REVOKED, EXPIRED.",
-        },
-        { status: 400 }
-      );
-    }
+const existing = await prisma.certificate.findFirst({
+  where: { certificateId },
+  select: { id: true, certificateId: true },
+});
 
-    const existing = await prisma.reservation.findFirst({
-      where: { certificateId },
-      select: { id: true, certificateId: true },
-    });
+if (!existing) {
+  return NextResponse.json(
+    {
+      success: false,
+      error: "Certificate not found.",
+    },
+    { status: 404 }
+  );
+}
 
-    if (!existing) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Certificate not found.",
-        },
-        { status: 404 }
-      );
-    }
 
-    const updated = await prisma.reservation.update({
-      where: { id: existing.id },
-      data: {
-        status,
-      },
-      select: {
-        id: true,
-        fullName: true,
-        certificateId: true,
-        certificateLevel: true,
-        program: true,
-        status: true,
-        updatedAt: true,
-      },
-    });
+    const updated = await prisma.certificate.update({
+  where: { id: existing.id },
+  data: {
+    status,
+  },
+  select: {
+    id: true,
+    certificateId: true,
+    status: true,
+  },
+});
 
     return NextResponse.json({
       success: true,

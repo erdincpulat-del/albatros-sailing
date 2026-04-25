@@ -6,31 +6,31 @@ import { useLanguage } from "@/contexts/LanguageProvider";
 import { getMessages } from "@/messages";
 
 export default function ReserveLandingPage() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   const ui = {
-    badge: lang === "tr" ? "Rezervasyon Merkezi" : "Reservation Center",
+    badge: locale === "tr" ? "Rezervasyon Merkezi" : "Reservation Center",
     title:
-      lang === "tr"
+      locale === "tr"
         ? "Eğitim ve charter taleplerini doğru akıştan başlatın."
         : "Start training and charter requests from the right flow.",
     description:
-      lang === "tr"
+      locale === "tr"
         ? "Albatros Sailing içinde eğitim rezervasyonu ve charter talebi farklı operasyon mantıklarıyla yönetilir. İhtiyacınıza uygun akışı seçerek devam edin."
         : "Inside Albatros Sailing, training reservations and charter requests are managed with different operational structures. Continue with the flow that matches your need.",
 
-    trainingBadge: lang === "tr" ? "Training" : "Training",
+    trainingBadge: locale === "tr" ? "Training" : "Training",
     trainingTitle:
-      lang === "tr"
+      locale === "tr"
         ? "Eğitim rezervasyonu"
         : "Training reservation",
     trainingText:
-      lang === "tr"
+      locale === "tr"
         ? "Açık deniz, rota, dönem, seviye ve kontenjan odaklı eğitim talepleri için doğru giriş noktası."
         : "The right entry point for training requests focused on offshore routes, seasons, levels, and capacity.",
     trainingFeatures:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Program ve rota seçimi",
             "Deneyim seviyesi bilgisi",
@@ -42,19 +42,19 @@ export default function ReserveLandingPage() {
             "Season and capacity planning",
           ],
     trainingButton:
-      lang === "tr" ? "Training rezervasyonuna git" : "Go to training reservation",
+      locale === "tr" ? "Training rezervasyonuna git" : "Go to training reservation",
 
-    charterBadge: lang === "tr" ? "Charter" : "Charter",
+    charterBadge: locale === "tr" ? "Charter" : "Charter",
     charterTitle:
-      lang === "tr"
+      locale === "tr"
         ? "Charter talebi"
         : "Charter request",
     charterText:
-      lang === "tr"
+      locale === "tr"
         ? "Tekne, model, sezon, Cumartesi–Cuma haftalık periyotlar ve müsaitlik odaklı charter talepleri için doğru giriş noktası."
         : "The right entry point for charter requests focused on boats, models, seasonality, Saturday-to-Friday weekly periods, and availability.",
     charterFeatures:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Tekne ve hafta seçimi",
             "Kişi sayısı ve rota tercihi",
@@ -66,14 +66,14 @@ export default function ReserveLandingPage() {
             "Availability and price follow-up",
           ],
     charterButton:
-      lang === "tr" ? "Charter talebine git" : "Go to charter request",
+      locale === "tr" ? "Charter talebine git" : "Go to charter request",
 
     footerTitle:
-      lang === "tr"
+      locale === "tr"
         ? "Neden bu ayrım önemli?"
         : "Why is this separation important?",
     footerText:
-      lang === "tr"
+      locale === "tr"
         ? "Charter ve eğitim aynı site içinde yer alsa da, aynı rezervasyon mantığıyla yönetilmez. Bu yapı hem kullanıcı deneyimini hem de admin panel yönetimini daha profesyonel hale getirir."
         : "Even though charter and training live on the same site, they should not be managed with the same reservation logic. This structure makes both the user experience and admin management more professional.",
   };
@@ -351,7 +351,7 @@ export default function ReserveLandingPage() {
                 color: "rgba(226,232,240,0.62)",
               }}
             >
-              {lang === "tr" ? "Sistem Mantığı" : "System Logic"}
+              {locale === "tr" ? "Sistem Mantığı" : "System Logic"}
             </p>
 
             <h2

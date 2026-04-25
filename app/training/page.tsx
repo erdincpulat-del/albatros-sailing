@@ -6,23 +6,23 @@ import { useLanguage } from "@/contexts/LanguageProvider";
 import { getMessages } from "@/messages";
 
 export default function TrainingPage() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   const intro = {
-    badge: lang === "tr" ? "Eğitim Yapısı" : "Training Structure",
+    badge: locale === "tr" ? "Eğitim Yapısı" : "Training Structure",
     title:
-      lang === "tr"
+      locale === "tr"
         ? "Gerçek denizde yetkinlik kazandıran eğitim sistemi."
         : "A training system that builds real competence at sea.",
     description:
-      lang === "tr"
+      locale === "tr"
         ? "Albatros Sailing eğitim modeli; yalnızca teori anlatan değil, karar alma, komuta, güven ve uygulama becerisi kazandıran bir gelişim yapısıdır. Amaç, sizi kurs tamamlayan değil, denizde daha güçlü hareket eden bir seviyeye taşımaktır."
         : "The Albatros Sailing training model is not just about theory. It is a development structure that builds decision-making, command, confidence, and practical ability. The goal is not only to complete a course, but to move you toward stronger performance at sea.",
   };
 
   const suitability =
-    lang === "tr"
+    locale === "tr"
       ? [
           {
             title: "Yeni başlayanlar için",
@@ -59,7 +59,7 @@ export default function TrainingPage() {
         ];
 
   const tyfLevels =
-    lang === "tr"
+    locale === "tr"
       ? [
           {
             code: "YY1",
@@ -126,7 +126,7 @@ export default function TrainingPage() {
         ];
 
   const steps =
-    lang === "tr"
+    locale === "tr"
       ? [
           {
             number: "01",
@@ -181,7 +181,7 @@ export default function TrainingPage() {
         ];
 
   const proofItems =
-    lang === "tr"
+    locale === "tr"
       ? [
           "Gerçek deniz deneyimi",
           "Yapılandırılmış gelişim modeli",
@@ -319,7 +319,7 @@ export default function TrainingPage() {
                     "0 10px 24px rgba(66,189,248,0.22)";
                 }}
               >
-                {lang === "tr" ? "Programları İncele" : "Explore Programs"}
+                {locale === "tr" ? "Programları İncele" : "Explore Programs"}
               </Link>
 
               <Link
@@ -352,7 +352,7 @@ export default function TrainingPage() {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                {lang === "tr" ? "Rezervasyon" : "Reserve"}
+                {locale === "tr" ? "Rezervasyon" : "Reserve"}
               </Link>
             </div>
           </div>
@@ -369,7 +369,7 @@ export default function TrainingPage() {
               color: "rgba(226,232,240,0.62)",
             }}
           >
-            {lang === "tr" ? "Bu Eğitim Kimler İçin?" : "Who Is This Training For?"}
+            {locale === "tr" ? "Bu Eğitim Kimler İçin?" : "Who Is This Training For?"}
           </p>
 
           <h2
@@ -382,7 +382,7 @@ export default function TrainingPage() {
               color: "#f8fafc",
             }}
           >
-            {lang === "tr"
+            {locale === "tr"
               ? "Seviyeniz ne olursa olsun, doğru yapı ile ilerleyin."
               : "Move forward with the right structure, whatever your level."}
           </h2>
@@ -459,7 +459,7 @@ export default function TrainingPage() {
                 color: "rgba(226,232,240,0.62)",
               }}
             >
-              {lang === "tr" ? "TYF / YES Uyumlu Yapı" : "TYF / YES Aligned Structure"}
+              {locale === "tr" ? "TYF / YES Uyumlu Yapı" : "TYF / YES Aligned Structure"}
             </p>
 
             <h2
@@ -472,7 +472,7 @@ export default function TrainingPage() {
                 color: "#f8fafc",
               }}
             >
-              {lang === "tr"
+              {locale === "tr"
                 ? "Türkiye Yelken Federasyonu eğitim seviyeleri ile uyumlu gelişim yapısı."
                 : "A development structure aligned with Turkish Sailing Federation training levels."}
             </h2>
@@ -486,7 +486,7 @@ export default function TrainingPage() {
                 color: "rgba(226,232,240,0.82)",
               }}
             >
-              {lang === "tr"
+              {locale === "tr"
                 ? "Albatros Sailing eğitim yaklaşımı, TYF Yelken Eğitim Sistemi seviyeleriyle uyumlu biçimde yapılandırılabilir. Böylece resmi sistemin netliği ile premium uygulama deneyimi aynı yapıda birleşir."
                 : "The Albatros Sailing training approach can be structured in alignment with TYF Sailing Education System levels. This combines the clarity of the official system with a premium practical experience."}
             </p>
@@ -575,7 +575,7 @@ export default function TrainingPage() {
                 color: "rgba(226,232,240,0.82)",
               }}
             >
-              {lang === "tr"
+              {locale === "tr"
                 ? "Bu seviye yapısı, Albatros Sailing’in gerçek rota, açık deniz pratiği ve doğrulanabilir sertifika yaklaşımı ile birleştirilerek uygulanır."
                 : "This level structure is applied together with Albatros Sailing’s real-route, offshore practice, and verifiable certification approach."}
             </p>
@@ -615,7 +615,7 @@ export default function TrainingPage() {
                   color: "#f8fafc",
                 }}
               >
-                {lang === "tr" ? "Program rotaları" : "Program routes"}
+                {locale === "tr" ? "Program rotaları" : "Program routes"}
               </h2>
 
               <p
@@ -626,7 +626,7 @@ export default function TrainingPage() {
                   color: "rgba(226,232,240,0.82)",
                 }}
               >
-                {lang === "tr"
+                {locale === "tr"
                   ? "İhtiyacınıza ve hedefinize göre uygun eğitim programını seçin."
                   : "Choose the right training program according to your needs and goals."}
               </p>
@@ -788,7 +788,7 @@ export default function TrainingPage() {
               color: "rgba(226,232,240,0.62)",
             }}
           >
-            {lang === "tr" ? "Eğitim Akışı" : "Training Flow"}
+            {locale === "tr" ? "Eğitim Akışı" : "Training Flow"}
           </p>
 
           <h2
@@ -801,7 +801,7 @@ export default function TrainingPage() {
               color: "#f8fafc",
             }}
           >
-            {lang === "tr" ? "Süreç nasıl ilerler?" : "How does the process work?"}
+            {locale === "tr" ? "Süreç nasıl ilerler?" : "How does the process work?"}
           </h2>
         </div>
 
@@ -909,7 +909,7 @@ export default function TrainingPage() {
                     color: "rgba(226,232,240,0.62)",
                   }}
                 >
-                  {lang === "tr" ? "Sonraki Adım" : "Next Step"}
+                  {locale === "tr" ? "Sonraki Adım" : "Next Step"}
                 </p>
 
                 <h2
@@ -922,7 +922,7 @@ export default function TrainingPage() {
                     color: "#f8fafc",
                   }}
                 >
-                  {lang === "tr"
+                  {locale === "tr"
                     ? "Şimdi sizin için doğru programı seçin."
                     : "Now choose the right program for you."}
                 </h2>
@@ -936,7 +936,7 @@ export default function TrainingPage() {
                     color: "rgba(226,232,240,0.82)",
                   }}
                 >
-                  {lang === "tr"
+                  {locale === "tr"
                     ? "Programları inceleyin, seviyenize uygun rotayı belirleyin ve rezervasyon sürecine geçin. Gerekirse ekibimizle iletişime geçerek yönlendirme alabilirsiniz."
                     : "Review the programs, identify the route that fits your level, and move into the reservation process. If needed, contact our team for guidance."}
                 </p>
@@ -969,7 +969,7 @@ export default function TrainingPage() {
                       "0 10px 24px rgba(66,189,248,0.22)";
                   }}
                 >
-                  {lang === "tr" ? "Programları Gör" : "View Programs"}
+                  {locale === "tr" ? "Programları Gör" : "View Programs"}
                 </Link>
 
                 <Link
@@ -1002,7 +1002,7 @@ export default function TrainingPage() {
                     e.currentTarget.style.boxShadow = "none";
                   }}
                 >
-                  {lang === "tr" ? "İletişime Geç" : "Contact Us"}
+                  {locale === "tr" ? "İletişime Geç" : "Contact Us"}
                 </Link>
               </div>
             </div>

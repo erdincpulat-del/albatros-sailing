@@ -19,22 +19,21 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const certificate = await prisma.reservation.findFirst({
-      where: {
-        certificateId,
-      },
-      select: {
-        id: true,
-        fullName: true,
-        certificateId: true,
-        certificateLevel: true,
-        program: true,
-        seaMiles: true,
-        status: true,
-        cardFrontUrl: true,
-        certifiedAt: true,
-      },
-    });
+    const certificate = await prisma.certificate.findFirst({
+  where: {
+    certificateId,
+  },
+  select: {
+    id: true,
+    fullName: true,
+    certificateId: true,
+    qualificationLevel: true,
+    program: true,
+    seaMiles: true,
+    status: true,
+    cardFrontUrl: true,
+  },
+});
 
     if (!certificate) {
       return NextResponse.json({

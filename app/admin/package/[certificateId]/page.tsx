@@ -1,13 +1,13 @@
 import prisma from "@/lib/prisma";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     certificateId: string;
-  };
+  }>;
 };
 
 export default async function CertificatePackagePage({ params }: PageProps) {
-  const { certificateId } = params;
+  const { certificateId } = await params;
 
   const certificate = await prisma.certificate.findFirst({
     where: {

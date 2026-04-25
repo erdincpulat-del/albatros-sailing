@@ -95,11 +95,7 @@ export async function GET() {
             month: "asc",
           },
         },
-        gallery: {
-          orderBy: {
-            sortOrder: "asc",
-          },
-        },
+        
       },
       orderBy: {
         name: "asc",
@@ -187,48 +183,23 @@ export async function POST(req: NextRequest) {
         { status: 409 }
       );
     }
+const boat = await prisma.charterBoat.create({
+  data: {
+    slug,
+    name,
+    model,
+    year,
+    cabins,
+    guestsLabel,
+    location,
+    image,
+    shortNote,
+    description,
+    features,
+  },
+});
 
-    const boat = await prisma.charterBoat.create({
-      data: {
-        slug,
-        name,
-        model,
-        year,
-        cabins,
-        guestsLabel,
-        location,
-        image,
-        shortNote,
-        description,
-        features,
-        prices: {
-          create: prices.map((price) => ({
-            month: price.month,
-            price: price.price,
-          })),
-        },
-        gallery: {
-          create: gallery.map((item, index) => ({
-            imageUrl: item.imageUrl,
-            sortOrder: typeof item.sortOrder === "number" ? item.sortOrder : index,
-          })),
-        },
-      },
-      include: {
-        prices: {
-          orderBy: {
-            month: "asc",
-          },
-        },
-        gallery: {
-          orderBy: {
-            sortOrder: "asc",
-          },
-        },
-      },
-    });
-
-    return NextResponse.json({ boat }, { status: 201 });
+return NextResponse.json({ boat }, { status: 201 });
   } catch (error) {
     console.error("POST /api/admin/charter error:", error);
     return NextResponse.json(

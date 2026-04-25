@@ -12,8 +12,8 @@ function buildWhatsAppUrl(message: string) {
 }
 
 export default function TrainingReservePage() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,71 +28,71 @@ export default function TrainingReservePage() {
   const [notes, setNotes] = useState("");
 
   const ui = {
-    badge: lang === "tr" ? "Training Reservation" : "Training Reservation",
+    badge: locale === "tr" ? "Training Reservation" : "Training Reservation",
     title:
-      lang === "tr"
+      locale === "tr"
         ? "Eğitim talebinizi doğru yapı ile oluşturun."
         : "Create your training inquiry with the right structure.",
     description:
-      lang === "tr"
+      locale === "tr"
         ? "Eğitim rezervasyonları rota, dönem, seviye ve kontenjan mantığıyla değerlendirilir. Bilgilerinizi bırakın, size en uygun eğitim akışını birlikte netleştirelim."
         : "Training reservations are evaluated based on route, season, level, and capacity. Leave your details and let us define the most suitable training flow together.",
 
-    formTitle: lang === "tr" ? "Eğitim Talep Formu" : "Training Inquiry Form",
+    formTitle: locale === "tr" ? "Eğitim Talep Formu" : "Training Inquiry Form",
     formDesc:
-      lang === "tr"
+      locale === "tr"
         ? "Form gönderildiğinde talebiniz sisteme kaydedilir ve ekibimiz sizinle iletişime geçer."
         : "When the form is submitted, your inquiry is stored in the system and our team will contact you.",
 
-    fullName: lang === "tr" ? "Ad Soyad" : "Full Name",
-    phone: lang === "tr" ? "Telefon / WhatsApp" : "Phone / WhatsApp",
-    email: lang === "tr" ? "E-posta" : "Email",
-    program: lang === "tr" ? "Program Seçimi" : "Program Selection",
-    experience: lang === "tr" ? "Deneyim Seviyesi" : "Experience Level",
-    preferredMonth: lang === "tr" ? "Tercih Edilen Dönem" : "Preferred Period",
-    participantCount: lang === "tr" ? "Katılımcı Sayısı" : "Participant Count",
-    routePreference: lang === "tr" ? "Rota Tercihi" : "Route Preference",
-    notes: lang === "tr" ? "Notunuz" : "Your Note",
+    fullName: locale === "tr" ? "Ad Soyad" : "Full Name",
+    phone: locale === "tr" ? "Telefon / WhatsApp" : "Phone / WhatsApp",
+    email: locale === "tr" ? "E-posta" : "Email",
+    program: locale === "tr" ? "Program Seçimi" : "Program Selection",
+    experience: locale === "tr" ? "Deneyim Seviyesi" : "Experience Level",
+    preferredMonth: locale === "tr" ? "Tercih Edilen Dönem" : "Preferred Period",
+    participantCount: locale === "tr" ? "Katılımcı Sayısı" : "Participant Count",
+    routePreference: locale === "tr" ? "Rota Tercihi" : "Route Preference",
+    notes: locale === "tr" ? "Notunuz" : "Your Note",
 
     notesPlaceholder:
-      lang === "tr"
+      locale === "tr"
         ? "Hedefiniz, tarih beklentiniz veya özel durumunuzu yazabilirsiniz."
         : "You can write your goal, preferred timing, or any special details.",
     routePlaceholder:
-      lang === "tr"
+      locale === "tr"
         ? "Örn: Bodrum - Yunan Adaları / Bodrum - İstanbul"
         : "Ex: Bodrum - Greek Islands / Bodrum - Istanbul",
 
     submit:
-      lang === "tr" ? "Talebi Sisteme Kaydet" : "Save Inquiry to System",
-    submitting: lang === "tr" ? "Kaydediliyor..." : "Saving...",
+      locale === "tr" ? "Talebi Sisteme Kaydet" : "Save Inquiry to System",
+    submitting: locale === "tr" ? "Kaydediliyor..." : "Saving...",
 
     success:
-      lang === "tr"
+      locale === "tr"
         ? "Eğitim talebiniz başarıyla kaydedildi."
         : "Your training inquiry has been saved successfully.",
     error:
-      lang === "tr"
+      locale === "tr"
         ? "İşlem sırasında bir hata oluştu."
         : "An error occurred during the request.",
     validation:
-      lang === "tr"
+      locale === "tr"
         ? "Lütfen ad soyad ve program seçimini doldurun."
         : "Please fill in full name and program selection.",
 
-    altTitle: lang === "tr" ? "Hızlı İletişim" : "Quick Contact",
+    altTitle: locale === "tr" ? "Hızlı İletişim" : "Quick Contact",
     altDesc:
-      lang === "tr"
+      locale === "tr"
         ? "Dilerseniz eğitim yapısı hakkında hızlı bilgi almak için doğrudan WhatsApp üzerinden de yazabilirsiniz."
         : "If you prefer, you can also message directly on WhatsApp for quick information about the training structure.",
-    altButton: lang === "tr" ? "WhatsApp ile Sor" : "Ask on WhatsApp",
+    altButton: locale === "tr" ? "WhatsApp ile Sor" : "Ask on WhatsApp",
 
     whyTitle:
-      lang === "tr"
+      locale === "tr"
         ? "Bu form neden önemli?"
         : "Why is this form important?",
     whyItems:
-      lang === "tr"
+      locale === "tr"
         ? [
             "Seviyenize uygun program yönlendirmesi yapılır",
             "Rota ve dönem uygunluğu değerlendirilir",
@@ -106,7 +106,7 @@ export default function TrainingReservePage() {
   };
 
   const experienceOptions =
-    lang === "tr"
+    locale === "tr"
       ? [
           "Başlangıç",
           "Temel seviye deneyimim var",
@@ -123,7 +123,7 @@ export default function TrainingReservePage() {
         ];
 
   const monthOptions =
-    lang === "tr"
+    locale === "tr"
       ? [
           "Nisan 2026",
           "Mayıs 2026",
@@ -144,7 +144,7 @@ export default function TrainingReservePage() {
         ];
 
   const routeOptions =
-    lang === "tr"
+    locale === "tr"
       ? [
           "Bodrum - Marmaris",
           "Bodrum - Yunan Adaları",
@@ -228,7 +228,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
   }
 
   const quickMessage =
-    lang === "tr"
+    locale === "tr"
       ? "Merhaba, Albatros Sailing eğitim programları, rotalar ve uygun dönemler hakkında bilgi almak istiyorum."
       : "Hello, I would like to get information about Albatros Sailing training programs, routes, and available periods.";
 
@@ -274,7 +274,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
             </p>
 
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">
-              {lang === "tr" ? "Bilgilerinizi bırakın" : "Leave your details"}
+              {locale === "tr" ? "Bilgilerinizi bırakın" : "Leave your details"}
             </h2>
 
             <p className="mt-4 max-w-2xl text-base leading-8 text-white/65">
@@ -291,7 +291,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   className="reserve-input"
-                  placeholder={lang === "tr" ? "Adınız soyadınız" : "Your full name"}
+                  placeholder={locale === "tr" ? "Adınız soyadınız" : "Your full name"}
                 />
               </div>
 
@@ -305,7 +305,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="reserve-input"
-                    placeholder={lang === "tr" ? "05xx xxx xx xx" : "+90 ..."}
+                    placeholder={locale === "tr" ? "05xx xxx xx xx" : "+90 ..."}
                   />
                 </div>
 
@@ -333,7 +333,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
                   className="reserve-input"
                 >
                   <option value="">
-                    {lang === "tr" ? "Program seçin" : "Select a program"}
+                    {locale === "tr" ? "Program seçin" : "Select a program"}
                   </option>
                   {programs.map((program) => (
                     <option key={program.href} value={program.href}>
@@ -354,7 +354,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
                     className="reserve-input"
                   >
                     <option value="">
-                      {lang === "tr" ? "Seçiniz" : "Select"}
+                      {locale === "tr" ? "Seçiniz" : "Select"}
                     </option>
                     {experienceOptions.map((item) => (
                       <option key={item} value={item}>
@@ -390,7 +390,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
                     className="reserve-input"
                   >
                     <option value="">
-                      {lang === "tr" ? "Dönem seçin" : "Select period"}
+                      {locale === "tr" ? "Dönem seçin" : "Select period"}
                     </option>
                     {monthOptions.map((item) => (
                       <option key={item} value={item}>
@@ -410,7 +410,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
                     className="reserve-input"
                   >
                     <option value="">
-                      {lang === "tr" ? "Rota seçin" : "Select route"}
+                      {locale === "tr" ? "Rota seçin" : "Select route"}
                     </option>
                     {routeOptions.map((item) => (
                       <option key={item} value={item}>
@@ -463,7 +463,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
               </p>
 
               <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">
-                {lang === "tr"
+                {locale === "tr"
                   ? "Hızlı bilgi almak isterseniz"
                   : "If you want quick information"}
               </h3>
@@ -526,17 +526,17 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
               }}
             >
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
-                {lang === "tr" ? "Yönlendirme" : "Direction"}
+                {locale === "tr" ? "Yönlendirme" : "Direction"}
               </p>
 
               <h3 className="mt-3 text-2xl font-semibold tracking-tight">
-                {lang === "tr"
+                {locale === "tr"
                   ? "Diğer eğitim sayfalarını incelemek ister misiniz?"
                   : "Would you like to review the other training pages?"}
               </h3>
 
               <p className="mt-4 text-base leading-8 text-white/70">
-                {lang === "tr"
+                {locale === "tr"
                   ? "Karar vermeden önce programları ve eğitim yapısını inceleyebilirsiniz."
                   : "Before deciding, you can review the programs and training structure."}
               </p>
@@ -550,7 +550,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
                     boxShadow: "0 0 30px rgba(56,189,248,0.35)",
                   }}
                 >
-                  {lang === "tr" ? "Programları Gör" : "View Programs"}
+                  {locale === "tr" ? "Programları Gör" : "View Programs"}
                 </Link>
 
                 <Link
@@ -561,7 +561,7 @@ window.location.href = buildWhatsAppUrl(`Merhaba, ben ${fullName}. ${selectedPro
                     background: "rgba(255,255,255,0.04)",
                   }}
                 >
-                  {lang === "tr" ? "Eğitim Yapısı" : "Training Structure"}
+                  {locale === "tr" ? "Eğitim Yapısı" : "Training Structure"}
                 </Link>
               </div>
             </div>

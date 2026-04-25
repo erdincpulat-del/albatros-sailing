@@ -5,11 +5,6 @@ type RouteParams = {
   slug: string;
 };
 
-type PriceInput = {
-  month?: string;
-  price?: string;
-};
-
 export async function GET(
   req: Request,
   { params }: { params: Promise<RouteParams> }
@@ -26,14 +21,6 @@ export async function GET(
 
     const boat = await prisma.charterBoat.findUnique({
       where: { slug },
-      include: {
-        gallery: {
-          orderBy: { sortOrder: "asc" },
-        },
-        prices: {
-          orderBy: { month: "asc" },
-        },
-      },
     });
 
     if (!boat) {
@@ -51,7 +38,7 @@ export async function GET(
     console.error("GET /api/charter/[slug] error:", error);
 
     return NextResponse.json(
-      { success: false, error: "Hata oluştu" },
+      { success: false, error: "Tekne alınamadı" },
       { status: 500 }
     );
   }
@@ -96,59 +83,12 @@ export async function PUT(
           typeof body.description === "string" ? body.description.trim() : "",
         features:
           typeof body.features === "string" ? body.features.trim() : "",
-
-        captainFee:
-          typeof body.captainFee === "string" ? body.captainFee.trim() : "",
-        transitlogFee:
-          typeof body.transitlogFee === "string"
-            ? body.transitlogFee.trim()
-            : "",
-        cleaningFee:
-          typeof body.cleaningFee === "string" ? body.cleaningFee.trim() : "",
-        extrasNote:
-          typeof body.extrasNote === "string" ? body.extrasNote.trim() : "",
-      },
-    });
-
-    await prisma.charterBoatPrice.deleteMany({
-      where: { boatId: updatedBoat.id },
-    });
-
-    const validPrices: PriceInput[] = Array.isArray(body.prices)
-      ? body.prices.filter(
-          (item: PriceInput) =>
-            typeof item?.month === "string" &&
-            typeof item?.price === "string" &&
-            item.month.trim() &&
-            item.price.trim()
-        )
-      : [];
-
-    if (validPrices.length > 0) {
-      await prisma.charterBoatPrice.createMany({
-        data: validPrices.map((item) => ({
-          boatId: updatedBoat.id,
-          month: String(item.month).trim(),
-          price: String(item.price).trim(),
-        })),
-      });
-    }
-
-    const finalBoat = await prisma.charterBoat.findUnique({
-      where: { id: updatedBoat.id },
-      include: {
-        gallery: {
-          orderBy: { sortOrder: "asc" },
-        },
-        prices: {
-          orderBy: { month: "asc" },
-        },
       },
     });
 
     return NextResponse.json({
       success: true,
-      boat: finalBoat,
+      boat: updatedBoat,
     });
   } catch (error) {
     console.error("PUT /api/charter/[slug] error:", error);
@@ -162,7 +102,7 @@ export async function PUT(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<RouteParams> }
 ) {
   try {
     const { slug } = await params;

@@ -17,57 +17,57 @@ type RegistryCertificate = {
 };
 
 export default function RegistryPage() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   const ui = {
     badge:
-      lang === "tr"
+      locale === "tr"
         ? "ALBATROS SAILING · RESMİ KAYIT SİSTEMİ"
         : "ALBATROS SAILING · OFFICIAL REGISTRY",
     title:
-      lang === "tr"
+      locale === "tr"
         ? "Global sertifika kayıt sistemi"
         : "Global certificate registry",
     description:
-      lang === "tr"
+      locale === "tr"
         ? "Sertifika ID girerek Albatros Sailing dijital kayıt sisteminde arama yapın ve resmi belge kaydını görüntüleyin."
         : "Search the Albatros Sailing digital registry by entering a certificate ID and review the official document record.",
-    inputLabel: lang === "tr" ? "Sertifika ID" : "Certificate ID",
+    inputLabel: locale === "tr" ? "Sertifika ID" : "Certificate ID",
     inputPlaceholder:
-      lang === "tr" ? "Örnek: AS-OFF-2026-1735" : "Example: AS-OFF-2026-1735",
-    search: lang === "tr" ? "Sertifika Ara" : "Search Certificate",
-    searching: lang === "tr" ? "Aranıyor..." : "Searching...",
+      locale === "tr" ? "Örnek: AS-OFF-2026-1735" : "Example: AS-OFF-2026-1735",
+    search: locale === "tr" ? "Sertifika Ara" : "Search Certificate",
+    searching: locale === "tr" ? "Aranıyor..." : "Searching...",
     emptyAlert:
-      lang === "tr"
+      locale === "tr"
         ? "Lütfen sertifika ID girin."
         : "Please enter a certificate ID.",
     searchError:
-      lang === "tr"
+      locale === "tr"
         ? "Arama sırasında hata oluştu."
         : "An error occurred during search.",
     notFound:
-      lang === "tr"
+      locale === "tr"
         ? "Bu sertifika ID için kayıt bulunamadı."
         : "No record was found for this certificate ID.",
-    resultTitle: lang === "tr" ? "Kayıt Sonucu" : "Registry Result",
-    fullName: lang === "tr" ? "Ad Soyad" : "Full Name",
-    certificateId: lang === "tr" ? "Sertifika ID" : "Certificate ID",
-    qualification: lang === "tr" ? "Yeterlilik" : "Qualification",
-    seaMiles: lang === "tr" ? "Deniz Mili" : "Sea Miles",
-    status: lang === "tr" ? "Durum" : "Status",
-    issueDate: lang === "tr" ? "Tarih" : "Issue Date",
+    resultTitle: locale === "tr" ? "Kayıt Sonucu" : "Registry Result",
+    fullName: locale === "tr" ? "Ad Soyad" : "Full Name",
+    certificateId: locale === "tr" ? "Sertifika ID" : "Certificate ID",
+    qualification: locale === "tr" ? "Yeterlilik" : "Qualification",
+    seaMiles: locale === "tr" ? "Deniz Mili" : "Sea Miles",
+    status: locale === "tr" ? "Durum" : "Status",
+    issueDate: locale === "tr" ? "Tarih" : "Issue Date",
     verifyButton:
-      lang === "tr"
+      locale === "tr"
         ? "Tam Doğrulama Sayfasını Aç"
         : "Open Full Verify Page",
-    trustTitle: lang === "tr" ? "Kayıt Güveni" : "Registry Trust",
+    trustTitle: locale === "tr" ? "Kayıt Güveni" : "Registry Trust",
     trustText:
-      lang === "tr"
+      locale === "tr"
         ? "Kayıt sistemi, belgenin yalnızca basılı kart olmadığını; kurumsal yapının içinde yer alan doğrulanabilir resmi kayıt olduğunu gösterir."
         : "The registry system shows that the document is not only a printed card, but a verifiable official record within the institutional structure.",
     infoCards:
-      lang === "tr"
+      locale === "tr"
         ? [
             {
               title: "Resmi Kayıt",
@@ -97,9 +97,9 @@ export default function RegistryPage() {
             },
           ],
     systemBadge:
-      lang === "tr" ? "Kayıt Destekli Sistem" : "Registry-Backed Structure",
+      locale === "tr" ? "Kayıt Destekli Sistem" : "Registry-Backed Structure",
     systemText:
-      lang === "tr"
+      locale === "tr"
         ? "Bu ekran, sertifikanın sistem içinde yaşadığını ve tek başına basılı bir belge olmadığını gösterir."
         : "This screen shows that the certificate lives within the system and is not a standalone printed document.",
   };

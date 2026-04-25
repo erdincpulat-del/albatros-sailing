@@ -19,17 +19,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const reservation = await prisma.reservation.findUnique({
-      where: { certificateId },
-      select: {
-        id: true,
-        certificateId: true,
-      },
-    });
+    const certificate = await prisma.certificate.findFirst({
+  where: { certificateId },
+  select: {
+    id: true,
+    certificateId: true,
+  },
+});
 
-    if (!reservation) {
+    if (!certificate) {
       return NextResponse.json(
-        { error: "Kayıt bulunamadı" },
+        { error: "Sertifika bulunamadı" },
         { status: 404 }
       );
     }
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     // verify URL
     const verifyUrl =
   `${req.nextUrl.origin}/verify/` +
-  encodeURIComponent(reservation.certificateId);
+  encodeURIComponent(certificate.certificateId);
 
     // QR üret
     const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     ctx.font = "bold 22px Arial";
     ctx.textAlign = "center";
     ctx.fillText(
-      reservation.certificateId,
+      certificate.certificateId,
       qrX + qrSize / 2,
       qrY + qrSize + 16
     );
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    const fileName = `${reservation.certificateId}-back.png`;
+    const fileName = `${certificate.certificateId}-back.png`;
     const filePath = path.join(outputDir, fileName);
 
     const buffer = canvas.toBuffer("image/png");
@@ -114,8 +114,8 @@ export async function POST(req: NextRequest) {
 
     const cardBackUrl = `/cards/${fileName}`;
 
-    await prisma.reservation.update({
-      where: { id: reservation.id },
+    await prisma.certificate.update({
+      where: { id: certificate.id },
       data: { cardBackUrl },
     });
 
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
       success: true,
       cardBackUrl,
       verifyUrl,
-      certificateId: reservation.certificateId,
+      certificateId: certificate.certificateId,
     });
   } catch (error) {
     console.error("generate-card-back error:", error);

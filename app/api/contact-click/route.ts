@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
     if (!source) {
       return NextResponse.json(
-        { error: "source zorunludur." },
+        { error: "Source zorunludur." },
         { status: 400 }
       );
     }
@@ -20,15 +20,9 @@ export async function POST(req: Request) {
     const log = await prisma.adminLog.create({
       data: {
         action: "CONTACT_CLICK",
-        entityType: "LEAD",
-        entityId: null,
-        message: `${source} tıklandı`,
-        meta: {
-          source,
-          page,
-          fullName,
-          phone,
-        },
+        targetType: "LEAD",
+        targetId: null,
+        details: `${source} tıklandı`,
       },
     });
 

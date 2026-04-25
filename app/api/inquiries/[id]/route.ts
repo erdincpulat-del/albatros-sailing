@@ -1,36 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-const ALLOWED_STATUSES = [
-  "NEW",
-  "CONTACTED",
-  "QUOTED",
-  "CONFIRMED",
-  "CANCELLED",
-] as const;
-
-function calculateLeadScore(input: {
-  type?: string | null;
-  guestCount?: number | null;
-  participantCount?: number | null;
-  skipperRequired?: boolean | null;
-  charterDurationWeeks?: number | null;
-  status?: string | null;
+function calculateLeadScore({
+  guestCount,
+  participantCount,
+  skipperRequired,
+  charterDurationWeeks,
+  status,
+}: {
+  guestCount?: number;
+  participantCount?: number;
+  skipperRequired?: boolean;
+  charterDurationWeeks?: number;
+  status?: string;
 }) {
-  let score = 20;
+  let score = 0;
 
-  if (input.type === "CHARTER") score += 20;
-  if ((input.guestCount ?? 0) >= 6) score += 15;
-  if ((input.participantCount ?? 0) >= 2) score += 10;
-  if (input.skipperRequired) score += 10;
-  if ((input.charterDurationWeeks ?? 0) >= 2) score += 15;
+  if (guestCount) score += guestCount * 2;
+  if (participantCount) score += participantCount * 2;
+  if (skipperRequired) score += 5;
+  if (charterDurationWeeks) score += charterDurationWeeks * 3;
+  if (status === "NEW") score += 10;
 
-  if (input.status === "CONTACTED") score += 5;
-  if (input.status === "QUOTED") score += 10;
-  if (input.status === "CONFIRMED") score += 20;
-  if (input.status === "CANCELLED") score = Math.max(score - 20, 0);
-
-  return Math.min(score, 100);
+  return score;
 }
 
 export async function PATCH(
@@ -39,15 +31,9 @@ export async function PATCH(
 ) {
   try {
     const { id } = await context.params;
-    const body = await req.json();
-    const status = String(body?.status ?? "").trim();
 
-    if (!ALLOWED_STATUSES.includes(status as (typeof ALLOWED_STATUSES)[number])) {
-      return NextResponse.json(
-        { success: false, error: "Geçersiz status." },
-        { status: 400 }
-      );
-    }
+    const body = await req.json();
+    const { status } = body;
 
     const existing = await prisma.inquiry.findUnique({
       where: { id },
@@ -61,13 +47,12 @@ export async function PATCH(
     }
 
     const nextLeadScore = calculateLeadScore({
-      type: existing.type,
-      guestCount: existing.guestCount,
-      participantCount: existing.participantCount,
-      skipperRequired: existing.skipperRequired,
-      charterDurationWeeks: existing.charterDurationWeeks,
-      status,
-    });
+  guestCount: existing.guestCount ?? undefined,
+  participantCount: existing.participantCount ?? undefined,
+  skipperRequired: existing.skipperRequired ?? undefined,
+  charterDurationWeeks: existing.charterDurationWeeks ?? undefined,
+  status,
+});
 
     const inquiry = await prisma.inquiry.update({
       where: { id },
@@ -75,23 +60,21 @@ export async function PATCH(
         status,
         leadScore: nextLeadScore,
       },
-      include: {
-        charterWeek: {
-          include: {
-            boat: true,
-          },
-        },
-      },
     });
 
     return NextResponse.json({
       success: true,
       inquiry,
     });
+
   } catch (error) {
     console.error("INQUIRY STATUS UPDATE ERROR:", error);
+
     return NextResponse.json(
-      { success: false, error: "Status güncellenemedi." },
+      {
+        success: false,
+        error: "Status güncellenemedi.",
+      },
       { status: 500 }
     );
   }

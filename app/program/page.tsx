@@ -6,8 +6,8 @@ import { useLanguage } from "@/contexts/LanguageProvider";
 import { getMessages } from "@/messages";
 
 export default function ProgramsPage() {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   return (
     <main className="bg-white text-gray-900">
@@ -15,17 +15,17 @@ export default function ProgramsPage() {
         <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
           <div className="max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-              {lang === "tr" ? "Programlar" : "Programs"}
+              {locale === "tr" ? "Programlar" : "Programs"}
             </p>
 
             <h1 className="mt-3 text-4xl font-semibold tracking-tight text-gray-950 md:text-5xl">
-              {lang === "tr"
+              {locale === "tr"
                 ? "Hedefinize uygun eğitim rotasını seçin."
                 : "Choose the training route that fits your goal."}
             </h1>
 
             <p className="mt-5 max-w-2xl text-lg leading-8 text-gray-600">
-              {lang === "tr"
+              {locale === "tr"
                 ? "Her program, denizde daha fazla güven, daha fazla yetkinlik ve daha güçlü bir profesyonel duruş kazandırmak için tasarlanmıştır."
                 : "Each program is designed to build greater confidence, stronger competence, and a more professional presence at sea."}
             </p>
@@ -64,7 +64,7 @@ export default function ProgramsPage() {
                   href="/reserve"
                   className="inline-flex items-center justify-center rounded-full border border-gray-300 px-5 py-3 text-sm font-semibold text-gray-900 transition hover:bg-gray-50"
                 >
-                  {lang === "tr" ? "Rezervasyon" : "Reserve"}
+                  {locale === "tr" ? "Rezervasyon" : "Reserve"}
                 </Link>
               </div>
             </div>
@@ -78,17 +78,17 @@ export default function ProgramsPage() {
             <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                  {lang === "tr" ? "Doğru Programı Seçin" : "Choose the Right Path"}
+                  {locale === "tr" ? "Doğru Programı Seçin" : "Choose the Right Path"}
                 </p>
 
                 <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-950 md:text-4xl">
-                  {lang === "tr"
+                  {locale === "tr"
                     ? "Hangi programın sizin için doğru olduğundan emin değil misiniz?"
                     : "Not sure which program is right for you?"}
                 </h2>
 
                 <p className="mt-4 max-w-2xl text-base leading-8 text-gray-600">
-                  {lang === "tr"
+                  {locale === "tr"
                     ? "Ekibimizle iletişime geçin. Seviyenize, hedefinize ve deniz tecrübenize göre size en uygun eğitim rotasını birlikte belirleyelim."
                     : "Contact our team. Based on your level, goals, and sea experience, we can help you choose the most suitable training path."}
                 </p>
@@ -99,14 +99,14 @@ export default function ProgramsPage() {
                   href="/contact"
                   className="inline-flex items-center justify-center rounded-full bg-gray-950 px-6 py-4 text-sm font-semibold text-white transition hover:opacity-95"
                 >
-                  {lang === "tr" ? "İletişime Geç" : "Contact Us"}
+                  {locale === "tr" ? "İletişime Geç" : "Contact Us"}
                 </Link>
 
                 <Link
                   href="/training"
                   className="inline-flex items-center justify-center rounded-full border border-gray-300 px-6 py-4 text-sm font-semibold text-gray-900 transition hover:bg-gray-50"
                 >
-                  {lang === "tr" ? "Eğitim Sayfası" : "Training Page"}
+                  {locale === "tr" ? "Eğitim Sayfası" : "Training Page"}
                 </Link>
               </div>
             </div>

@@ -14,11 +14,11 @@ export default function GuideCta({
   title,
   description,
 }: GuideCtaProps) {
-  const { lang } = useLanguage();
-  const t = useMemo(() => getMessages(lang), [lang]);
+  const { locale } = useLanguage();
+  const t = useMemo(() => getMessages(locale), [locale]);
 
   const ui =
-    lang === "tr"
+    locale === "tr"
       ? {
           badge: "NEXT STEP",
           title:
