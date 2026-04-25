@@ -1,12 +1,13 @@
 import { NextRequest } from "next/server";
 import fs from "fs";
 import path from "path";
-import * as archiver from "archiver"; 
+import * as archiver from "archiver";
 
 import prisma from "@/lib/prisma";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 10;
 
 function resolvePublicFile(urlOrPath?: string | null) {
   if (!urlOrPath) return null;
