@@ -34,27 +34,31 @@ export async function POST(req: Request) {
       .digest("hex");
 
     const certificate = await prisma.certificate.create({
-      data: {
-        certificateId,
-        fullName,
-        program,
-        qualificationLevel,
-        issueDate: issueDate ? new Date(issueDate) : null,
-        seaMiles: seaMiles ? Number(seaMiles) : null,
-        photoUrl: photoUrl || null,
-        status: "ACTIVE",
-        verificationHash,
+  data: {
+    certificateId,
+    fullName,
+    program,
+    qualificationLevel,
+    issueDate: issueDate ? new Date(issueDate) : null,
+    seaMiles: seaMiles ? Number(seaMiles) : null,
+    photoUrl: photoUrl || null,
+    status: "ACTIVE",
+    verificationHash,
 
-        instructor: {
-          connect: {
-            id: instructorId,
+    ...(instructorId
+      ? {
+          instructor: {
+            connect: {
+              id: instructorId,
+            },
           },
-        },
-      },
-      include: {
-        instructor: true,
-      },
-    });
+        }
+      : {}),
+  },
+  include: {
+    instructor: true,
+  },
+});
 
     return NextResponse.json({
       success: true,
