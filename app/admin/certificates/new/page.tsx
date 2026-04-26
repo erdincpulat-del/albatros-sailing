@@ -70,7 +70,7 @@ export default function NewCertificatePage() {
       setMessage("")
       setCreatedCertificateId("")
 
-      const res = await fetch("/api/certificates/create", {
+      const res = await fetch("/api/certificates", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
