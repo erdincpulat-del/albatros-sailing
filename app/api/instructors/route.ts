@@ -2,33 +2,29 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+  process.env.SUPABASE_SERVICE_ROLE_KEY as string
 );
 
 export async function GET() {
-  try {
-    const { data, error } = await supabase
-      .from("Instructor")
-      .select("*")
-      .order("createdAt", { ascending: false });
+  const { data, error } = await supabase
+    .from("Instructor")
+    .select("id, fullName, title, createdAt")
+    .order("createdAt", { ascending: false });
 
-    if (error) throw error;
-
-    return NextResponse.json({
-      success: true,
-      items: data,
-    });
-  } catch (error) {
-    console.error("GET /api/instructors error:", error);
-
+  if (error) {
     return NextResponse.json(
       {
         success: false,
-        error: "Instructorlar alınamadı",
+        error: error.message,
         items: [],
       },
       { status: 500 }
     );
   }
+
+  return NextResponse.json({
+    success: true,
+    items: data ?? [],
+  });
 }
