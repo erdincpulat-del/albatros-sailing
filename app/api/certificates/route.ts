@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     fullName,
     program,
     qualificationLevel,
-    issueDate: issueDate ? new Date(issueDate) : null,
+    issueDate: issueDate ? new Date(issueDate.split(".").reverse().join("-")): null,
     seaMiles: seaMiles ? Number(seaMiles) : null,
     photoUrl: photoUrl || null,
     status: "ACTIVE",
