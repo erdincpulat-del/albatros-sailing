@@ -3,51 +3,6 @@ import prisma from "@/lib/prisma";
 import crypto from "crypto";
 
 // ✅ 1. GET (zaten var)
-export async function GET() {
-  try {
-    const items = await prisma.certificate.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      select: {
-        id: true,
-        certificateId: true,
-        fullName: true,
-        program: true,
-        qualificationLevel: true,
-        issueDate: true,
-        seaMiles: true,
-        photoUrl: true,
-        cardFrontUrl: true,
-        cardBackUrl: true,
-        verificationHash: true,
-        status: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      items,
-      total: items.length,
-    });
-  } catch (error) {
-    console.error("GET /api/certificates error:", error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Sertifikalar alınamadı",
-        items: [],
-        total: 0,
-      },
-      { status: 500 }
-    );
-  }
-}
-
-// ✅ 2. BURAYA EKLENECEK (GET’in ALTINA)
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -59,7 +14,15 @@ export async function POST(req: Request) {
       issueDate,
       seaMiles,
       instructorId,
+      photoUrl,
     } = body;
+
+    if (!fullName || !program || !qualificationLevel || !instructorId) {
+      return NextResponse.json(
+        { success: false, error: "Eksik alan var" },
+        { status: 400 }
+      );
+    }
 
     const count = await prisma.certificate.count();
 
@@ -67,7 +30,7 @@ export async function POST(req: Request) {
 
     const verificationHash = crypto
       .createHash("sha256")
-      .update(certificateId + Date.now())
+      .update(`${certificateId}-${Date.now()}`)
       .digest("hex");
 
     const certificate = await prisma.certificate.create({
@@ -78,9 +41,18 @@ export async function POST(req: Request) {
         qualificationLevel,
         issueDate: issueDate ? new Date(issueDate) : null,
         seaMiles: seaMiles ? Number(seaMiles) : null,
-        instructorId,
-        status: "PENDING",
+        photoUrl: photoUrl || null,
+        status: "ACTIVE",
         verificationHash,
+
+        instructor: {
+          connect: {
+            id: instructorId,
+          },
+        },
+      },
+      include: {
+        instructor: true,
       },
     });
 
@@ -89,12 +61,15 @@ export async function POST(req: Request) {
       certificate,
     });
   } catch (error) {
-    console.error("POST /api/certificates error:", error);
+    console.error("CERTIFICATE_CREATE_ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error: "Sertifika oluşturulamadı",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Sertifika oluşturulamadı",
       },
       { status: 500 }
     );
