@@ -45,18 +45,7 @@ export async function POST(req: Request) {
     status: "ACTIVE",
     verificationHash,
 
-    ...(instructorId
-      ? {
-          instructor: {
-            connect: {
-              id: instructorId,
-            },
-          },
-        }
-      : {}),
-  },
-  include: {
-    instructor: true,
+    instructorId: instructorId || "erdinc-pulat",
   },
 });
 
