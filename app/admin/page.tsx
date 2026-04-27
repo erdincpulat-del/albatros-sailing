@@ -49,23 +49,12 @@ const programOptions = [
   "YELKENLI YAT EGITIMI (YES)",
 ];
 
-const OFFSHORE_LEVELS = [
+const qualificationOptions = [
   "INTERNATIONAL BAREBOAT SKIPPER",
   "OFFSHORE SKIPPER",
   "YACHTMASTER",
   "COMPETENT CREW",
 ];
-
-const YES_LEVELS = ["YY1", "YY2", "YY3", "YY4", "YY5", "YY6"];
-
-const YES_LABELS: Record<string, string> = {
-  YY1: "Beginner Crew",
-  YY2: "Basic Crew",
-  YY3: "Intermediate Sailor",
-  YY4: "Advanced Sailor",
-  YY5: "Skipper Level",
-  YY6: "Master Skipper",
-};
 
 function normalizeText(value?: string | null) {
   return (value || "").toLocaleLowerCase("tr-TR");
@@ -108,15 +97,6 @@ function getStatusMeta(status?: string | null) {
       color: "#ef4444",
       bg: "rgba(239,68,68,0.16)",
       border: "rgba(239,68,68,0.30)",
-    };
-  }
-
-  if (normalized === "EXPIRED") {
-    return {
-      label: "EXPIRED",
-      color: "#f97316",
-      bg: "rgba(249,115,22,0.16)",
-      border: "rgba(249,115,22,0.30)",
     };
   }
 
@@ -171,11 +151,7 @@ function formatDateTime(value?: string | null) {
     minute: "2-digit",
   }).format(date);
 }
-
-async function apiFetch<T = unknown>(
-  url: string,
-  options?: RequestInit
-): Promise<T> {
+async function apiFetch<T = any>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     credentials: "include",
     cache: "no-store",
@@ -214,19 +190,40 @@ function getHashPreview(hash?: string | null) {
   if (hash.length <= 12) return hash;
   return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
 }
-
 export default function AdminPage() {
   const [fullName, setFullName] = useState("");
   const [program, setProgram] = useState("Offshore Yacht Course");
   const [qualificationLevel, setQualificationLevel] = useState(
     "INTERNATIONAL BAREBOAT SKIPPER"
   );
+
+  const OFFSHORE_LEVELS = [
+    "INTERNATIONAL BAREBOAT SKIPPER",
+    "OFFSHORE SKIPPER",
+    "YACHTMASTER",
+    "COMPETENT CREW",
+  ];
+
+  const YES_LEVELS = ["YY1", "YY2", "YY3", "YY4", "YY5", "YY6"];
+  const YES_LABELS: Record<string, string> = {
+  YY1: "Beginner Crew",
+  YY2: "Basic Crew",
+  YY3: "Intermediate Sailor",
+  YY4: "Advanced Sailor",
+  YY5: "Skipper Level",
+  YY6: "Master Skipper",
+};
+
+  const qualificationOptions =
+    program === "YELKENLI YAT EGITIMI (YES)"
+      ? YES_LEVELS
+      : OFFSHORE_LEVELS;
+
   const [issueDate, setIssueDate] = useState("");
   const [seaMiles, setSeaMiles] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
-  const [printingId, setPrintingId] = useState<string | null>(null);
-
   const photoInputRef = useRef<HTMLInputElement | null>(null);
+const [printingId, setPrintingId] = useState<string | null>(null);
 
   const [items, setItems] = useState<CertificateItem[]>([]);
   const [logs, setLogs] = useState<AdminLogItem[]>([]);
@@ -237,113 +234,49 @@ export default function AdminPage() {
   const [loadingLogs, setLoadingLogs] = useState(false);
   const [loadingInstructors, setLoadingInstructors] = useState(false);
   const [updatingStatusId, setUpdatingStatusId] = useState<string | null>(null);
-  const [selectedInstructorId, setSelectedInstructorId] = useState("");
+  const [selectedInstructorId, setSelectedInstructorId] = useState<string | null>(null);
+
+
+async function updateStatus(
+  id: string,
+  status: string,
+  reason?: string
+) {
+  try {
+    setUpdatingStatusId(id);
+
+    const res = await fetch(`/api/certificates/${id}/status`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        status,
+        reason: reason || null,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      alert(data.error || "Status değiştirilemedi");
+      return;
+    }
+
+    await loadCertificates();
+    await loadLogs();
+  } catch (error) {
+    console.error("Update status error:", error);
+    alert("Status güncellenemedi");
+  } finally {
+    setUpdatingStatusId(null);
+  }
+}
 
   const [searchTerm, setSearchTerm] = useState("");
   const [programFilter, setProgramFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
-
-  const currentQualificationOptions =
-    program === "YELKENLI YAT EGITIMI (YES)" ? YES_LEVELS : OFFSHORE_LEVELS;
-
-  async function loadCertificates() {
-    try {
-      setLoadingList(true);
-
-      const data = await apiFetch<{ success: true; items: CertificateItem[] }>(
-        "/api/certificates"
-      );
-
-      setItems(data.items || []);
-    } catch (error) {
-      console.error("Load certificates error:", error);
-      setItems([]);
-    } finally {
-      setLoadingList(false);
-    }
-  }
-
-  async function loadLogs() {
-    try {
-      setLoadingLogs(true);
-
-      const data = await apiFetch<{ success: true; items: AdminLogItem[] }>(
-        "/api/admin-logs"
-      );
-
-      setLogs((data.items || []).slice(0, 10));
-    } catch (error) {
-      console.error("Load logs error:", error);
-      setLogs([]);
-    } finally {
-      setLoadingLogs(false);
-    }
-  }
-
-  async function loadInstructors() {
-    try {
-      setLoadingInstructors(true);
-
-      const data = await apiFetch<{ success: true; items: InstructorItem[] }>(
-        "/api/instructors"
-      );
-
-      setInstructors(data.items || []);
-    } catch (error) {
-      console.error("Instructor load error:", error);
-      setInstructors([]);
-    } finally {
-      setLoadingInstructors(false);
-    }
-  }
-
-  useEffect(() => {
-    loadCertificates();
-    loadLogs();
-    loadInstructors();
-  }, []);
-
-  useEffect(() => {
-    const options =
-      program === "YELKENLI YAT EGITIMI (YES)" ? YES_LEVELS : OFFSHORE_LEVELS;
-
-    if (!options.includes(qualificationLevel)) {
-      setQualificationLevel(options[0]);
-    }
-  }, [program, qualificationLevel]);
-
-  async function updateStatus(id: string, status: string, reason?: string) {
-    try {
-      setUpdatingStatusId(id);
-
-      const data = await apiFetch<{ success: true }>(
-        `/api/certificates/${id}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status,
-            reason: reason || null,
-          }),
-        }
-      );
-
-      if (!data.success) {
-        alert("Status değiştirilemedi");
-        return;
-      }
-
-      await loadCertificates();
-      await loadLogs();
-    } catch (error) {
-      console.error("Update status error:", error);
-      alert("Status güncellenemedi");
-    } finally {
-      setUpdatingStatusId(null);
-    }
-  }
 
   async function handleLogout() {
     try {
@@ -365,96 +298,172 @@ export default function AdminPage() {
     }
   }
 
-  async function createCertificate() {
-    try {
-      setLoading(true);
+  async function loadCertificates() {
+  try {
+    setLoadingList(true);
 
-      if (!fullName.trim()) {
-        alert("Full name gerekli");
-        return;
-      }
+    const data = await apiFetch<{ success: true; items: CertificateItem[] }>(
+      "/api/certificates"
+    );
 
-      if (!qualificationLevel.trim()) {
-        alert("Qualification level gerekli");
-        return;
-      }
-
-      if (!selectedInstructorId) {
-        alert("Instructor seçmelisin");
-        return;
-      }
-
-      if (seaMiles && Number(seaMiles) < 0) {
-        alert("Sea miles negatif olamaz");
-        return;
-      }
-
-      let photoUrl: string | null = null;
-
-      if (photo) {
-        const photoFormData = new FormData();
-
-        photoFormData.append("file", photo);
-        photoFormData.append("folder", "students");
-
-        const photoData = await apiFetch<{ success: true; url: string }>(
-          "/api/upload-photo",
-          {
-            method: "POST",
-            body: photoFormData,
-          }
-        );
-
-        photoUrl = photoData.url;
-      }
-
-      const data = await apiFetch<{ success: true }>(
-        "/api/certificates/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fullName: fullName.trim(),
-            program,
-            qualificationLevel,
-            issueDate: issueDate || null,
-            seaMiles: seaMiles ? Number(seaMiles) : null,
-            instructorId: selectedInstructorId,
-            photoUrl,
-          }),
-        }
-      );
-
-      if (!data.success) {
-        alert("Certificate oluşturulamadı");
-        return;
-      }
-
-      alert("✅ Certificate oluşturuldu");
-
-      setFullName("");
-      setProgram("Offshore Yacht Course");
-      setQualificationLevel("INTERNATIONAL BAREBOAT SKIPPER");
-      setIssueDate("");
-      setSeaMiles("");
-      setPhoto(null);
-      setSelectedInstructorId("");
-
-      if (photoInputRef.current) {
-        photoInputRef.current.value = "";
-      }
-
-      await loadCertificates();
-      await loadLogs();
-    } catch (error) {
-      console.error("createCertificate error:", error);
-      alert(error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu");
-    } finally {
-      setLoading(false);
-    }
+    setItems(data.items || []);
+  } catch (error) {
+    console.error("Load certificates error:", error);
+    setItems([]);
+  } finally {
+    setLoadingList(false);
   }
+}
+
+  async function loadLogs() {
+  try {
+    setLoadingLogs(true);
+
+    const data = await apiFetch<{ success: true; items: AdminLogItem[] }>(
+      "/api/admin-logs"
+    );
+
+    setLogs((data.items || []).slice(0, 10));
+  } catch (error) {
+    console.error("Load logs error:", error);
+    setLogs([]);
+  } finally {
+    setLoadingLogs(false);
+  }
+}
+
+  async function loadInstructors() {
+  try {
+    setLoadingInstructors(true);
+
+    const res = await fetch("/api/instructors");
+    const data = await res.json();
+
+    setInstructors(data.items || []);
+  } catch (error) {
+    console.error("Instructor load error:", error);
+    setInstructors([]);
+  } finally {
+    setLoadingInstructors(false);
+  }
+}
+
+useEffect(() => {
+  loadCertificates();
+  loadLogs();
+  loadInstructors();
+}, []);
+
+async function createCertificate() {
+  try {
+    setLoading(true);
+
+    if (!fullName.trim()) {
+      alert("Full name gerekli");
+      return;
+    }
+
+    if (!qualificationLevel.trim()) {
+      alert("Qualification level gerekli");
+      return;
+    }
+
+    if (!selectedInstructorId) {
+      alert("Instructor seçmelisin");
+      return;
+    }
+if (seaMiles && Number(seaMiles) < 0) {
+  alert("Sea miles negatif olamaz");
+  return;
+}
+    let photoUrl: string | null = null;
+
+    // 📸 FOTO YÜKLE
+    if (photo) {
+      const photoFormData = new FormData();
+
+      photoFormData.append("file", photo);
+
+      // 🔥 BURAYI DİKKAT
+      photoFormData.append("folder", "students"); // default
+
+      const photoRes = await fetch("/api/upload-photo", {
+        method: "POST",
+        body: photoFormData,
+        credentials: "include",
+      });
+
+      if (photoRes.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+
+      const photoData = await photoRes.json();
+
+      if (!photoRes.ok || !photoData.success) {
+        alert(photoData.error || "Fotoğraf yüklenemedi");
+        return;
+      }
+
+      // ✅ DOĞRU URL
+      photoUrl = photoData.url;
+    }
+
+    // 🚀 CERTIFICATE CREATE
+    const res = await fetch("/api/certificates/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        fullName,
+        program,
+        qualificationLevel,
+        issueDate: issueDate || null,
+        seaMiles: seaMiles || null,
+        instructorId: selectedInstructorId,
+        photoUrl,
+      }),
+    });
+
+    if (res.status === 401) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      alert(data.error || "Certificate oluşturulamadı");
+      return;
+    }
+
+    alert("✅ Certificate oluşturuldu");
+
+    // 🔄 FORM RESET
+    setFullName("");
+setProgram("Offshore Yacht Course");
+setQualificationLevel("INTERNATIONAL BAREBOAT SKIPPER");
+setIssueDate("");
+setSeaMiles("");
+setPhoto(null);
+setSelectedInstructorId("");
+
+if (photoInputRef.current) {
+  photoInputRef.current.value = "";
+}
+
+// 🔄 LİSTE YENİLE
+await loadCertificates();
+await loadLogs();
+  } catch (error) {
+    console.error("createCertificate error:", error);
+    alert("Beklenmeyen bir hata oluştu");
+  } finally {
+    setLoading(false);
+  }
+}
 
   async function copyVerifyLink(certificateId: string) {
     try {
@@ -469,46 +478,9 @@ export default function AdminPage() {
     }
   }
 
-  async function printCard(certificateId: string) {
-    try {
-      setPrintingId(certificateId);
-
-      const res = await fetch("/api/certificates/print-card", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          certificateId,
-        }),
-      });
-
-      if (res.status === 401) {
-        window.location.href = "/login";
-        return;
-      }
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || "Print error");
-      }
-
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      window.open(url, "_blank");
-    } catch (error) {
-      console.error("Print card error:", error);
-      alert(error instanceof Error ? error.message : "Print error");
-    } finally {
-      setPrintingId(null);
-    }
-  }
 
   function scrollToCreateForm() {
     const target = document.getElementById("create-certificate-section");
-
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -520,7 +492,10 @@ export default function AdminPage() {
       return;
     }
 
-    window.open(`/verify/${encodeURIComponent(items[0].certificateId)}`, "_blank");
+    window.open(
+      `/verify/${encodeURIComponent(items[0].certificateId)}`,
+      "_blank"
+    );
   }
 
   const filteredItems = useMemo(() => {
@@ -605,55 +580,55 @@ export default function AdminPage() {
         <h2 style={panelTitleStyle}>Create Certificate</h2>
 
         <div style={formGridStyle}>
-          <div>
-            <label style={labelStyle}>Full Name</label>
-            <input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Student full name"
-              style={inputStyle}
-            />
-          </div>
+  <div>
+    <label style={labelStyle}>Full Name</label>
+    <input
+      value={fullName}
+      onChange={(e) => setFullName(e.target.value)}
+      placeholder="Student full name"
+      style={inputStyle}
+    />
+  </div>
 
-          <div>
-            <label style={labelStyle}>Program</label>
-            <select
-              value={program}
-              onChange={(e) => setProgram(e.target.value)}
-              style={inputStyle}
-            >
-              {programOptions.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </div>
+  <div>
+    <label style={labelStyle}>Program</label>
+    <select
+      value={program}
+      onChange={(e) => setProgram(e.target.value)}
+      style={inputStyle}
+    >
+      {programOptions.map((item) => (
+        <option key={item} value={item}>
+          {item}
+        </option>
+      ))}
+    </select>
+  </div>
 
-          <div>
-            <label style={labelStyle}>Qualification Level</label>
-            <select
-              value={qualificationLevel}
-              onChange={(e) => setQualificationLevel(e.target.value)}
-              style={inputStyle}
-            >
-              {currentQualificationOptions.map((level) => (
-                <option key={level} value={level}>
-                  {YES_LABELS[level] ? `${level} - ${YES_LABELS[level]}` : level}
-                </option>
-              ))}
-            </select>
-          </div>
+  <div>
+    <label style={labelStyle}>Qualification Level</label>
+    <select
+      value={qualificationLevel}
+      onChange={(e) => setQualificationLevel(e.target.value)}
+      style={inputStyle}
+    >
+      {qualificationOptions.map((level) => (
+        <option key={level} value={level}>
+          {level}
+        </option>
+      ))}
+    </select>
+  </div>
 
-          <div>
-            <label style={labelStyle}>Issue Date</label>
-            <input
-              type="date"
-              value={issueDate}
-              onChange={(e) => setIssueDate(e.target.value)}
-              style={inputStyle}
-            />
-          </div>
+  <div>
+    <label style={labelStyle}>Issue Date</label>
+    <input
+      type="date"
+      value={issueDate}
+      onChange={(e) => setIssueDate(e.target.value)}
+      style={inputStyle}
+    />
+  </div>
 
           <div>
             <label style={labelStyle}>Sea Miles</label>
@@ -669,37 +644,36 @@ export default function AdminPage() {
           <div>
             <label style={labelStyle}>Student Photo</label>
             <input
-              ref={photoInputRef}
-              id="student-photo-input"
-              type="file"
-              accept="image/*"
-              onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-              style={inputStyle}
-            />
-
-            {photo ? (
-              <div style={{ marginTop: 10 }}>
-                <img
-                  src={URL.createObjectURL(photo)}
-                  alt="Preview"
-                  style={{
-                    width: 100,
-                    height: 120,
-                    objectFit: "cover",
-                    borderRadius: 10,
-                    border: "1px solid rgba(148,163,184,0.18)",
-                    background: "#0f172a",
-                  }}
-                />
-              </div>
-            ) : null}
+  ref={photoInputRef}
+  id="student-photo-input"
+  type="file"
+  accept="image/*"
+  onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+  style={inputStyle}
+/>
+{photo ? (
+  <div style={{ marginTop: 10 }}>
+    <img
+      src={URL.createObjectURL(photo)}
+      alt="Preview"
+      style={{
+        width: 100,
+        height: 120,
+        objectFit: "cover",
+        borderRadius: 10,
+        border: "1px solid rgba(148,163,184,0.18)",
+        background: "#0f172a",
+      }}
+    />
+  </div>
+) : null}
           </div>
 
           <div>
             <label style={labelStyle}>Instructor</label>
             <select
-              value={selectedInstructorId}
-              onChange={(e) => setSelectedInstructorId(e.target.value)}
+              value={selectedInstructorId || ""}
+onChange={(e) => setSelectedInstructorId(e.target.value)}
               style={inputStyle}
             >
               <option value="">
@@ -709,7 +683,7 @@ export default function AdminPage() {
               {instructors.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.fullName}
-                  {item.title ? ` - ${item.title}` : ""}
+                  {item.title ? ` — ${item.title}` : ""}
                 </option>
               ))}
             </select>
@@ -734,7 +708,7 @@ export default function AdminPage() {
             <input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="isim, ID, program, seviye ara"
+              placeholder="İsim, ID, program, seviye ara"
               style={inputStyle}
             />
           </div>
@@ -747,7 +721,6 @@ export default function AdminPage() {
               style={inputStyle}
             >
               <option value="ALL">All Programs</option>
-
               {programOptions.map((item) => (
                 <option key={item} value={item}>
                   {item}
@@ -767,7 +740,6 @@ export default function AdminPage() {
               <option value="ACTIVE">ACTIVE</option>
               <option value="PENDING">PENDING</option>
               <option value="REVOKED">REVOKED</option>
-              <option value="EXPIRED">EXPIRED</option>
               <option value="UNKNOWN">UNKNOWN</option>
             </select>
           </div>
@@ -796,76 +768,81 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {logs.length === 0 && !loadingLogs ? (
-          <p style={emptyTextStyle}>Henüz log kaydı yok.</p>
-        ) : (
-          <div style={{ display: "grid", gap: 12 }}>
-            {logs.map((log) => {
-              let parsed: Record<string, string> | null = null;
+{logs.length === 0 && !loadingLogs ? (
+  <p style={emptyTextStyle}>Henüz log kaydı yok.</p>
+) : (
+  <div style={{ display: "grid", gap: 12 }}>
+    {logs.map((log) => {
+  let parsed = null;
 
-              try {
-                parsed = log.details ? JSON.parse(log.details) : null;
-              } catch {
-                parsed = null;
-              }
+  try {
+    parsed = log.details ? JSON.parse(log.details) : null;
+  } catch {
+    parsed = null;
+  }
 
-              return (
-                <div key={log.id} style={logCardStyle}>
-                  <div style={logTopStyle}>
-                    <strong style={{ color: "#38bdf8" }}>{log.action}</strong>
+  return (
+    <div
+      key={log.id}
+      style={{
+        padding: 12,
+        borderRadius: 12,
+        background: "rgba(15,23,42,0.6)",
+        border: "1px solid rgba(148,163,184,0.2)",
+        display: "grid",
+        gap: 6
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <strong style={{ color: "#38bdf8" }}>{log.action}</strong>
+        <span style={{ opacity: 0.6 }}>
+          {formatDateTime(log.createdAt)}
+        </span>
+      </div>
 
-                    <span style={logTimeStyle}>
-                      {formatDateTime(log.createdAt)}
-                    </span>
-                  </div>
+      <div>
+        <strong>Target:</strong> {log.targetType || "-"}
+      </div>
 
-                  <div style={logContentStyle}>
-                    <div>
-                      <strong>Target:</strong> {log.targetType || "-"}
-                    </div>
+      <div>
+        <strong>ID:</strong> {log.targetId || "-"}
+      </div>
 
-                    <div>
-                      <strong>ID:</strong> {log.targetId || "-"}
-                    </div>
+      {parsed && parsed.fullName && (
+        <div>
+          <strong>Name:</strong> {parsed.fullName}
+        </div>
+      )}
 
-                    {parsed?.fullName ? (
-                      <div>
-                        <strong>Name:</strong> {parsed.fullName}
-                      </div>
-                    ) : null}
+      {parsed && parsed.certificateId && (
+        <div>
+          <strong>Certificate:</strong> {parsed.certificateId}
+        </div>
+      )}
 
-                    {parsed?.certificateId ? (
-                      <div>
-                        <strong>Certificate:</strong> {parsed.certificateId}
-                      </div>
-                    ) : null}
+      {parsed && parsed.newStatus && (
+        <div>
+          <strong>Status:</strong> {parsed.newStatus}
+        </div>
+      )}
 
-                    {parsed?.newStatus ? (
-                      <div>
-                        <strong>Status:</strong> {parsed.newStatus}
-                      </div>
-                    ) : null}
-
-                    {parsed?.revokeReason ? (
-                      <div style={{ color: "#f87171" }}>
-                        <strong>Reason:</strong> {parsed.revokeReason}
-                      </div>
-                    ) : null}
-
-                    {!parsed && log.details ? (
-                      <div>
-                        <strong>Details:</strong> {log.details}
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      <section style={panelStyle}>
+      {parsed && parsed.revokeReason && (
+  <div style={{ color: "#f87171" }}>
+    <strong>Reason:</strong> {parsed.revokeReason}
+  </div>
+)}
+{!parsed && log.details && (
+  <div>
+    <strong>Details:</strong> {log.details}
+  </div>
+)}
+    </div>
+  );
+})}
+  </div>
+)}
+</section>
+<section style={panelStyle}>
         <div style={sectionHeaderStyle}>
           <h2 style={panelTitleStyle}>Certificates</h2>
           <div style={sectionMetaTextStyle}>
@@ -873,256 +850,283 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {filteredItems.length === 0 && !loadingList ? (
+        {filteredItems.length === 0 && !loadingList && (
           <p style={emptyTextStyle}>No matching certificate records found.</p>
-        ) : null}
+        )}
 
         <div style={{ display: "grid", gap: 20 }}>
-          {filteredItems.map((item) => {
-            const statusMeta = getStatusMeta(item.status);
-            const securityMeta = getSecurityMeta(item);
-            const currentStatus = getStatusLabel(item.status);
-            const isRevoked = currentStatus === "REVOKED";
-            const isUpdating = updatingStatusId === item.id;
+  {filteredItems.map((item) => {
+    const statusMeta = getStatusMeta(item.status);
+    const securityMeta = getSecurityMeta(item);
+    const currentStatus = getStatusLabel(item.status);
+    const isRevoked = currentStatus === "REVOKED";
+    const isUpdating = updatingStatusId === item.id;
 
-            return (
-              <div key={item.id} style={certificateCardStyle}>
-                <div style={certificateTopStyle}>
-                  <div>
-                    <div style={badgesRowStyle}>
-                      <h3 style={cardTitleStyle}>{item.fullName}</h3>
+    return (
+      <div key={item.id} style={certificateCardStyle}>
+        <div style={certificateTopStyle}>
+          <div>
+            <div style={badgesRowStyle}>
+              <h3 style={cardTitleStyle}>{item.fullName}</h3>
 
-                      <StatusBadge
-                        label={statusMeta.label}
-                        color={statusMeta.color}
-                        bg={statusMeta.bg}
-                        border={statusMeta.border}
-                      />
+              <StatusBadge
+                label={statusMeta.label}
+                color={statusMeta.color}
+                bg={statusMeta.bg}
+                border={statusMeta.border}
+              />
 
-                      <StatusBadge
-                        label={securityMeta.label}
-                        color={securityMeta.color}
-                        bg={securityMeta.bg}
-                        border={securityMeta.border}
-                      />
-                    </div>
+              <StatusBadge
+                label={securityMeta.label}
+                color={securityMeta.color}
+                bg={securityMeta.bg}
+                border={securityMeta.border}
+              />
+            </div>
 
-                    <div style={detailsGridStyle}>
-                      <DetailRow label="ID" value={item.certificateId} />
-                      <DetailRow label="Program" value={item.program || "-"} />
-                      <DetailRow
-                        label="Level"
-                        value={item.qualificationLevel || "-"}
-                      />
-                      <DetailRow
-                        label="Issue Date"
-                        value={formatDate(item.issueDate)}
-                      />
-                      <DetailRow
-                        label="Sea Miles"
-                        value={
-                          typeof item.seaMiles === "number"
-                            ? `${item.seaMiles} NM`
-                            : "-"
-                        }
-                      />
-                      <DetailRow label="Status" value={currentStatus} />
-                      <DetailRow
-                        label="Instructor"
-                        value={item.instructor?.fullName || "-"}
-                      />
-                      <DetailRow
-                        label="Verification Hash"
-                        value={getHashPreview(item.verificationHash)}
-                      />
-                    </div>
-                  </div>
+            <div style={detailsGridStyle}>
+              <DetailRow label="ID" value={item.certificateId} />
+              <DetailRow label="Program" value={item.program || "-"} />
+              <DetailRow
+                label="Level"
+                value={item.qualificationLevel || "-"}
+              />
+              <DetailRow
+                label="Issue Date"
+                value={formatDate(item.issueDate)}
+              />
+              <DetailRow
+                label="Sea Miles"
+                value={
+                  typeof item.seaMiles === "number"
+                    ? `${item.seaMiles} NM`
+                    : "-"
+                }
+              />
+              <DetailRow label="Status" value={currentStatus} />
+              <DetailRow
+                label="Instructor"
+                value={item.instructor?.fullName || "-"}
+              />
+              <DetailRow
+                label="Verification Hash"
+                value={getHashPreview(item.verificationHash)}
+              />
+            </div>
+          </div>
 
-                  {item.photoUrl ? (
-                    <img
-                      src={item.photoUrl}
-                      alt={item.fullName}
-                      style={photoStyle}
-                      onError={(e) => {
-                        e.currentTarget.src = "/placeholder-user.png";
-                      }}
-                    />
-                  ) : null}
-                </div>
+          {item.photoUrl ? (
+            <img
+              src={item.photoUrl}
+              alt={item.fullName}
+              style={photoStyle}
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder-user.png";
+              }}
+            />
+          ) : null}
+        </div>
 
-                <div style={buttonsWrapStyle}>
-                  {item.cardFrontUrl ? (
-                    <button
-                      onClick={() => window.open(item.cardFrontUrl!, "_blank")}
-                      style={secondaryButtonStyle}
-                    >
-                      Open Card Front
-                    </button>
-                  ) : null}
+        <div style={buttonsWrapStyle}>
+          {item.cardFrontUrl ? (
+            <button
+              onClick={() => window.open(item.cardFrontUrl!, "_blank")}
+              style={secondaryButtonStyle}
+            >
+              Open Card Front
+            </button>
+          ) : null}
 
-                  {item.cardBackUrl ? (
-                    <button
-                      onClick={() => window.open(item.cardBackUrl!, "_blank")}
-                      style={secondaryButtonStyle}
-                    >
-                      Open Card Back
-                    </button>
-                  ) : null}
+          {item.cardBackUrl ? (
+            <button
+              onClick={() => window.open(item.cardBackUrl!, "_blank")}
+              style={secondaryButtonStyle}
+            >
+              Open Card Back
+            </button>
+          ) : null}
 
-                  <button
-                    onClick={() =>
-                      window.open(
-                        `/verify/${encodeURIComponent(item.certificateId)}`,
-                        "_blank"
-                      )
-                    }
-                    style={secondaryButtonStyle}
-                  >
-                    Open Verify Page
-                  </button>
+          <button
+            onClick={() =>
+              window.open(
+                `/verify/${encodeURIComponent(item.certificateId)}`,
+                "_blank"
+              )
+            }
+            style={secondaryButtonStyle}
+          >
+            Open Verify Page
+          </button>
 
-                  <button
-                    onClick={() => copyVerifyLink(item.certificateId)}
-                    style={secondaryButtonStyle}
-                  >
-                    Copy Verify Link
-                  </button>
+          <button
+            onClick={() => copyVerifyLink(item.certificateId)}
+            style={secondaryButtonStyle}
+          >
+            Copy Verify Link
+          </button>
 
-                  <button
-                    onClick={() => printCard(item.certificateId)}
-                    disabled={printingId === item.certificateId}
-                    style={secondaryButtonStyle}
-                  >
-                    {printingId === item.certificateId
-                      ? "Printing..."
-                      : "Print Card"}
-                  </button>
+          <button
+  onClick={async () => {
+    try {
+      setPrintingId(item.certificateId);
 
-                  <button
-                    onClick={() =>
-                      window.open(
-                        `/api/certificates/export-certificate-pdf?certificateId=${encodeURIComponent(
-                          item.certificateId
-                        )}`,
-                        "_blank"
-                      )
-                    }
-                    style={primaryButtonStyle}
-                  >
-                    Download A4 Certificate
-                  </button>
+      const res = await fetch("/api/certificates/print-card", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          certificateId: item.certificateId,
+        }),
+      });
 
-                  <button
-                    onClick={() => updateStatus(item.id, "ACTIVE")}
-                    disabled={isUpdating || currentStatus === "ACTIVE"}
-                    style={{
-                      ...statusActionButtonStyle,
-                      border: "1px solid #22c55e",
-                      background:
-                        currentStatus === "ACTIVE"
-                          ? "rgba(34,197,94,0.10)"
-                          : "rgba(34,197,94,0.16)",
-                      color: "#22c55e",
-                      opacity: isUpdating || currentStatus === "ACTIVE" ? 0.7 : 1,
+      if (!res.ok) {
+        throw new Error("Print failed");
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Print card error:", error);
+      alert("Card PDF oluşturulamadı");
+    } finally {
+      setPrintingId(null);
+    }
+  }}
+  disabled={printingId === item.certificateId}
+  style={secondaryButtonStyle}
+>
+  {printingId === item.certificateId
+    ? "Printing..."
+    : "Download Card PDF"}
+</button>
+
+          <button
+            onClick={() =>
+              window.open(
+                `/api/certificates/export-certificate-pdf?certificateId=${encodeURIComponent(
+                  item.certificateId
+                )}`,
+                "_blank"
+              )
+            }
+            style={primaryButtonStyle}
+          >
+            Download A4 Certificate
+          </button>
+
+          <button
+            onClick={() => updateStatus(item.id, "ACTIVE")}
+            disabled={isUpdating || currentStatus === "ACTIVE"}
+            style={{
+              ...statusActionButtonStyle,
+              border: "1px solid #22c55e",
+              background:
+                currentStatus === "ACTIVE"
+                  ? "rgba(34,197,94,0.10)"
+                  : "rgba(34,197,94,0.16)",
+              color: "#22c55e",
+              opacity: isUpdating || currentStatus === "ACTIVE" ? 0.7 : 1,
+            }}
+          >
+            {isUpdating ? "Updating..." : "Set Active"}
+          </button>
+
+          <button
+            onClick={() => {
+              if (isRevoked) {
+                updateStatus(item.id, "ACTIVE");
+                return;
+              }
+
+              const reason = window.prompt(
+                "Revoke nedeni girin:",
+                "Manual revoke"
+              );
+
+              if (!reason || !reason.trim()) {
+                return;
+              }
+
+              updateStatus(item.id, "REVOKED", reason.trim());
+            }}
+            disabled={isUpdating}
+            style={{
+              ...statusActionButtonStyle,
+              border: isRevoked
+                ? "1px solid #22c55e"
+                : "1px solid #ef4444",
+              background: isRevoked
+                ? "rgba(34,197,94,0.16)"
+                : "rgba(239,68,68,0.16)",
+              color: isRevoked ? "#22c55e" : "#ef4444",
+              opacity: isUpdating ? 0.7 : 1,
+            }}
+          >
+            {isUpdating
+              ? "Updating..."
+              : isRevoked
+              ? "Restore Certificate"
+              : "Revoke Certificate"}
+          </button>
+        </div>
+
+        {(item.cardFrontUrl || item.cardBackUrl) && (
+          <div style={previewGridStyle}>
+            <div>
+              <div style={previewTitleStyle}>Front Side</div>
+              <div style={previewBoxStyle}>
+                {item.cardFrontUrl ? (
+                  <img
+                    src={item.cardFrontUrl!}
+                    alt="Card front"
+                    style={previewImageStyle}
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder-card.png";
                     }}
-                  >
-                    {isUpdating ? "Updating..." : "Set Active"}
-                  </button>
-
-                  <button
-                    onClick={() => updateStatus(item.id, "EXPIRED")}
-                    disabled={isUpdating || currentStatus === "EXPIRED"}
-                    style={warningButtonStyle}
-                  >
-                    Expire
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (isRevoked) {
-                        updateStatus(item.id, "ACTIVE");
-                        return;
-                      }
-
-                      const reason = window.prompt(
-                        "Revoke nedeni girin",
-                        "Manual revoke"
-                      );
-
-                      if (!reason || !reason.trim()) return;
-
-                      updateStatus(item.id, "REVOKED", reason.trim());
-                    }}
-                    disabled={isUpdating}
-                    style={{
-                      ...statusActionButtonStyle,
-                      border: isRevoked
-                        ? "1px solid #22c55e"
-                        : "1px solid #ef4444",
-                      background: isRevoked
-                        ? "rgba(34,197,94,0.16)"
-                        : "rgba(239,68,68,0.16)",
-                      color: isRevoked ? "#22c55e" : "#ef4444",
-                      opacity: isUpdating ? 0.7 : 1,
-                    }}
-                  >
-                    {isUpdating
-                      ? "Updating..."
-                      : isRevoked
-                      ? "Restore Certificate"
-                      : "Revoke Certificate"}
-                  </button>
-                </div>
-
-                {(item.cardFrontUrl || item.cardBackUrl) && (
-                  <div style={previewGridStyle}>
-                    <div>
-                      <div style={previewTitleStyle}>Front Side</div>
-                      <div style={previewBoxStyle}>
-                        {item.cardFrontUrl ? (
-                          <img
-                            src={item.cardFrontUrl}
-                            alt="Card front"
-                            style={previewImageStyle}
-                            onError={(e) => {
-                              e.currentTarget.src = "/placeholder-card.png";
-                            }}
-                          />
-                        ) : (
-                          <div style={emptyPreviewStyle}>Front yok</div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div style={previewTitleStyle}>Back Side</div>
-                      <div style={previewBoxStyle}>
-                        {item.cardBackUrl ? (
-                          <img
-                            src={item.cardBackUrl}
-                            alt="Card back"
-                            style={previewImageStyle}
-                            onError={(e) => {
-                              e.currentTarget.src = "/placeholder-card.png";
-                            }}
-                          />
-                        ) : (
-                          <div style={emptyPreviewStyle}>Back yok</div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  />
+                ) : (
+                  <div style={emptyPreviewStyle}>Front yok</div>
                 )}
               </div>
-            );
-          })}
-        </div>
+            </div>
+
+            <div>
+              <div style={previewTitleStyle}>Back Side</div>
+              <div style={previewBoxStyle}>
+                {item.cardBackUrl ? (
+                  <img
+                    src={item.cardBackUrl!}
+                    alt="Card back"
+                    style={previewImageStyle}
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder-card.png";
+                    }}
+                  />
+                ) : (
+                  <div style={emptyPreviewStyle}>Back yok</div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  })}
+</div>
       </section>
     </main>
   );
 }
 
-function TopStatusCard({ label, value }: { label: string; value: string }) {
+function TopStatusCard({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
   return (
     <div style={topStatusCardStyle}>
       <div style={topStatusLabelStyle}>{label}</div>
@@ -1131,7 +1135,13 @@ function TopStatusCard({ label, value }: { label: string; value: string }) {
   );
 }
 
-function SummaryBadge({ label, value }: { label: string; value: number }) {
+function SummaryBadge({
+  label,
+  value,
+}: {
+  label: string;
+  value: number;
+}) {
   return (
     <div style={summaryBadgeStyle}>
       <strong>{label}:</strong> {value}
@@ -1272,7 +1282,6 @@ const formGridStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
   gap: 16,
-  marginTop: 18,
 };
 
 const filtersGridStyle: CSSProperties = {
@@ -1478,16 +1487,6 @@ const secondaryButtonStyle: CSSProperties = {
   border: "1px solid rgba(148,163,184,0.18)",
   background: "rgba(30,41,59,0.7)",
   color: "#f8fafc",
-  cursor: "pointer",
-  fontWeight: 700,
-};
-
-const warningButtonStyle: CSSProperties = {
-  padding: "12px 16px",
-  borderRadius: 12,
-  border: "1px solid rgba(249,115,22,0.45)",
-  background: "rgba(249,115,22,0.16)",
-  color: "#fb923c",
   cursor: "pointer",
   fontWeight: 700,
 };
