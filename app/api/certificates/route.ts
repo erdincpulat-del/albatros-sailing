@@ -1,16 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import crypto from "crypto";
+import QRCode from "qrcode";
 
-type CreateCertificateBody = {
-  fullName: string;
-  program: string;
-  qualificationLevel: string;
-  issueDate?: string | null;
-  seaMiles?: number | string | null;
-  instructorId?: string | null;
-  photoUrl?: string | null;
-};
-
+// -----------------------------
+// GET → tüm sertifikaları getir
+// -----------------------------
 export async function GET() {
   try {
     const certificates = await prisma.certificate.findMany({
@@ -27,20 +22,52 @@ export async function GET() {
     console.error("CERTIFICATES FETCH ERROR:", error);
 
     return NextResponse.json(
-      { success: false, error: "Certificates fetch failed" },
+      {
+        success: false,
+        error: "Certificates fetch failed",
+      },
       { status: 500 }
     );
   }
 }
 
+// -----------------------------
+// POST → yeni sertifika oluştur
+// -----------------------------
 export async function POST(req: Request) {
   try {
-    const body: CreateCertificateBody = await req.json();
+    const body = await req.json();
 
+    // 🌍 BASE URL
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      process.env.APP_URL ||
+      "https://albatros-sailing.vercel.app";
+
+    // 🔐 HASH oluştur
+    const verificationHash = crypto
+      .createHash("sha256")
+      .update(
+        `${body.fullName}-${body.program}-${body.qualificationLevel}-${Date.now()}`
+      )
+      .digest("hex")
+      .slice(0, 12)
+      .toUpperCase();
+
+    // 🔗 Verify URL
+    const verifyUrl = `${baseUrl}/verify/${verificationHash}`;
+
+    // 📱 QR üret
+    const qrCodeUrl = await QRCode.toDataURL(verifyUrl, {
+      width: 300,
+      margin: 1,
+    });
+
+    // 🧠 DATA OBJESİ
     const data: any = {
-      fullName: body.fullName,
-      program: body.program,
-      qualificationLevel: body.qualificationLevel,
+      fullName: String(body.fullName || ""),
+      program: String(body.program || ""),
+      qualificationLevel: String(body.qualificationLevel || ""),
 
       issueDate: body.issueDate ? new Date(body.issueDate) : null,
 
@@ -52,16 +79,22 @@ export async function POST(req: Request) {
           : null,
 
       photoUrl: body.photoUrl || null,
+
       status: "PENDING",
+
+      // 🔥 EN KRİTİK ALANLAR
+      verificationHash,
+      qrCodeUrl,
     };
 
-    // instructor varsa bağla
+    // 👨‍✈️ Instructor bağlantısı (varsa)
     if (body.instructorId) {
       data.instructor = {
         connect: { id: body.instructorId },
       };
     }
 
+    // 💾 DB kayıt
     const certificate = await prisma.certificate.create({
       data,
       include: { instructor: true },
