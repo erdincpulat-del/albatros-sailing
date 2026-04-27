@@ -410,7 +410,7 @@ if (seaMiles && Number(seaMiles) < 0) {
     }
 
     // 🚀 CERTIFICATE CREATE
-   const res = await fetch("/api/certificates", {
+ const res = await fetch("/api/certificates/create", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
