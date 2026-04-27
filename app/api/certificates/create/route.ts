@@ -2,8 +2,8 @@ import crypto from "crypto";
 import QRCode from "qrcode";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { generateCertificateCardFront } from "@/lib/generate-certificate-card-front";
-import { generateCertificateCardBack } from "@/lib/generate-certificate-card-back";
+// import { generateCertificateCardFront } from "@/lib/generate-certificate-card-front";
+// import { generateCertificateCardBack } from "@/lib/generate-certificate-card-back";
 
 function normalizeText(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -155,7 +155,7 @@ export async function POST(req: Request) {
         issueDate,
         seaMiles,
         instructorId,
-        photoUrl,
+       // photoUrl,
         verificationHash,
         status: "PENDING",
       },
