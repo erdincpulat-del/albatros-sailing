@@ -189,40 +189,28 @@ export async function POST(req: Request) {
       },
     });
 
-    // 4) aynı QR ile front / back üret
-    const cardFrontUrl = await generateCertificateCardFront({
-      certificateId: generatedId,
-      fullName,
-      qualification: qualificationLevel,
-      issueDate,
-      seaMiles,
-      photoUrl,
-      qrCodeDataUrl,
-    });
+    // 4) Vercel limit yüzünden kart üretimi şimdilik kapalı
+// Kart front/back daha sonra ayrı route içinde üretilecek.
+const cardFrontUrl = null;
+const cardBackUrl = null;
 
-    const cardBackUrl = await generateCertificateCardBack({
-  certificateId: generatedId,
-  qrCodeDataUrl,
-  
+// 5) kaydı kart url'leri ile güncelle
+const updatedCertificate = await prisma.certificate.update({
+  where: { id: createdCertificate.id },
+  data: {
+    cardFrontUrl,
+    cardBackUrl,
+  },
+  include: {
+    instructor: {
+      select: {
+        id: true,
+        fullName: true,
+        title: true,
+      },
+    },
+  },
 });
-
-    // 5) kaydı kart url'leri ile güncelle
-    const updatedCertificate = await prisma.certificate.update({
-      where: { id: createdCertificate.id },
-      data: {
-        cardFrontUrl,
-        cardBackUrl,
-      },
-      include: {
-        instructor: {
-          select: {
-            id: true,
-            fullName: true,
-            title: true,
-          },
-        },
-      },
-    });
 
     // 6) log
     await prisma.adminLog.create({
