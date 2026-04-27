@@ -4,10 +4,13 @@ import prisma from "@/lib/prisma";
 export async function GET() {
   try {
     const certificates = await prisma.certificate.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+  orderBy: {
+    createdAt: "desc",
+  },
+  include: {
+    instructor: true,
+  },
+});
 
     return NextResponse.json({
       success: true,
