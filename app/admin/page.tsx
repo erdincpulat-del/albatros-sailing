@@ -410,36 +410,37 @@ if (seaMiles && Number(seaMiles) < 0) {
     }
 
     // 🚀 CERTIFICATE CREATE
-    const res = await fetch("/api/certificates/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        fullName,
-        program,
-        qualificationLevel,
-        issueDate: issueDate || null,
-        seaMiles: seaMiles || null,
-        instructorId: selectedInstructorId,
-        photoUrl,
-      }),
-    });
+   const res = await fetch("/api/certificates", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  credentials: "include",
+  body: JSON.stringify({
+    fullName,
+    program,
+    qualificationLevel,
+    issueDate: issueDate || null,
+    seaMiles: seaMiles || null,
+    instructorId: selectedInstructorId,
+    photoUrl,
+  }),
+});
 
-    if (res.status === 401) {
-      window.location.href = "/login";
-      return;
-    }
+if (res.status === 401) {
+  window.location.href = "/login";
+  return;
+}
 
-    const data = await res.json();
+const data = await res.json();
 
-    if (!res.ok || !data.success) {
-      alert(data.error || "Certificate oluşturulamadı");
-      return;
-    }
+if (!res.ok || !data.success) {
+  alert(data.error || "Sertifika oluşturulamadı");
+  return;
+}
 
-    alert("✅ Certificate oluşturuldu");
+// başarılıysa listeyi yenile
+window.location.reload();
 
     // 🔄 FORM RESET
     setFullName("");
