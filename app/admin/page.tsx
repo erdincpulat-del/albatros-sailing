@@ -967,37 +967,40 @@ onChange={(e) => setSelectedInstructorId(e.target.value)}
           </button>
 
           <button
-            onClick={async () => {
-              try {
-                setPrintingId(item.certificateId);
+  onClick={async () => {
+    try {
+      setPrintingId(item.certificateId);
 
-                const res = await fetch("/api/certificates/print-card", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    certificateId: item.certificateId,
-  }),
-});
+      const res = await fetch("/api/certificates/print-card", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          certificateId: item.certificateId,
+        }),
+      });
 
-const blob = await res.blob();
-const url = window.URL.createObjectURL(blob);
+      if (!res.ok) {
+        throw new Error("Print failed");
+      }
 
-window.open(url, "_blank");
-
-} catch (error) {
-  console.error("Print card error:", error);
-  alert(error instanceof Error ? error.message : "Print error");
-} finally {
-  setPrintingId(null);
-}
-
-}}
-disabled={printingId === item.certificateId}
-style={secondaryButtonStyle}
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Print card error:", error);
+      alert("Card PDF oluşturulamadı");
+    } finally {
+      setPrintingId(null);
+    }
+  }}
+  disabled={printingId === item.certificateId}
+  style={secondaryButtonStyle}
 >
-{printingId === item.certificateId ? "Printing..." : "Print Card"}
+  {printingId === item.certificateId
+    ? "Printing..."
+    : "Download Card PDF"}
 </button>
 
           <button
