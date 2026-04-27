@@ -201,13 +201,10 @@ export async function POST(req: Request) {
     });
 
     const cardBackUrl = await generateCertificateCardBack({
-      certificateId: generatedId,
-      fullName,
-      qualification: qualificationLevel,
-      issueDate,
-      qrCodeDataUrl,
-      verificationHash,
-    });
+  certificateId: generatedId,
+  qrCodeDataUrl,
+  
+});
 
     // 5) kaydı kart url'leri ile güncelle
     const updatedCertificate = await prisma.certificate.update({
