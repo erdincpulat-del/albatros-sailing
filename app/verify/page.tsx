@@ -1,131 +1,115 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-export default function VerifyPage() {
+function VerifyPageContent() {
   const lang = "tr";
+  const searchParams = useSearchParams();
+
+  const qrCertificateId = searchParams.get("certificateId") || "";
 
   const [certificateId, setCertificateId] = useState("");
+
+  useEffect(() => {
+    if (qrCertificateId) {
+      setCertificateId(qrCertificateId.toUpperCase());
+    }
+  }, [qrCertificateId]);
 
   const normalizedCertificateId = certificateId.trim().toUpperCase();
 
   const verifyHref = normalizedCertificateId
-    ? `/verify/${encodeURIComponent(normalizedCertificateId)}`
+    ? `/verify?certificateId=${encodeURIComponent(normalizedCertificateId)}`
     : "#";
 
-  const ui = {
-    badge:
-      lang === "tr"
-        ? "ALBATROS SAILING · RESMİ DOĞRULAMA PORTALI"
-        : "ALBATROS SAILING · OFFICIAL VERIFICATION PORTAL",
+  const hasVerifiedCertificate = Boolean(qrCertificateId);
 
-    title:
-      lang === "tr"
-        ? "Sertifika doğrulamasını anında yapın."
-        : "Verify certificate authenticity instantly.",
+  const frontCardUrl = normalizedCertificateId
+    ? `/api/card/front?certificateId=${encodeURIComponent(normalizedCertificateId)}`
+    : "";
 
-    description:
-      lang === "tr"
-        ? "Sertifika kodunu girerek resmi doğrulama ekranına ilerleyin. Bu portal, kayıt destekli belge yapısını görünür hale getirir ve Albatros Sailing eğitim sisteminin kurumsal güven katmanını güçlendirir."
-        : "Enter the certificate code to continue to the official verification screen. This portal makes the registry-backed document structure visible and strengthens the institutional trust layer of the Albatros Sailing training system.",
+  const backCardUrl = normalizedCertificateId
+    ? `/api/card/back?certificateId=${encodeURIComponent(normalizedCertificateId)}`
+    : "";
 
-    trustLine:
-      lang === "tr"
-        ? [
-            "Resmi kayıt desteği",
-            "Hızlı doğrulama",
-            "Kurumsal güven yapısı",
-          ]
-        : [
-            "Official registry support",
-            "Fast verification",
-            "Institutional trust structure",
-          ],
+  const ui = useMemo(
+    () => ({
+      badge:
+        lang === "tr"
+          ? "ALBATROS SAILING · RESMİ DOĞRULAMA PORTALI"
+          : "ALBATROS SAILING · OFFICIAL VERIFICATION PORTAL",
 
-    entryBadge: lang === "tr" ? "Doğrulama Girişi" : "Verification Entry",
-    entryTitle:
-      lang === "tr"
-        ? "Sertifika ID / Kayıt Kodu"
-        : "Certificate ID / Registry Code",
-    entryDescription:
-      lang === "tr"
-        ? "Kart üzerinde bulunan sertifika kodunu veya resmi kayıt numarasını girin."
-        : "Enter the certificate code shown on the card or the official registry number.",
-    inputLabel: lang === "tr" ? "Sertifika Kodu" : "Certificate Code",
-    inputPlaceholder:
-      lang === "tr" ? "Örn: AS-OFF-2026-0001" : "Ex: AS-OFF-2026-0001",
-    verifyButton:
-      lang === "tr" ? "Doğrulamaya Git" : "Go to Verification",
-    registryButton:
-      lang === "tr" ? "Kayıt Sistemini Aç" : "Open Registry",
-    inputWarning:
-      lang === "tr"
-        ? "Lütfen geçerli bir sertifika kodu girin."
-        : "Please enter a valid certificate code.",
+      title:
+        lang === "tr"
+          ? "Sertifika doğrulamasını anında yapın."
+          : "Verify certificate authenticity instantly.",
 
-    trustBoxTitle: lang === "tr" ? "Güven Katmanı" : "Trust Layer",
-    trustBoxText:
-      lang === "tr"
-        ? "Doğrulama sistemi yalnızca kontrol alanı değildir. Aynı zamanda Albatros Sailing eğitim yapısının ciddiyetini, belge disiplinini ve resmi kayıt mantığını görünür hale getirir."
-        : "The verification system is not only a control field. It also makes the seriousness of the Albatros Sailing training structure, document discipline, and official registry logic visible.",
+      description:
+        lang === "tr"
+          ? "Sertifika kodunu girerek resmi doğrulama ekranına ilerleyin. Bu portal, kayıt destekli belge yapısını görünür hale getirir ve Albatros Sailing eğitim sisteminin kurumsal güven katmanını güçlendirir."
+          : "Enter the certificate code to continue to the official verification screen.",
 
-    infoCards:
-      lang === "tr"
-        ? [
-            {
-              title: "Nasıl Çalışır?",
-              text: "Sertifika kodu girilir, sistem ilgili kayıtla eşleşir ve kullanıcı resmi doğrulama ekranına yönlendirilir.",
-            },
-            {
-              title: "Neden Önemlidir?",
-              text: "Bu yapı, sertifikanın yalnızca basılı belge olmadığını; sistem içinde kayıtlı ve doğrulanabilir olduğunu gösterir.",
-            },
-            {
-              title: "Ne Sağlar?",
-              text: "Kurumsal güven, öğrenci başarısının görünürlüğü ve premium marka algısını güçlendirir.",
-            },
-          ]
-        : [
-            {
-              title: "How It Works?",
-              text: "The certificate code is entered, the system matches it with the relevant record, and the user is directed to the official verification screen.",
-            },
-            {
-              title: "Why It Matters?",
-              text: "This structure proves that the certificate is not just a printed document, but a record stored and verifiable within the system.",
-            },
-            {
-              title: "What Does It Provide?",
-              text: "It strengthens institutional trust, visibility of student achievement, and premium brand perception.",
-            },
-          ],
+      trustLine:
+        lang === "tr"
+          ? ["Resmi kayıt desteği", "Hızlı doğrulama", "Kurumsal güven yapısı"]
+          : ["Official registry support", "Fast verification", "Institutional trust structure"],
 
-    nextStepBadge: lang === "tr" ? "Sonraki Adım" : "Next Step",
-    nextStepTitle:
-      lang === "tr"
-        ? "Doğrulama sonrası resmi kaydı da inceleyin."
-        : "After verification, review the official registry as well.",
-    nextStepText:
-      lang === "tr"
-        ? "Doğrulama ekranı belgeyi teyit eder; kayıt sistemi ise yapı, disiplin ve güven algısını daha da güçlendirir."
-        : "The verification screen confirms the document, while the registry system further strengthens the sense of structure, discipline, and trust.",
-    openRegistry:
-      lang === "tr" ? "Registry Aç" : "Open Registry",
-    contact:
-      lang === "tr" ? "İletişime Geç" : "Contact",
+      entryBadge: lang === "tr" ? "Doğrulama Girişi" : "Verification Entry",
+      entryTitle: lang === "tr" ? "Sertifika ID / Kayıt Kodu" : "Certificate ID",
+      entryDescription:
+        lang === "tr"
+          ? "Kart üzerinde bulunan sertifika kodunu veya resmi kayıt numarasını girin."
+          : "Enter the certificate code shown on the card.",
+      inputLabel: lang === "tr" ? "Sertifika Kodu" : "Certificate Code",
+      inputPlaceholder: lang === "tr" ? "Örn: AS-OFF-2026-0001" : "Ex: AS-OFF-2026-0001",
+      verifyButton: lang === "tr" ? "Doğrulamaya Git" : "Go to Verification",
+      registryButton: lang === "tr" ? "Kayıt Sistemini Aç" : "Open Registry",
+      inputWarning:
+        lang === "tr"
+          ? "Lütfen geçerli bir sertifika kodu girin."
+          : "Please enter a valid certificate code.",
 
-    sampleCodesTitle:
-      lang === "tr" ? "Örnek Kod Formatı" : "Sample Code Format",
-    sampleCodes: ["AS-OFF-2026-0001", "AS-OFF-2026-0108", "AS-OFF-2026-1735"],
+      cardTitle: lang === "tr" ? "Doğrulanan Sertifika Kartı" : "Verified Certificate Card",
+      frontCard: lang === "tr" ? "Kart Ön Yüz" : "Card Front",
+      backCard: lang === "tr" ? "Kart Arka Yüz" : "Card Back",
 
-    securityBadge:
-      lang === "tr" ? "Kayıt Destekli Güven" : "Registry-Backed Trust",
-    securityText:
-      lang === "tr"
-        ? "Bu portal, belge doğrulamasını görünür hale getirir ve kurumsal ciddiyeti destekler."
-        : "This portal makes document verification visible and reinforces institutional credibility.",
-  };
+      trustBoxTitle: lang === "tr" ? "Güven Katmanı" : "Trust Layer",
+      trustBoxText:
+        lang === "tr"
+          ? "Doğrulama sistemi yalnızca kontrol alanı değildir. Aynı zamanda Albatros Sailing eğitim yapısının ciddiyetini, belge disiplinini ve resmi kayıt mantığını görünür hale getirir."
+          : "The verification system makes the official registry structure visible.",
+
+      sampleCodesTitle: lang === "tr" ? "Örnek Kod Formatı" : "Sample Code Format",
+      sampleCodes: ["AS-OFF-2026-0001", "AS-OFF-2026-0108", "AS-OFF-2026-1735"],
+
+      securityBadge: lang === "tr" ? "Kayıt Destekli Güven" : "Registry-Backed Trust",
+      securityText:
+        lang === "tr"
+          ? "Bu portal, belge doğrulamasını görünür hale getirir ve kurumsal ciddiyeti destekler."
+          : "This portal reinforces institutional credibility.",
+
+      infoCards:
+        lang === "tr"
+          ? [
+              {
+                title: "Nasıl Çalışır?",
+                text: "Sertifika kodu girilir, sistem ilgili kayıtla eşleşir ve kullanıcı resmi doğrulama ekranına yönlendirilir.",
+              },
+              {
+                title: "Neden Önemlidir?",
+                text: "Bu yapı, sertifikanın yalnızca basılı belge olmadığını; sistem içinde kayıtlı ve doğrulanabilir olduğunu gösterir.",
+              },
+              {
+                title: "Ne Sağlar?",
+                text: "Kurumsal güven, öğrenci başarısının görünürlüğü ve premium marka algısını güçlendirir.",
+              },
+            ]
+          : [],
+    }),
+    [lang]
+  );
 
   function handleVerifyClick(e: React.MouseEvent<HTMLAnchorElement>) {
     if (!normalizedCertificateId) {
@@ -135,8 +119,15 @@ export default function VerifyPage() {
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter" && normalizedCertificateId) {
-      window.location.href = `/verify/${encodeURIComponent(normalizedCertificateId)}`;
+    if (e.key === "Enter") {
+      if (!normalizedCertificateId) {
+        alert(ui.inputWarning);
+        return;
+      }
+
+      window.location.href = `/verify?certificateId=${encodeURIComponent(
+        normalizedCertificateId
+      )}`;
     }
   }
 
@@ -207,9 +198,7 @@ export default function VerifyPage() {
                     id="certificateId"
                     type="text"
                     value={certificateId}
-                    onChange={(e) =>
-                      setCertificateId(e.target.value.toUpperCase())
-                    }
+                    onChange={(e) => setCertificateId(e.target.value.toUpperCase())}
                     onKeyDown={handleKeyDown}
                     placeholder={ui.inputPlaceholder}
                     className="w-full rounded-2xl border border-white/12 bg-white/[0.05] px-4 py-4 text-sm text-white outline-none transition placeholder:text-white/28 focus:border-cyan-300/40 focus:bg-white/[0.07]"
@@ -267,6 +256,47 @@ export default function VerifyPage() {
         </div>
       </section>
 
+      {hasVerifiedCertificate && normalizedCertificateId ? (
+        <section className="border-b border-white/8">
+          <div className="mx-auto max-w-7xl px-6 py-12">
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-2xl">
+              <div className="mb-6">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-100/60">
+                  {normalizedCertificateId}
+                </p>
+                <h2 className="mt-2 text-3xl font-bold text-white">
+                  {ui.cardTitle}
+                </h2>
+              </div>
+
+              <div className="grid gap-8 lg:grid-cols-2">
+                <div>
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-white/55">
+                    {ui.frontCard}
+                  </h3>
+                  <img
+                    src={frontCardUrl}
+                    alt={`${normalizedCertificateId} front card`}
+                    className="w-full rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.24)]"
+                  />
+                </div>
+
+                <div>
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-white/55">
+                    {ui.backCard}
+                  </h3>
+                  <img
+                    src={backCardUrl}
+                    alt={`${normalizedCertificateId} back card`}
+                    className="w-full rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.24)]"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section className="border-b border-white/8 bg-transparent">
         <div className="mx-auto grid max-w-7xl gap-6 px-6 py-10 md:grid-cols-3">
           {ui.infoCards.map((item) => (
@@ -274,9 +304,7 @@ export default function VerifyPage() {
               key={item.title}
               className="rounded-[1.8rem] border border-white/10 bg-white/[0.04] p-6 shadow-[0_16px_44px_rgba(0,0,0,0.18)] backdrop-blur-xl"
             >
-              <h3 className="text-xl font-bold text-white">
-                {item.title}
-              </h3>
+              <h3 className="text-xl font-bold text-white">{item.title}</h3>
               <p className="mt-4 text-sm leading-7 text-white/62">
                 {item.text}
               </p>
@@ -284,42 +312,20 @@ export default function VerifyPage() {
           ))}
         </div>
       </section>
-
-      <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.22)] backdrop-blur-2xl md:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-100/60">
-                {ui.nextStepBadge}
-              </p>
-
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
-                {ui.nextStepTitle}
-              </h2>
-
-              <p className="mt-4 max-w-2xl text-base leading-8 text-white/64">
-                {ui.nextStepText}
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-4 sm:flex-row lg:justify-end">
-              <Link
-                href="/registry"
-                className="inline-flex items-center justify-center rounded-full border border-cyan-300/30 bg-gradient-to-r from-cyan-300 to-blue-500 px-6 py-4 text-sm font-semibold text-[#07111d] shadow-[0_14px_32px_rgba(56,189,248,0.20)] transition hover:opacity-95"
-              >
-                {ui.openRegistry}
-              </Link>
-
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/[0.04] px-6 py-4 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
-              >
-                {ui.contact}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#07101d] px-6 py-20 text-white">
+          Yükleniyor...
+        </main>
+      }
+    >
+      <VerifyPageContent />
+    </Suspense>
   );
 }
