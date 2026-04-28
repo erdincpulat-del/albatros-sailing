@@ -16,59 +16,51 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const reservation = await prisma.reservation.findFirst({
-      where: {
-        certificateId,
-      },
+    const certificate = await prisma.certificate.findUnique({
+      where: { certificateId },
     });
 
-    if (!reservation) {
+    if (!certificate) {
       return NextResponse.json(
         { success: false, error: "Certificate not found" },
         { status: 404 }
       );
     }
 
-    const existingFrontUrl = (reservation as any).cardFrontUrl;
-
     if (
-      typeof existingFrontUrl === "string" &&
-      existingFrontUrl.startsWith("https://")
+      certificate.cardFrontUrl &&
+      certificate.cardFrontUrl.startsWith("https://")
     ) {
-      return NextResponse.redirect(existingFrontUrl);
+      return NextResponse.redirect(certificate.cardFrontUrl);
     }
 
     const cardFrontUrl = await generateCertificateCardFront({
-      certificateId: (reservation as any).certificateId || certificateId,
-      fullName: (reservation as any).fullName || "",
+      certificateId: certificate.certificateId,
+      fullName: certificate.fullName,
       qualification:
-        (reservation as any).qualificationLevel ||
-        (reservation as any).certificateLevel ||
-        (reservation as any).program ||
+        certificate.qualificationLevel ||
+        certificate.program ||
         "Offshore Yacht Course",
-      issueDate:
-        (reservation as any).issueDate ||
-        (reservation as any).certifiedAt ||
-        null,
-      seaMiles: (reservation as any).seaMiles || null,
-      photoUrl: (reservation as any).photoUrl || null,
+      issueDate: certificate.issueDate,
+      seaMiles: certificate.seaMiles,
+      photoUrl: certificate.photoUrl,
     });
 
-    await prisma.reservation.update({
-      where: {
-        id: reservation.id,
-      },
-      data: {
-        cardFrontUrl,
-      } as any,
+    await prisma.certificate.update({
+      where: { id: certificate.id },
+      data: { cardFrontUrl },
     });
 
     return NextResponse.redirect(cardFrontUrl);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Front card route error:", error);
 
     return NextResponse.json(
-      { success: false, error: "Front card could not be generated" },
+      {
+        success: false,
+        error: "Front card could not be generated",
+        detail: error?.message || String(error),
+      },
       { status: 500 }
     );
   }
