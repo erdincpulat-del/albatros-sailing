@@ -1,7 +1,4 @@
-export async function uploadCertificateFile(
-  fileName: string,
-  buffer: Buffer
-) {
+export async function uploadCertificateFile(fileName: string, buffer: Buffer) {
   const supabaseUrl =
     process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
 
@@ -16,7 +13,9 @@ export async function uploadCertificateFile(
   }
 
   const bucket = "certificates";
-  const filePath = `generated-cards/${fileName}`;
+
+  const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "-");
+  const filePath = `generated-cards/${safeFileName}`;
 
   const uploadUrl = `${supabaseUrl}/storage/v1/object/${bucket}/${filePath}`;
 
@@ -28,7 +27,7 @@ export async function uploadCertificateFile(
       "Content-Type": "image/png",
       "x-upsert": "true",
     },
-    body: buffer as BodyInit,
+    body: new Uint8Array(buffer),
   });
 
   if (!res.ok) {
