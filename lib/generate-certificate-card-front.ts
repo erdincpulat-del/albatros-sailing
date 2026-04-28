@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import sharp from "sharp";
+import { uploadCertificateFile } from "@/lib/upload-certificate-file";
 
 type GenerateCertificateCardFrontParams = {
   certificateId: string;
@@ -651,10 +652,10 @@ export async function generateCertificateCardFront({
     top: 0,
   });
 
-  await sharp(templateBuffer)
-    .composite(overlays)
-    .png()
-    .toFile(outputPath);
+  const finalBuffer = await sharp(templateBuffer)
+  .composite(overlays)
+  .png()
+  .toBuffer();
 
-  return `/generated-cards/${outputFileName}`;
+return await uploadCertificateFile(outputFileName, finalBuffer);
 }

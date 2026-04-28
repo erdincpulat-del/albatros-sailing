@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import sharp from "sharp";
-
+import { uploadCertificateFile } from "@/lib/upload-certificate-file";
 type Params = {
   certificateId: string;
   qrCodeDataUrl: string;
@@ -406,17 +406,18 @@ export async function generateCertificateCardBack({
       left: 165,
       top: 770,
     });
-  } catch {}
-
+  } catch (e) {
+  console.error(e);
+}
   
 
   const file = `${certificateId}-back.png`;
   const output = path.join(outputDir, file);
 
-  await sharp(base)
-    .composite(overlays)
-    .png()
-    .toFile(output);
+  const finalBuffer = await sharp(base)
+  .composite(overlays)
+  .png()
+  .toBuffer();
 
-  return `/generated-cards/${file}`;
+return await uploadCertificateFile(file, finalBuffer);
 }
