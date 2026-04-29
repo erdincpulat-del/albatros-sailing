@@ -224,6 +224,7 @@ export default function AdminPage() {
   const [seaMiles, setSeaMiles] = useState("");
   const [photo, setPhoto] = useState<File | null>(null);
   const [printingId, setPrintingId] = useState<string | null>(null);
+  const [generatingCardId, setGeneratingCardId] = useState<string | null>(null);
   const [selectedInstructorId, setSelectedInstructorId] = useState<string | null>(
     null
   );
@@ -370,6 +371,47 @@ export default function AdminPage() {
     }
   }
 
+  async function handleGenerateCard(certificateId: string) {
+    try {
+      setGeneratingCardId(certificateId);
+
+      const res = await fetch("/api/generate-card", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ certificateId }),
+      });
+
+      if (res.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        alert(data.error || "Kart üretilemedi");
+        return;
+      }
+
+      await loadCertificates();
+      await loadLogs();
+
+      if (data.cardFrontUrl) {
+        window.open(data.cardFrontUrl, "_blank");
+      }
+
+      alert("Kart başarıyla oluşturuldu");
+    } catch (error) {
+      console.error("handleGenerateCard error:", error);
+      alert("Kart oluşturulurken hata oluştu");
+    } finally {
+      setGeneratingCardId(null);
+    }
+  }
+
   async function createCertificate() {
     try {
       setLoading(true);
@@ -466,6 +508,17 @@ export default function AdminPage() {
 
       await loadCertificates();
       await loadLogs();
+
+      if (data.certificateId) {
+        const shouldGenerate = window.confirm(
+          "Sertifika oluşturuldu. Kart ön yüzünü şimdi üretmek ister misin?"
+        );
+
+        if (shouldGenerate) {
+          await handleGenerateCard(data.certificateId);
+          return;
+        }
+      }
 
       alert("Sertifika başarıyla oluşturuldu");
     } catch (error) {
@@ -801,6 +854,7 @@ export default function AdminPage() {
                 const currentStatus = getStatusLabel(item.status);
                 const isRevoked = currentStatus === "REVOKED";
                 const isUpdating = updatingStatusId === item.id;
+                const isGenerating = generatingCardId === item.certificateId;
 
                 const liveFrontUrl = getFrontCardApiPath(item.certificateId);
                 const liveBackUrl = getBackCardApiPath(item.certificateId);
@@ -871,6 +925,18 @@ export default function AdminPage() {
                     </div>
 
                     <div style={buttonsWrapStyle}>
+                      <button
+                        onClick={() => handleGenerateCard(item.certificateId)}
+                        disabled={isGenerating}
+                        style={{
+                          ...primaryButtonStyle,
+                          opacity: isGenerating ? 0.65 : 1,
+                          cursor: isGenerating ? "not-allowed" : "pointer",
+                        }}
+                      >
+                        {isGenerating ? "Generating..." : "Kart Üret"}
+                      </button>
+
                       <button
                         onClick={() => window.open(liveFrontUrl, "_blank")}
                         style={secondaryButtonStyle}

@@ -2,105 +2,18 @@ import crypto from "crypto";
 import QRCode from "qrcode";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { generateCertificateCardFront } from "@/lib/generate-certificate-card-front";
-
-function normalizeText(value: unknown) {
-  return typeof value === "string" ? value.trim() : "";
-}
-
-function parseIssueDate(value: unknown) {
-  if (typeof value !== "string" || !value.trim()) return null;
-
-  const raw = value.trim();
-  const trMatch = raw.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
-
-  if (trMatch) {
-    const [, day, month, year] = trMatch;
-    const date = new Date(`${year}-${month}-${day}T00:00:00`);
-    return Number.isNaN(date.getTime()) ? null : date;
-  }
-
-  const date = new Date(raw);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
-
-function parseSeaMiles(value: unknown) {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return Math.max(0, Math.floor(value));
-  }
-
-  if (typeof value === "string" && value.trim()) {
-    const num = Number(value.trim());
-    if (Number.isFinite(num)) return Math.max(0, Math.floor(num));
-  }
-
-  return null;
-}
-
-function getProgramCode(program: string) {
-  const normalized = program.toLowerCase();
-
-  if (normalized.includes("offshore")) return "OFF";
-  if (normalized.includes("yelkenli")) return "YES";
-  if (normalized.includes("icc")) return "ICC";
-  if (normalized.includes("vhf")) return "SRC";
-  if (normalized.includes("src")) return "SRC";
-  if (normalized.includes("bareboat")) return "BBS";
-  if (normalized.includes("day skipper")) return "DS";
-  if (normalized.includes("coastal")) return "CST";
-  if (normalized.includes("yachtmaster")) return "YMT";
-
-  return "GEN";
-}
-
-async function generateCertificateId(program: string) {
-  const year = new Date().getFullYear();
-  const programCode = getProgramCode(program);
-  const prefix = `AS-${programCode}-${year}-`;
-
-  const lastCertificate = await prisma.certificate.findFirst({
-    where: {
-      certificateId: {
-        startsWith: prefix,
-      },
-    },
-    orderBy: {
-      certificateId: "desc",
-    },
-    select: {
-      certificateId: true,
-    },
-  });
-
-  let nextNumber = 1;
-
-  if (lastCertificate?.certificateId) {
-    const lastPart = lastCertificate.certificateId.split("-").pop();
-    const parsed = Number(lastPart);
-    if (Number.isFinite(parsed)) nextNumber = parsed + 1;
-  }
-
-  return `${prefix}${String(nextNumber).padStart(4, "0")}`;
-}
-
-export async function GET() {
-  return NextResponse.json({
-    success: true,
-    message: "Certificate create API is ready. Use POST.",
-  });
-}
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const fullName = normalizeText(body.fullName);
-    const program = normalizeText(body.program) || "Offshore Yacht Course";
-    const qualificationLevel = normalizeText(body.qualificationLevel);
-    const issueDate = parseIssueDate(body.issueDate);
-    const seaMiles = parseSeaMiles(body.seaMiles);
-    const instructorId = normalizeText(body.instructorId);
-    const photoUrl = normalizeText(body.photoUrl) || null;
+    const fullName = body.fullName?.trim();
+    const program = body.program || "Offshore Yacht Course";
+    const qualificationLevel = body.qualificationLevel;
+    const issueDate = body.issueDate ? new Date(body.issueDate) : null;
+    const seaMiles = body.seaMiles ? Number(body.seaMiles) : null;
+    const instructorId = body.instructorId;
+    const photoUrl = body.photoUrl || null;
 
     if (!fullName) {
       return NextResponse.json(
@@ -111,66 +24,35 @@ export async function POST(req: Request) {
 
     if (!qualificationLevel) {
       return NextResponse.json(
-        { success: false, error: "Qualification level gerekli" },
+        { success: false, error: "Qualification gerekli" },
         { status: 400 }
       );
     }
 
-    if (!instructorId) {
-      return NextResponse.json(
-        { success: false, error: "Instructor seçilmedi" },
-        { status: 400 }
-      );
-    }
+    // 🔹 CERTIFICATE ID
+    const year = new Date().getFullYear();
+    const generatedId = `AS-OFF-${year}-${Date.now().toString().slice(-4)}`;
 
-    const instructor = await prisma.instructor.findUnique({
-      where: { id: instructorId },
-      select: {
-        id: true,
-        fullName: true,
-        title: true,
-      },
-    });
-
-    if (!instructor) {
-      return NextResponse.json(
-        { success: false, error: "Instructor bulunamadı" },
-        { status: 400 }
-      );
-    }
-
-    const generatedId = await generateCertificateId(program);
-
+    // 🔹 HASH
     const verificationHash = crypto
       .createHash("sha256")
-      .update(
-        `${generatedId}:${fullName}:${program}:${qualificationLevel}:${Date.now()}`
-      )
+      .update(`${generatedId}:${fullName}:${Date.now()}`)
       .digest("hex")
       .slice(0, 12)
       .toUpperCase();
 
+    // 🔹 VERIFY URL
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL ||
-      process.env.NEXT_PUBLIC_APP_URL ||
-      process.env.APP_URL ||
       "https://albatros-sailing.vercel.app";
 
-    const verifyUrl = `${baseUrl}/verify?certificateId=${encodeURIComponent(
-      generatedId
-    )}`;
+    const verifyUrl = `${baseUrl}/verify?certificateId=${generatedId}`;
 
-    const qrCodeDataUrl = await QRCode.toDataURL(verifyUrl, {
-      errorCorrectionLevel: "H",
-      margin: 1,
-      width: 512,
-      color: {
-        dark: "#111827",
-        light: "#FFFFFFFF",
-      },
-    });
+    // 🔹 QR
+    const qrCodeDataUrl = await QRCode.toDataURL(verifyUrl);
 
-    const createdCertificate = await prisma.certificate.create({
+    // 🔹 DB CREATE
+    const certificate = await prisma.certificate.create({
       data: {
         certificateId: generatedId,
         fullName,
@@ -181,93 +63,22 @@ export async function POST(req: Request) {
         instructorId,
         photoUrl,
         verificationHash,
-        status: "PENDING",
-        cardFrontUrl: null,
-        cardBackUrl: null,
-      },
-      include: {
-        instructor: {
-          select: {
-            id: true,
-            fullName: true,
-            title: true,
-          },
-        },
+        status: "PENDING", // 🔥 önemli
       },
     });
-
-    let cardFrontUrl: string | null = null;
-
-    try {
-      cardFrontUrl = await generateCertificateCardFront({
-        certificateId: createdCertificate.certificateId,
-        fullName: createdCertificate.fullName,
-        qualification:
-          createdCertificate.qualificationLevel ||
-          createdCertificate.program ||
-          "Offshore Yacht Course",
-        issueDate: createdCertificate.issueDate,
-        seaMiles: createdCertificate.seaMiles,
-        photoUrl: createdCertificate.photoUrl,
-        qrCodeDataUrl,
-      });
-
-      await prisma.certificate.update({
-        where: { id: createdCertificate.id },
-        data: {
-          cardFrontUrl,
-          status: "COMPLETED",
-        },
-      });
-    } catch (cardError) {
-      console.error("CARD GENERATION ERROR:", cardError);
-    }
-
-    try {
-      await prisma.adminLog.create({
-        data: {
-          action: "CERTIFICATE_CREATED",
-          targetType: "CERTIFICATE",
-          targetId: createdCertificate.id,
-          details: JSON.stringify({
-            certificateId: createdCertificate.certificateId,
-            fullName: createdCertificate.fullName,
-            program: createdCertificate.program,
-            qualificationLevel: createdCertificate.qualificationLevel,
-            instructorId: createdCertificate.instructorId,
-            verificationHash: createdCertificate.verificationHash,
-            cardFrontUrl,
-            verifyUrl,
-          }),
-        },
-      });
-    } catch (logError) {
-      console.error("Admin log create failed:", logError);
-    }
 
     return NextResponse.json({
       success: true,
-      id: createdCertificate.id,
-      certificateId: createdCertificate.certificateId,
-      verificationHash: createdCertificate.verificationHash,
+      certificateId: certificate.certificateId,
       verifyUrl,
       qrCodeDataUrl,
-      cardFrontUrl,
-      item: {
-        ...createdCertificate,
-        cardFrontUrl,
-        status: cardFrontUrl ? "COMPLETED" : createdCertificate.status,
-      },
+      item: certificate,
     });
   } catch (error) {
-    console.error("POST /api/certificates/create error:", error);
+    console.error("CREATE ERROR:", error);
 
     return NextResponse.json(
-      {
-        success: false,
-        error: "Certificate oluşturulamadı",
-        detail: error instanceof Error ? error.message : String(error),
-      },
+      { success: false, error: "Certificate oluşturulamadı" },
       { status: 500 }
     );
   }
