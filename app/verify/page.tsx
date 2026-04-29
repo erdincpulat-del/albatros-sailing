@@ -86,8 +86,12 @@ function VerifyPageContent() {
   const hasVerifiedCertificate = Boolean(qrCertificateId);
 
   const frontCardUrl = certificate?.cardFrontUrl || "";
-  const backCardUrl = certificate?.cardBackUrl || "/templates/card-back.png";
 
+const backCardUrl =
+  certificate?.cardBackUrl ||
+  (certificate?.cardFrontUrl
+    ? certificate.cardFrontUrl.replace("-front.png", "-back.png")
+    : "/templates/card-back.png");
   const ui = useMemo(
     () => ({
       badge:
