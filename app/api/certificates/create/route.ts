@@ -2,6 +2,7 @@ import crypto from "crypto";
 import QRCode from "qrcode";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { generateCertificateCardFront } from "@/lib/generate-certificate-card-front";
 
 function normalizeText(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -40,6 +41,10 @@ function getProgramCode(program: string) {
   const normalized = program.toLowerCase();
 
   if (normalized.includes("offshore")) return "OFF";
+  if (normalized.includes("yelkenli")) return "YES";
+  if (normalized.includes("icc")) return "ICC";
+  if (normalized.includes("vhf")) return "SRC";
+  if (normalized.includes("src")) return "SRC";
   if (normalized.includes("bareboat")) return "BBS";
   if (normalized.includes("day skipper")) return "DS";
   if (normalized.includes("coastal")) return "CST";
@@ -60,7 +65,7 @@ async function generateCertificateId(program: string) {
       },
     },
     orderBy: {
-      createdAt: "desc",
+      certificateId: "desc",
     },
     select: {
       certificateId: true,
@@ -146,16 +151,19 @@ export async function POST(req: Request) {
       .toUpperCase();
 
     const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL ||
       process.env.NEXT_PUBLIC_APP_URL ||
       process.env.APP_URL ||
       "https://albatros-sailing.vercel.app";
 
-    const verifyUrl = `${baseUrl}/verify/${encodeURIComponent(generatedId)}`;
+    const verifyUrl = `${baseUrl}/verify?certificateId=${encodeURIComponent(
+      generatedId
+    )}`;
 
     const qrCodeDataUrl = await QRCode.toDataURL(verifyUrl, {
-      errorCorrectionLevel: "M",
+      errorCorrectionLevel: "H",
       margin: 1,
-      width: 300,
+      width: 512,
       color: {
         dark: "#111827",
         light: "#FFFFFFFF",
@@ -188,6 +196,33 @@ export async function POST(req: Request) {
       },
     });
 
+    let cardFrontUrl: string | null = null;
+
+    try {
+      cardFrontUrl = await generateCertificateCardFront({
+        certificateId: createdCertificate.certificateId,
+        fullName: createdCertificate.fullName,
+        qualification:
+          createdCertificate.qualificationLevel ||
+          createdCertificate.program ||
+          "Offshore Yacht Course",
+        issueDate: createdCertificate.issueDate,
+        seaMiles: createdCertificate.seaMiles,
+        photoUrl: createdCertificate.photoUrl,
+        qrCodeDataUrl,
+      });
+
+      await prisma.certificate.update({
+        where: { id: createdCertificate.id },
+        data: {
+          cardFrontUrl,
+          status: "COMPLETED",
+        },
+      });
+    } catch (cardError) {
+      console.error("CARD GENERATION ERROR:", cardError);
+    }
+
     try {
       await prisma.adminLog.create({
         data: {
@@ -201,8 +236,8 @@ export async function POST(req: Request) {
             qualificationLevel: createdCertificate.qualificationLevel,
             instructorId: createdCertificate.instructorId,
             verificationHash: createdCertificate.verificationHash,
-            cardFrontUrl: createdCertificate.cardFrontUrl,
-            cardBackUrl: createdCertificate.cardBackUrl,
+            cardFrontUrl,
+            verifyUrl,
           }),
         },
       });
@@ -217,7 +252,12 @@ export async function POST(req: Request) {
       verificationHash: createdCertificate.verificationHash,
       verifyUrl,
       qrCodeDataUrl,
-      item: createdCertificate,
+      cardFrontUrl,
+      item: {
+        ...createdCertificate,
+        cardFrontUrl,
+        status: cardFrontUrl ? "COMPLETED" : createdCertificate.status,
+      },
     });
   } catch (error) {
     console.error("POST /api/certificates/create error:", error);
