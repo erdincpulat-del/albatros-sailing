@@ -4,6 +4,22 @@ import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
+type CertificateData = {
+  id?: string;
+  certificateId?: string | null;
+  fullName?: string | null;
+  program?: string | null;
+  qualificationLevel?: string | null;
+  issueDate?: string | null;
+  seaMiles?: number | null;
+  status?: string | null;
+  photoUrl?: string | null;
+  cardFrontUrl?: string | null;
+  cardBackUrl?: string | null;
+  qrCodeUrl?: string | null;
+  verificationHash?: string | null;
+};
+
 function VerifyPageContent() {
   const lang = "tr";
   const searchParams = useSearchParams();
@@ -11,6 +27,9 @@ function VerifyPageContent() {
   const qrCertificateId = searchParams.get("certificateId") || "";
 
   const [certificateId, setCertificateId] = useState("");
+  const [certificate, setCertificate] = useState<CertificateData | null>(null);
+  const [loadingCertificate, setLoadingCertificate] = useState(false);
+  const [verifyError, setVerifyError] = useState("");
 
   useEffect(() => {
     if (qrCertificateId) {
@@ -20,19 +39,54 @@ function VerifyPageContent() {
 
   const normalizedCertificateId = certificateId.trim().toUpperCase();
 
+  useEffect(() => {
+    if (!qrCertificateId) {
+      setCertificate(null);
+      setVerifyError("");
+      return;
+    }
+
+    async function loadCertificate() {
+      try {
+        setLoadingCertificate(true);
+        setVerifyError("");
+
+        const res = await fetch(
+          `/api/verify?certificateId=${encodeURIComponent(
+            qrCertificateId.trim().toUpperCase()
+          )}`,
+          { cache: "no-store" }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          setCertificate(null);
+          setVerifyError(data.error || "Sertifika bulunamadı.");
+          return;
+        }
+
+        setCertificate(data.certificate);
+      } catch (error) {
+        console.error("VERIFY PAGE LOAD ERROR:", error);
+        setCertificate(null);
+        setVerifyError("Doğrulama sırasında hata oluştu.");
+      } finally {
+        setLoadingCertificate(false);
+      }
+    }
+
+    loadCertificate();
+  }, [qrCertificateId]);
+
   const verifyHref = normalizedCertificateId
     ? `/verify?certificateId=${encodeURIComponent(normalizedCertificateId)}`
     : "#";
 
   const hasVerifiedCertificate = Boolean(qrCertificateId);
 
-  const frontCardUrl = normalizedCertificateId
-    ? `/api/card/front?certificateId=${encodeURIComponent(normalizedCertificateId)}`
-    : "";
-
-  const backCardUrl = normalizedCertificateId
-    ? `/api/card/back?certificateId=${encodeURIComponent(normalizedCertificateId)}`
-    : "";
+  const frontCardUrl = certificate?.cardFrontUrl || "";
+  const backCardUrl = certificate?.cardBackUrl || "/templates/card-back.png";
 
   const ui = useMemo(
     () => ({
@@ -54,16 +108,22 @@ function VerifyPageContent() {
       trustLine:
         lang === "tr"
           ? ["Resmi kayıt desteği", "Hızlı doğrulama", "Kurumsal güven yapısı"]
-          : ["Official registry support", "Fast verification", "Institutional trust structure"],
+          : [
+              "Official registry support",
+              "Fast verification",
+              "Institutional trust structure",
+            ],
 
       entryBadge: lang === "tr" ? "Doğrulama Girişi" : "Verification Entry",
-      entryTitle: lang === "tr" ? "Sertifika ID / Kayıt Kodu" : "Certificate ID",
+      entryTitle:
+        lang === "tr" ? "Sertifika ID / Kayıt Kodu" : "Certificate ID",
       entryDescription:
         lang === "tr"
           ? "Kart üzerinde bulunan sertifika kodunu veya resmi kayıt numarasını girin."
           : "Enter the certificate code shown on the card.",
       inputLabel: lang === "tr" ? "Sertifika Kodu" : "Certificate Code",
-      inputPlaceholder: lang === "tr" ? "Örn: AS-OFF-2026-0001" : "Ex: AS-OFF-2026-0001",
+      inputPlaceholder:
+        lang === "tr" ? "Örn: AS-OFF-2026-0001" : "Ex: AS-OFF-2026-0001",
       verifyButton: lang === "tr" ? "Doğrulamaya Git" : "Go to Verification",
       registryButton: lang === "tr" ? "Kayıt Sistemini Aç" : "Open Registry",
       inputWarning:
@@ -71,7 +131,8 @@ function VerifyPageContent() {
           ? "Lütfen geçerli bir sertifika kodu girin."
           : "Please enter a valid certificate code.",
 
-      cardTitle: lang === "tr" ? "Doğrulanan Sertifika Kartı" : "Verified Certificate Card",
+      cardTitle:
+        lang === "tr" ? "Doğrulanan Sertifika Kartı" : "Verified Certificate Card",
       frontCard: lang === "tr" ? "Kart Ön Yüz" : "Card Front",
       backCard: lang === "tr" ? "Kart Arka Yüz" : "Card Back",
 
@@ -82,7 +143,7 @@ function VerifyPageContent() {
           : "The verification system makes the official registry structure visible.",
 
       sampleCodesTitle: lang === "tr" ? "Örnek Kod Formatı" : "Sample Code Format",
-      sampleCodes: ["AS-OFF-2026-0001", "AS-OFF-2026-0108", "AS-OFF-2026-1735"],
+      sampleCodes: ["AS-OFF-2026-0001", "AS-OFF-2026-0108", "AS-GEN-2026-0002"],
 
       securityBadge: lang === "tr" ? "Kayıt Destekli Güven" : "Registry-Backed Trust",
       securityText:
@@ -264,34 +325,64 @@ function VerifyPageContent() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-100/60">
                   {normalizedCertificateId}
                 </p>
+
                 <h2 className="mt-2 text-3xl font-bold text-white">
                   {ui.cardTitle}
                 </h2>
+
+                {loadingCertificate ? (
+                  <p className="mt-3 text-sm text-white/55">
+                    Sertifika bilgileri yükleniyor...
+                  </p>
+                ) : null}
+
+                {verifyError ? (
+                  <div className="mt-4 rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+                    {verifyError}
+                  </div>
+                ) : null}
+
+                {certificate && !frontCardUrl ? (
+                  <div className="mt-4 rounded-2xl border border-amber-300/20 bg-amber-300/10 px-4 py-3 text-sm text-amber-100">
+                    Kart ön yüz URL’i henüz oluşturulmamış. Script ile kartı
+                    üretip DB’de cardFrontUrl alanını doldurmalısın.
+                  </div>
+                ) : null}
               </div>
 
-              <div className="grid gap-8 lg:grid-cols-2">
-                <div>
-                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-white/55">
-                    {ui.frontCard}
-                  </h3>
-                  <img
-                    src={frontCardUrl}
-                    alt={`${normalizedCertificateId} front card`}
-                    className="w-full rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.24)]"
-                  />
-                </div>
+              {certificate ? (
+                <div className="grid gap-8 lg:grid-cols-2">
+                  <div>
+                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-white/55">
+                      {ui.frontCard}
+                    </h3>
 
-                <div>
-                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-white/55">
-                    {ui.backCard}
-                  </h3>
-                  <img
-                    src={backCardUrl}
-                    alt={`${normalizedCertificateId} back card`}
-                    className="w-full rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.24)]"
-                  />
+                    {frontCardUrl ? (
+                      <img
+                        src={frontCardUrl}
+                        alt={`${normalizedCertificateId} front card`}
+                        className="w-full rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.24)]"
+                      />
+                    ) : (
+                      <div className="flex aspect-[1536/1024] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-sm text-white/50">
+                        Kart ön yüzü henüz yok.
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-white/55">
+                      {ui.backCard}
+                    </h3>
+
+                    <img
+                      src={backCardUrl}
+                      alt={`${normalizedCertificateId} back card`}
+                      className="w-full rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.24)]"
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
           </div>
         </section>
