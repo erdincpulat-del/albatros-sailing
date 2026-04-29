@@ -1,135 +1,83 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createCanvas, loadImage } from "canvas";
-import path from "path";
-import fs from "fs";
-import QRCode from "qrcode";
 import prisma from "@/lib/prisma";
+import { generateCertificateCardFront } from "@/lib/generate-certificate-card-front";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { certificateId } = body;
+    const certificateId = body.certificateId;
 
-    if (!certificateId) {
+    if (!certificateId || typeof certificateId !== "string") {
       return NextResponse.json(
-        { error: "certificateId gerekli" },
+        { success: false, error: "certificateId gerekli" },
         { status: 400 }
       );
     }
 
-    const certificate = await prisma.certificate.findFirst({
-  where: { certificateId },
-  select: {
-    id: true,
-    certificateId: true,
-  },
-});
+    const certificate = await prisma.certificate.findUnique({
+      where: { certificateId },
+      include: {
+        instructor: true,
+      },
+    });
 
     if (!certificate) {
       return NextResponse.json(
-        { error: "Sertifika bulunamadı" },
+        { success: false, error: "Certificate bulunamadı" },
         { status: 404 }
       );
     }
 
-    const templatePath = path.join(
-      process.cwd(),
-      "public",
-      "templates",
-      "card-back.png"
-    );
+    const cardFrontUrl = await generateCertificateCardFront({
+      certificateId: certificate.certificateId,
+      fullName: certificate.fullName,
+      qualification:
+        certificate.qualificationLevel ||
+        certificate.program ||
+        "Offshore Yacht Course",
+      issueDate: certificate.issueDate,
+      seaMiles: certificate.seaMiles,
+      photoUrl: certificate.photoUrl,
+    });
 
-    if (!fs.existsSync(templatePath)) {
-      return NextResponse.json(
-        { error: "card-back.png bulunamadı" },
-        { status: 500 }
-      );
-    }
-
-    const template = await loadImage(templatePath);
-    const canvas = createCanvas(template.width, template.height);
-    const ctx = canvas.getContext("2d");
-
-    // back template
-    ctx.drawImage(template, 0, 0, template.width, template.height);
-
-    // verify URL
-    const verifyUrl =
-  `${req.nextUrl.origin}/verify/` +
-  encodeURIComponent(certificate.certificateId);
-
-    // QR üret
-    const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
-      margin: 1,
-      width: 220,
-      color: {
-        dark: "#111827",
-        light: "#FFFFFF",
+    const updatedCertificate = await prisma.certificate.update({
+      where: { id: certificate.id },
+      data: {
+        cardFrontUrl,
+        status: "COMPLETED",
       },
     });
 
-    const qrImage = await loadImage(qrDataUrl);
-
-    // QR yerleşimi
-    // Bu koordinatlar mevcut kartına göre güvenli başlangıç değerleri.
-    // Sonraki aşamada milimetrik ince ayar yapabiliriz.
-    const qrX = template.width - 245;
-    const qrY = template.height - 195;
-    const qrSize = 150;
-
-    ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
-
-    // Certificate ID küçük yazı
-    ctx.fillStyle = "#374151";
-    ctx.font = "bold 22px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(
-      certificate.certificateId,
-      qrX + qrSize / 2,
-      qrY + qrSize + 16
-    );
-
-    // küçük verification label
-    ctx.fillStyle = "#374151";
-    ctx.font = "18px Arial";
-    ctx.fillText(
-      "Certificate Verification",
-      qrX + qrSize / 2,
-      qrY - 28
-    );
-
-    const outputDir = path.join(process.cwd(), "public", "cards");
-
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir, { recursive: true });
-    }
-
-    const fileName = `${certificate.certificateId}-back.png`;
-    const filePath = path.join(outputDir, fileName);
-
-    const buffer = canvas.toBuffer("image/png");
-    fs.writeFileSync(filePath, buffer);
-
-    const cardBackUrl = `/cards/${fileName}`;
-
-    await prisma.certificate.update({
-      where: { id: certificate.id },
-      data: { cardBackUrl },
+    await prisma.adminLog.create({
+      data: {
+        action: "CARD_GENERATED",
+        targetType: "CERTIFICATE",
+        targetId: certificate.id,
+        details: JSON.stringify({
+          certificateId: certificate.certificateId,
+          cardFrontUrl,
+        }),
+      },
     });
 
     return NextResponse.json({
       success: true,
-      cardBackUrl,
-      verifyUrl,
-      certificateId: certificate.certificateId,
+      certificateId: updatedCertificate.certificateId,
+      cardFrontUrl,
+      item: updatedCertificate,
     });
   } catch (error) {
-    console.error("generate-card-back error:", error);
+    console.error("POST /api/generate-card error:", error);
 
     return NextResponse.json(
-      { error: "Arka yüz üretilemedi" },
+      {
+        success: false,
+        error: "Kart üretilemedi",
+        detail: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }
