@@ -30,6 +30,7 @@ function VerifyPageContent() {
   const [certificate, setCertificate] = useState<CertificateData | null>(null);
   const [loadingCertificate, setLoadingCertificate] = useState(false);
   const [verifyError, setVerifyError] = useState("");
+  const [backCardImageError, setBackCardImageError] = useState(false);
 
   useEffect(() => {
     if (qrCertificateId) {
@@ -43,6 +44,7 @@ function VerifyPageContent() {
     if (!qrCertificateId) {
       setCertificate(null);
       setVerifyError("");
+      setBackCardImageError(false);
       return;
     }
 
@@ -50,6 +52,7 @@ function VerifyPageContent() {
       try {
         setLoadingCertificate(true);
         setVerifyError("");
+        setBackCardImageError(false);
 
         const res = await fetch(
           `/api/verify?certificateId=${encodeURIComponent(
@@ -87,11 +90,12 @@ function VerifyPageContent() {
 
   const frontCardUrl = certificate?.cardFrontUrl || "";
 
-const backCardUrl =
-  certificate?.cardBackUrl ||
-  (certificate?.cardFrontUrl
-    ? certificate.cardFrontUrl.replace("-front.png", "-back.png")
-    : "/templates/card-back.png");
+  const backCardUrl =
+    certificate?.cardBackUrl ||
+    (certificate?.cardFrontUrl
+      ? certificate.cardFrontUrl.replace("-front.png", "-back.png")
+      : "/templates/card-back.png");
+
   const ui = useMemo(
     () => ({
       badge:
@@ -136,7 +140,9 @@ const backCardUrl =
           : "Please enter a valid certificate code.",
 
       cardTitle:
-        lang === "tr" ? "Doğrulanan Sertifika Kartı" : "Verified Certificate Card",
+        lang === "tr"
+          ? "Doğrulanan Sertifika Kartı"
+          : "Verified Certificate Card",
       frontCard: lang === "tr" ? "Kart Ön Yüz" : "Card Front",
       backCard: lang === "tr" ? "Kart Arka Yüz" : "Card Back",
 
@@ -146,10 +152,16 @@ const backCardUrl =
           ? "Doğrulama sistemi yalnızca kontrol alanı değildir. Aynı zamanda Albatros Sailing eğitim yapısının ciddiyetini, belge disiplinini ve resmi kayıt mantığını görünür hale getirir."
           : "The verification system makes the official registry structure visible.",
 
-      sampleCodesTitle: lang === "tr" ? "Örnek Kod Formatı" : "Sample Code Format",
-      sampleCodes: ["AS-OFF-2026-0001", "AS-OFF-2026-0108", "AS-GEN-2026-0002"],
+      sampleCodesTitle:
+        lang === "tr" ? "Örnek Kod Formatı" : "Sample Code Format",
+      sampleCodes: [
+        "AS-OFF-2026-0001",
+        "AS-OFF-2026-0108",
+        "AS-GEN-2026-0002",
+      ],
 
-      securityBadge: lang === "tr" ? "Kayıt Destekli Güven" : "Registry-Backed Trust",
+      securityBadge:
+        lang === "tr" ? "Kayıt Destekli Güven" : "Registry-Backed Trust",
       securityText:
         lang === "tr"
           ? "Bu portal, belge doğrulamasını görünür hale getirir ve kurumsal ciddiyeti destekler."
@@ -263,7 +275,9 @@ const backCardUrl =
                     id="certificateId"
                     type="text"
                     value={certificateId}
-                    onChange={(e) => setCertificateId(e.target.value.toUpperCase())}
+                    onChange={(e) =>
+                      setCertificateId(e.target.value.toUpperCase())
+                    }
                     onKeyDown={handleKeyDown}
                     placeholder={ui.inputPlaceholder}
                     className="w-full rounded-2xl border border-white/12 bg-white/[0.05] px-4 py-4 text-sm text-white outline-none transition placeholder:text-white/28 focus:border-cyan-300/40 focus:bg-white/[0.07]"
@@ -379,11 +393,20 @@ const backCardUrl =
                       {ui.backCard}
                     </h3>
 
-                    <img
-                      src={backCardUrl}
-                      alt={`${normalizedCertificateId} back card`}
-                      className="w-full rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.24)]"
-                    />
+                    {backCardUrl && !backCardImageError ? (
+                      <img
+                        src={backCardUrl}
+                        alt={`${normalizedCertificateId} back card`}
+                        onError={() => setBackCardImageError(true)}
+                        className="w-full rounded-2xl border border-white/10 bg-white/5 shadow-[0_20px_60px_rgba(0,0,0,0.24)]"
+                      />
+                    ) : (
+                      <div className="flex aspect-[1536/1024] w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 text-center text-sm leading-7 text-white/50">
+                        Kart arka yüzü bulunamadı. Supabase içinde
+                        generated-cards klasörüne AS-GEN-2026-0002-back.png
+                        formatında arka yüz dosyası yüklenmeli.
+                      </div>
+                    )}
                   </div>
                 </div>
               ) : null}
