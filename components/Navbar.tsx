@@ -42,6 +42,7 @@ const navItems = [
       { label: "Navigasyon", href: "/guide/navigasyon" },
       { label: "Meteoroloji", href: "/guide/denizde-meteoroloji" },
       { label: "Demirde Alkol", href: "/guide/anchored-alcohol" },
+      { label: "STCW Quiz", href: "/stcw-quiz" },
     ],
   },
 
@@ -138,11 +139,7 @@ export default function Navbar() {
 
             if (!hasChildren) {
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  style={navLinkStyle}
-                >
+                <Link key={item.href} href={item.href} style={navLinkStyle}>
                   {item.label}
                 </Link>
               );
@@ -185,7 +182,7 @@ export default function Navbar() {
                     top: "calc(100% + 10px)",
                     left: 0,
                     minWidth: 260,
-                    maxHeight: 320,
+                    maxHeight: 360,
                     overflowY: "auto",
                     borderRadius: 18,
                     border: "1px solid rgba(255,255,255,.08)",
@@ -209,18 +206,26 @@ export default function Navbar() {
                         padding: "12px 14px",
                         borderRadius: 12,
                         textDecoration: "none",
-                        color: "#e2e8f0",
+                        color: child.href === "/stcw-quiz" ? "#67d3ff" : "#e2e8f0",
                         fontSize: 14,
-                        fontWeight: 600,
+                        fontWeight: 700,
                         transition: "all 0.18s ease",
+                        background:
+                          child.href === "/stcw-quiz"
+                            ? "rgba(103,211,255,.08)"
+                            : "transparent",
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background = "rgba(103,211,255,.10)";
                         e.currentTarget.style.color = "#67d3ff";
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "transparent";
-                        e.currentTarget.style.color = "#e2e8f0";
+                        e.currentTarget.style.background =
+                          child.href === "/stcw-quiz"
+                            ? "rgba(103,211,255,.08)"
+                            : "transparent";
+                        e.currentTarget.style.color =
+                          child.href === "/stcw-quiz" ? "#67d3ff" : "#e2e8f0";
                       }}
                     >
                       {child.label}
@@ -286,6 +291,24 @@ export default function Navbar() {
             }}
           >
             Offshore Eğitim
+          </Link>
+
+          <Link
+            href="/stcw-quiz"
+            style={{
+              padding: "10px 14px",
+              borderRadius: 12,
+              textDecoration: "none",
+              color: "#67d3ff",
+              fontSize: 14,
+              fontWeight: 900,
+              border: "1px solid rgba(103,211,255,.22)",
+              background: "rgba(103,211,255,.08)",
+              boxShadow: "0 0 18px rgba(103,211,255,.12)",
+              transition: "all 0.2s ease",
+            }}
+          >
+            STCW Quiz
           </Link>
 
           <Link
