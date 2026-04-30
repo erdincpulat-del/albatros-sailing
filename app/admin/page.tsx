@@ -1,5 +1,5 @@
 "use client";
-
+import { createCertificateAction } from "./actions";
 import {
   useEffect,
   useMemo,
@@ -465,46 +465,17 @@ export default function AdminPage() {
         photoUrl = photoData.url;
       }
 
-      const res = await fetch("/api/certificates/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          fullName: fullName.trim(),
-          program,
-          qualificationLevel,
-          issueDate: issueDate || null,
-          seaMiles: seaMiles ? Number(seaMiles) : null,
-          instructorId: selectedInstructorId,
-          photoUrl,
-        }),
-      });
+      const data = await createCertificateAction({
+  fullName: fullName.trim(),
+  program,
+  qualificationLevel,
+  issueDate,
+  seaMiles,
+  instructorId: selectedInstructorId || "",
+  photoUrl: photoUrl || null,
+});
 
-      if (res.status === 401) {
-        window.location.href = "/login";
-        return;
-      }
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        alert(data.error || "Sertifika oluşturulamadı");
-        return;
-      }
-
-      setFullName("");
-      setProgram("Offshore Yacht Course");
-      setQualificationLevel("INTERNATIONAL BAREBOAT SKIPPER");
-      setIssueDate("");
-      setSeaMiles("");
-      setPhoto(null);
-      setSelectedInstructorId(null);
-
-      if (photoInputRef.current) {
-        photoInputRef.current.value = "";
-      }
+      
 
       await loadCertificates();
       await loadLogs();
