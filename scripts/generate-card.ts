@@ -1,11 +1,16 @@
 import prisma from "../lib/prisma";
 import { generateCertificateCardFront } from "../lib/generate-certificate-card-front";
+import { generateCertificateCardBack } from "../lib/generate-certificate-card-back";
+import "dotenv/config";
+import QRCode from "qrcode";
 
 async function main() {
   const certificateId = process.argv[2];
 
   if (!certificateId) {
-    throw new Error("Kullanım: npx tsx scripts/generate-card.ts AS-GEN-2026-0002");
+    throw new Error(
+      "Kullanım: npx tsx scripts/generate-card.ts AS-GEN-2026-0002"
+    );
   }
 
   const certificate = await prisma.certificate.findUnique({
@@ -18,7 +23,7 @@ async function main() {
 
   console.log("Kart üretiliyor:", certificate.certificateId);
 
-  const cardFrontUrl = await generateCertificateCardFront({
+  const payload = {
     certificateId: certificate.certificateId,
     fullName: certificate.fullName,
     qualification:
@@ -28,18 +33,30 @@ async function main() {
     issueDate: certificate.issueDate,
     seaMiles: certificate.seaMiles,
     photoUrl: certificate.photoUrl,
-  });
+  };
 
+  const cardFrontUrl = await generateCertificateCardFront(payload);
+
+  const qrCodeDataUrl = await QRCode.toDataURL(
+  `https://www.albatros-sailing.com/verify/${certificate.certificateId}`
+);
+
+const cardBackUrl = await generateCertificateCardBack({
+  certificateId: certificate.certificateId,
+  qrCodeDataUrl,
+});
   await prisma.certificate.update({
     where: { id: certificate.id },
     data: {
       cardFrontUrl,
-      status: "COMPLETED",
+      cardBackUrl,
+      status: "ACTIVE",
     },
   });
 
-  console.log("✅ Kart üretildi ve DB güncellendi:");
-  console.log(cardFrontUrl);
+  console.log("✅ Kart üretildi ve DB güncellendi.");
+  console.log("Front:", cardFrontUrl);
+  console.log("Back:", cardBackUrl);
 }
 
 main()
