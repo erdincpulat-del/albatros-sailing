@@ -1,21 +1,21 @@
 import prisma from "@/lib/prisma";
 
-type Props = {
-  searchParams: {
-    certificateId?: string;
-  };
-};
+export default async function VerifyPage({
+  searchParams,
+}: {
+  searchParams: { certificateId?: string };
+}) {
+  const rawId = searchParams?.certificateId;
 
-export default async function VerifyPage({ searchParams }: Props) {
-  const certificateId = searchParams.certificateId?.toUpperCase();
-
-  if (!certificateId) {
+  if (!rawId) {
     return (
       <div style={{ padding: 40 }}>
         <h2>Sertifika ID gerekli</h2>
       </div>
     );
   }
+
+  const certificateId = rawId.toUpperCase();
 
   const certificate = await prisma.certificate.findFirst({
     where: {
