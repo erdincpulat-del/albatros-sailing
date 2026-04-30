@@ -9,22 +9,21 @@ export async function createCertificateAction(data: {
   photoUrl: string | null;
   instructorId: string;
 }) {
-  const { prisma } = await import("@/lib/prisma");
+  try {
+    const { createCertificateWithCard } = await import("@/lib/create-certificate-with-card");
 
-  const certificateId = `AS-${Date.now()}`;
+    return await createCertificateWithCard({
+  fullName: data.fullName,
+  program: data.program,
+  qualificationLevel: data.qualificationLevel,
+  issueDate: new Date(data.issueDate),
+  seaMiles: data.seaMiles ? Number(data.seaMiles) : 0,
+  photoUrl: data.photoUrl || undefined,
+  instructorId: data.instructorId,
+});
 
-  const certificate = await prisma.certificate.create({
-    data: {
-      certificateId,
-      fullName: data.fullName,
-      program: data.program,
-      qualificationLevel: data.qualificationLevel,
-      issueDate: new Date(data.issueDate),
-      seaMiles: Number(data.seaMiles) || 0,
-      photoUrl: data.photoUrl,
-      status: "PENDING",
-    },
-  });
-
-  return certificate;
+  } catch (err) {
+    console.error("🔥 CERTIFICATE ENGINE ERROR:", err);
+    throw new Error("Kart oluşturulamadı");
+  }
 }

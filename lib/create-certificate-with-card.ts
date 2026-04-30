@@ -27,6 +27,7 @@ export async function createCertificateWithCard(data: {
       issueDate: data.issueDate,
       photoUrl: data.photoUrl || null,
       status: "PENDING",
+      instructorId: data.instructorId,
     },
   })
 
