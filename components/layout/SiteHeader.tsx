@@ -107,6 +107,7 @@ export default function SiteHeader() {
               items: [
                 { label: "Yat Kaptanı Nasıl Olunur", href: "/guide/yat-kaptani-nasil-olunur" },
                 { label: "Denizde Acil Durumlar", href: "/guide/denizde-acil-durumlar" },
+                { label: "STCW Quiz", href: "/stcw-quiz" },
                 { label: "Anchored Alcohol", href: "/guide/anchored-alcohol" },
               ],
             },
@@ -124,29 +125,27 @@ export default function SiteHeader() {
           ],
         },
         {
-          
-  key: "about",
-  label: "Eğitmen",
-  href: "/about",
-  items: [{ label: "Eğitmen Hakkında", href: "/about" }],
-},
-
-  {
-  key: "charter",
-  label: "Charter",
-  href: "/charter",
-},
-{
-  key: "verify",
-  label: "Doğrula",
-  href: "/verify",
-  items: [
-    { label: "Sertifika Doğrula", href: "/verify" },
-    { label: "Kayıt Sistemi", href: "/registry" },
-    { label: "Sertifika", href: "/verify" },
-    { label: "Kartlar", href: "/cards" },
-  ],
-},
+          key: "about",
+          label: "Eğitmen",
+          href: "/about",
+          items: [{ label: "Eğitmen Hakkında", href: "/about" }],
+        },
+        {
+          key: "charter",
+          label: "Charter",
+          href: "/charter",
+        },
+        {
+          key: "verify",
+          label: "Doğrula",
+          href: "/verify",
+          items: [
+            { label: "Sertifika Doğrula", href: "/verify" },
+            { label: "Kayıt Sistemi", href: "/registry" },
+            { label: "Sertifika", href: "/verify" },
+            { label: "Kartlar", href: "/cards" },
+          ],
+        },
         {
           key: "contact",
           label: "İletişim",
@@ -225,6 +224,7 @@ export default function SiteHeader() {
             items: [
               { label: "How to Become a Yacht Captain", href: "/guide/yat-kaptani-nasil-olunur" },
               { label: "Emergency at Sea", href: "/guide/denizde-acil-durumlar" },
+              { label: "STCW Quiz", href: "/stcw-quiz" },
               { label: "Anchored Alcohol", href: "/guide/anchored-alcohol" },
             ],
           },
@@ -538,25 +538,49 @@ export default function SiteHeader() {
                             </div>
 
                             {section.items.map((item) => {
+                              const isQuiz = item.href === "/stcw-quiz";
+
                               const content = (
                                 <div
                                   className="dropdown-item-card"
                                   style={{
                                     borderRadius: 14,
                                     padding: "12px 14px",
+                                    background: isQuiz
+                                      ? "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))"
+                                      : undefined,
+                                    border: isQuiz
+                                      ? "1px solid rgba(103,211,255,0.35)"
+                                      : "1px solid transparent",
+                                    boxShadow: isQuiz
+                                      ? "0 0 24px rgba(103,211,255,0.18)"
+                                      : undefined,
                                   }}
                                 >
                                   <div
                                     style={{
-                                      color: "#f8fafc",
+                                      color: isQuiz ? "#9deaff" : "#f8fafc",
                                       fontSize: 14,
                                       fontWeight: 800,
                                       lineHeight: 1.4,
                                       transition: "color 0.18s ease",
                                     }}
                                   >
+                                    {isQuiz ? "⚓ " : ""}
                                     {item.label}
                                   </div>
+                                  {isQuiz && (
+                                    <div
+                                      style={{
+                                        marginTop: 4,
+                                        fontSize: 12,
+                                        lineHeight: 1.45,
+                                        color: "rgba(226,232,240,0.72)",
+                                      }}
+                                    >
+                                      STCW 149/499 gemici hazırlık deneme sistemi
+                                    </div>
+                                  )}
                                 </div>
                               );
 
@@ -592,25 +616,49 @@ export default function SiteHeader() {
                     ) : (
                       <>
                         {group.items?.map((item) => {
+                          const isQuiz = item.href === "/stcw-quiz";
+
                           const content = (
                             <div
                               className="dropdown-item-card"
                               style={{
                                 borderRadius: 14,
                                 padding: "12px 14px",
+                                background: isQuiz
+                                  ? "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))"
+                                  : undefined,
+                                border: isQuiz
+                                  ? "1px solid rgba(103,211,255,0.35)"
+                                  : "1px solid transparent",
+                                boxShadow: isQuiz
+                                  ? "0 0 24px rgba(103,211,255,0.18)"
+                                  : undefined,
                               }}
                             >
                               <div
                                 style={{
-                                  color: "#f8fafc",
+                                  color: isQuiz ? "#9deaff" : "#f8fafc",
                                   fontSize: 14,
                                   fontWeight: 800,
                                   lineHeight: 1.4,
                                   transition: "color 0.18s ease",
                                 }}
                               >
+                                {isQuiz ? "⚓ " : ""}
                                 {item.label}
                               </div>
+                              {isQuiz && (
+                                <div
+                                  style={{
+                                    marginTop: 4,
+                                    fontSize: 12,
+                                    lineHeight: 1.45,
+                                    color: "rgba(226,232,240,0.72)",
+                                  }}
+                                >
+                                  STCW 149/499 gemici hazırlık deneme sistemi
+                                </div>
+                              )}
                             </div>
                           );
 

@@ -52,6 +52,12 @@ function DesktopNavLinks() {
         { href: "/training", label: t.nav.training },
         { href: "/guide/colreg", label: "COLREG" },
         { href: "/guide/ais-ve-vts-nedir", label: "AIS / VTS" },
+        {
+          href: "/stcw-quiz",
+          label: "STCW Quiz",
+          description: "Yangın, can kurtarma ve gemici sınav modülü",
+          highlight: true,
+        },
         { href: "/guide/gece-seyri-fenerleri", label: "Gece Seyri Fenerleri" },
         { href: "/guide/denizde-meteoroloji", label: "Denizde Meteoroloji" },
         { href: "/guide/guvenlik", label: "Güvenlik" },
@@ -65,8 +71,14 @@ function DesktopNavLinks() {
         { href: "/programs/basic-sailing", label: "Başlangıç Yelken Eğitimi" },
         { href: "/programs/coastal-skipper", label: "Coastal Skipper" },
         { href: "/programs/offshore-skipper", label: "Offshore Skipper" },
-        { href: "/programs/offshore-yacht-course", label: "Yunan Adaları Açık Deniz Eğitimi" },
-        { href: "/programs/hisaronu-gulf-training", label: "Hisarönü Körfezi Eğitimi" },
+        {
+          href: "/programs/offshore-yacht-course",
+          label: "Yunan Adaları Açık Deniz Eğitimi",
+        },
+        {
+          href: "/programs/hisaronu-gulf-training",
+          label: "Hisarönü Körfezi Eğitimi",
+        },
       ],
     },
 
@@ -211,6 +223,12 @@ function MobileNavLinks() {
         { href: "/training", label: t.nav.training },
         { href: "/guide/colreg", label: "COLREG" },
         { href: "/guide/ais-ve-vts-nedir", label: "AIS / VTS" },
+        {
+          href: "/stcw-quiz",
+          label: "STCW Quiz",
+          description: "Yangın, can kurtarma ve gemici sınav modülü",
+          highlight: true,
+        },
         { href: "/guide/gece-seyri-fenerleri", label: "Gece Seyri Fenerleri" },
         { href: "/guide/denizde-meteoroloji", label: "Denizde Meteoroloji" },
         { href: "/guide/guvenlik", label: "Güvenlik" },
@@ -283,6 +301,7 @@ function MobileNavLinks() {
                     >
                       <div className="flex items-center justify-between gap-3">
                         <span className="font-semibold">{sub.label}</span>
+
                         {sub.highlight && (
                           <span className="rounded-full border border-[#67d3ff]/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em]">
                             Yeni
@@ -522,6 +541,11 @@ function Footer() {
               </Link>
             </li>
             <li>
+              <Link href="/stcw-quiz" className="transition hover:text-[#67d3ff]">
+                STCW Quiz
+              </Link>
+            </li>
+            <li>
               <Link href="/charter" className="transition hover:text-[#67d3ff]">
                 {t.nav.charter}
               </Link>
@@ -529,11 +553,6 @@ function Footer() {
             <li>
               <Link href="/reserve" className="transition hover:text-[#67d3ff]">
                 {t.nav.reserve}
-              </Link>
-            </li>
-            <li>
-              <Link href="/stcw-quiz" className="transition hover:text-[#67d3ff]">
-                STCW Quiz
               </Link>
             </li>
           </ul>
