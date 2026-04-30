@@ -11,6 +11,7 @@ export async function createCertificateWithCard(data: {
   seaMiles?: number
   issueDate: Date
   photoUrl?: string
+  instructorId: string
 }) {
   // 1. CERTIFICATE ID
   const certificateId = await generateCertificateId(data.program)
