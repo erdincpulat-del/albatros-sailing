@@ -814,8 +814,8 @@ export default function AdminPage() {
                 const isUpdating = updatingStatusId === item.id;
                 const isGenerating = generatingCardId === item.certificateId;
 
-                const liveFrontUrl = getFrontCardApiPath(item.certificateId);
-                const liveBackUrl = getBackCardApiPath(item.certificateId);
+                const liveFrontUrl = item.cardFrontUrl || "";
+const liveBackUrl = item.cardBackUrl || "";
 
                 return (
                   <article key={item.id} style={certificateCardStyle}>
