@@ -1,7 +1,5 @@
 "use server";
 
-import { createCertificateWithCard } from "@/lib/create-certificate-with-card";
-
 export async function createCertificateAction(data: {
   fullName: string;
   program: string;
@@ -11,12 +9,22 @@ export async function createCertificateAction(data: {
   photoUrl: string | null;
   instructorId: string;
 }) {
-  return await createCertificateWithCard({
-  fullName: data.fullName,
-  program: data.program,
-  qualificationLevel: data.qualificationLevel,
-  issueDate: data.issueDate ? new Date(data.issueDate) : new Date(),
-  seaMiles: data.seaMiles ? Number(data.seaMiles) : 0,
-  photoUrl: data.photoUrl || undefined,
-});
+  const { prisma } = await import("@/lib/prisma");
+
+  const certificateId = `AS-${Date.now()}`;
+
+  const certificate = await prisma.certificate.create({
+    data: {
+      certificateId,
+      fullName: data.fullName,
+      program: data.program,
+      qualificationLevel: data.qualificationLevel,
+      issueDate: new Date(data.issueDate),
+      seaMiles: Number(data.seaMiles) || 0,
+      photoUrl: data.photoUrl,
+      status: "PENDING",
+    },
+  });
+
+  return certificate;
 }

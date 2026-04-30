@@ -413,92 +413,79 @@ export default function AdminPage() {
   }
 
   async function createCertificate() {
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      if (!fullName.trim()) {
-        alert("Full name gerekli");
-        return;
-      }
-
-      if (!qualificationLevel.trim()) {
-        alert("Qualification level gerekli");
-        return;
-      }
-
-      if (!selectedInstructorId) {
-        alert("Instructor seçmelisin");
-        return;
-      }
-
-      if (seaMiles && Number(seaMiles) < 0) {
-        alert("Sea miles negatif olamaz");
-        return;
-      }
-
-      let photoUrl: string | null = null;
-
-      if (photo) {
-        const photoFormData = new FormData();
-
-        photoFormData.append("file", photo);
-        photoFormData.append("folder", "students");
-
-        const photoRes = await fetch("/api/upload-photo", {
-          method: "POST",
-          body: photoFormData,
-          credentials: "include",
-        });
-
-        if (photoRes.status === 401) {
-          window.location.href = "/login";
-          return;
-        }
-
-        const photoData = await photoRes.json();
-
-        if (!photoRes.ok || !photoData.success) {
-          alert(photoData.error || "Fotoğraf yüklenemedi");
-          return;
-        }
-
-        photoUrl = photoData.url;
-      }
-
-      const data = await createCertificateAction({
-  fullName: fullName.trim(),
-  program,
-  qualificationLevel,
-  issueDate,
-  seaMiles,
-  instructorId: selectedInstructorId || "",
-  photoUrl: photoUrl || null,
-});
-
-      
-
-      await loadCertificates();
-      await loadLogs();
-
-      if (data.certificateId) {
-        const shouldGenerate = window.confirm(
-          "Sertifika oluşturuldu. Kart ön yüzünü şimdi üretmek ister misin?"
-        );
-
-        if (shouldGenerate) {
-          await handleGenerateCard(data.certificateId);
-          return;
-        }
-      }
-
-      alert("Sertifika başarıyla oluşturuldu");
-    } catch (error) {
-      console.error("createCertificate error:", error);
-      alert("Beklenmeyen bir hata oluştu");
-    } finally {
-      setLoading(false);
+    if (!fullName.trim()) {
+      alert("Full name gerekli");
+      return;
     }
+
+    if (!qualificationLevel.trim()) {
+      alert("Qualification level gerekli");
+      return;
+    }
+
+    if (!selectedInstructorId) {
+      alert("Instructor seçmelisin");
+      return;
+    }
+
+    if (seaMiles && Number(seaMiles) < 0) {
+      alert("Sea miles negatif olamaz");
+      return;
+    }
+
+    let photoUrl: string | null = null;
+
+    if (photo) {
+      const photoFormData = new FormData();
+
+      photoFormData.append("file", photo);
+      photoFormData.append("folder", "students");
+
+      const photoRes = await fetch("/api/upload-photo", {
+        method: "POST",
+        body: photoFormData,
+        credentials: "include",
+      });
+
+      if (photoRes.status === 401) {
+        window.location.href = "/login";
+        return;
+      }
+
+      const photoData = await photoRes.json();
+
+      if (!photoRes.ok || !photoData.success) {
+        alert(photoData.error || "Fotoğraf yüklenemedi");
+        return;
+      }
+
+      photoUrl = photoData.url;
+    }
+
+    await createCertificateAction({
+      fullName: fullName.trim(),
+      program,
+      qualificationLevel,
+      issueDate,
+      seaMiles,
+      instructorId: selectedInstructorId || "",
+      photoUrl: photoUrl || null,
+    });
+
+    await loadCertificates();
+    await loadLogs();
+
+    alert("Sertifika + kart başarıyla oluşturuldu");
+  } catch (error) {
+    console.error("createCertificate error:", error);
+    alert("Beklenmeyen bir hata oluştu");
+  } finally {
+    setLoading(false);
   }
+}
 
   async function copyVerifyLink(certificateId: string) {
     try {
