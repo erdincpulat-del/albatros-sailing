@@ -8,6 +8,8 @@ import { getMessages } from "@/messages";
 type NavChild = {
   href: string;
   label: string;
+  description?: string;
+  highlight?: boolean;
 };
 
 type NavItem =
@@ -34,6 +36,12 @@ function DesktopNavLinks() {
         { href: "/guide/navigasyon", label: "Navigasyon" },
         { href: "/guide/sextant", label: "Sextant" },
         { href: "/guide/paper-chart-navigation", label: "Kağıt Harita" },
+        {
+          href: "/stcw-quiz",
+          label: "STCW Quiz",
+          description: "Profesyonel sınav simülasyonu",
+          highlight: true,
+        },
         { href: "/contact", label: "İletişim" },
       ],
     },
@@ -54,11 +62,11 @@ function DesktopNavLinks() {
       label: t.nav.programs,
       children: [
         { href: "/programs", label: "Tüm Programlar" },
-{ href: "/programs/basic-sailing", label: "Başlangıç Yelken Eğitimi" },
-{ href: "/programs/coastal-skipper", label: "Coastal Skipper" },
-{ href: "/programs/offshore-skipper", label: "Offshore Skipper" },
-{ href: "/programs/offshore-yacht-course", label: "Yunan Adaları Açık Deniz Eğitimi" },
-{ href: "/programs/hisaronu-gulf-training", label: "Hisarönü Körfezi Eğitimi" },
+        { href: "/programs/basic-sailing", label: "Başlangıç Yelken Eğitimi" },
+        { href: "/programs/coastal-skipper", label: "Coastal Skipper" },
+        { href: "/programs/offshore-skipper", label: "Offshore Skipper" },
+        { href: "/programs/offshore-yacht-course", label: "Yunan Adaları Açık Deniz Eğitimi" },
+        { href: "/programs/hisaronu-gulf-training", label: "Hisarönü Körfezi Eğitimi" },
       ],
     },
 
@@ -100,7 +108,7 @@ function DesktopNavLinks() {
                 </svg>
               </button>
 
-              <div className="invisible absolute left-0 top-full z-50 mt-3 w-72 translate-y-2 rounded-3xl border border-white/10 bg-[#06111c]/95 p-3 opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+              <div className="invisible absolute left-0 top-full z-50 mt-3 w-80 translate-y-2 rounded-3xl border border-white/10 bg-[#06111c]/95 p-3 opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                 <div className="absolute left-8 top-0 h-3 w-3 -translate-y-1/2 rotate-45 border-l border-t border-white/10 bg-[#06111c]/95" />
 
                 <div className="space-y-1 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-xl">
@@ -108,9 +116,49 @@ function DesktopNavLinks() {
                     <Link
                       key={sub.href}
                       href={sub.href}
-                      className="block rounded-2xl px-4 py-3 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white"
+                      className={`group/item block rounded-2xl px-4 py-3 text-sm transition ${
+                        sub.highlight
+                          ? "border border-[#67d3ff]/25 bg-[#67d3ff]/10 text-white shadow-[0_0_24px_rgba(103,211,255,0.12)] hover:border-[#67d3ff]/45 hover:bg-[#67d3ff]/15"
+                          : "font-medium text-white/80 hover:bg-white/10 hover:text-white"
+                      }`}
                     >
-                      {sub.label}
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            {sub.highlight && (
+                              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#67d3ff]/15 text-[13px] text-[#67d3ff] ring-1 ring-[#67d3ff]/25">
+                                ⚓
+                              </span>
+                            )}
+
+                            <span
+                              className={`font-semibold ${
+                                sub.highlight ? "text-[#67d3ff]" : "text-white/85"
+                              }`}
+                            >
+                              {sub.label}
+                            </span>
+
+                            {sub.highlight && (
+                              <span className="rounded-full border border-[#67d3ff]/25 bg-[#67d3ff]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#67d3ff]">
+                                Yeni
+                              </span>
+                            )}
+                          </div>
+
+                          {sub.description && (
+                            <p className="mt-1 pl-9 text-xs leading-5 text-white/55">
+                              {sub.description}
+                            </p>
+                          )}
+                        </div>
+
+                        {sub.highlight && (
+                          <span className="mt-1 text-[#67d3ff]/80 transition group-hover/item:translate-x-1">
+                            →
+                          </span>
+                        )}
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -147,6 +195,12 @@ function MobileNavLinks() {
         { href: "/guide/navigasyon", label: "Navigasyon" },
         { href: "/guide/sextant", label: "Sextant" },
         { href: "/guide/paper-chart-navigation", label: "Kağıt Harita" },
+        {
+          href: "/stcw-quiz",
+          label: "STCW Quiz",
+          description: "Profesyonel sınav simülasyonu",
+          highlight: true,
+        },
         { href: "/contact", label: "İletişim" },
       ],
     },
@@ -221,9 +275,26 @@ function MobileNavLinks() {
                     <Link
                       key={sub.href}
                       href={sub.href}
-                      className="block rounded-xl px-3 py-2 text-sm text-white/65 transition hover:bg-white/5 hover:text-[#67d3ff]"
+                      className={`block rounded-xl px-3 py-2 text-sm transition ${
+                        sub.highlight
+                          ? "border border-[#67d3ff]/25 bg-[#67d3ff]/10 text-[#67d3ff]"
+                          : "text-white/65 hover:bg-white/5 hover:text-[#67d3ff]"
+                      }`}
                     >
-                      {sub.label}
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="font-semibold">{sub.label}</span>
+                        {sub.highlight && (
+                          <span className="rounded-full border border-[#67d3ff]/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em]">
+                            Yeni
+                          </span>
+                        )}
+                      </div>
+
+                      {sub.description && (
+                        <p className="mt-1 text-xs leading-5 text-white/55">
+                          {sub.description}
+                        </p>
+                      )}
                     </Link>
                   ))}
                 </div>
@@ -286,10 +357,9 @@ function Header() {
     <>
       <style>{`
         @keyframes albatrosGlowMove {
-  0%   { transform: translateX(-40%) scaleX(1);   opacity: 0.6; }
-  50%  { transform: translateX(40%)  scaleX(1.05);opacity: 1;   }
-  100% { transform: translateX(-40%) scaleX(1);   opacity: 0.6; }
-}
+          0%   { transform: translateX(-40%) scaleX(1); opacity: 0.6; }
+          50%  { transform: translateX(40%) scaleX(1.05); opacity: 1; }
+          100% { transform: translateX(-40%) scaleX(1); opacity: 0.6; }
         }
       `}</style>
 
@@ -298,7 +368,6 @@ function Header() {
           <div className="flex items-center justify-between gap-6">
             <Link href="/" className="shrink-0">
               <div className="relative flex flex-col leading-none group">
-                {/* 🔵 STATİK GLOW */}
                 <div
                   className="pointer-events-none absolute left-0 right-0 top-[calc(100%-2px)] h-[6px]"
                   style={{
@@ -311,7 +380,6 @@ function Header() {
                   }}
                 />
 
-                {/* 🔥 KAYAN IŞIK */}
                 <div
                   style={{
                     position: "absolute",
@@ -461,6 +529,11 @@ function Footer() {
             <li>
               <Link href="/reserve" className="transition hover:text-[#67d3ff]">
                 {t.nav.reserve}
+              </Link>
+            </li>
+            <li>
+              <Link href="/stcw-quiz" className="transition hover:text-[#67d3ff]">
+                STCW Quiz
               </Link>
             </li>
           </ul>
