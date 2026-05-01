@@ -6,7 +6,7 @@ import { getStcwQuestionsFromSupabase } from "@/lib/stcw/get-stcw-questions";
 import type { QuizMode, QuizResult, StcwQuestion } from "@/lib/stcw/quiz-types";
 import { calculateQuizResult } from "@/lib/stcw/quiz-utils";
 
-const MODES: QuizMode[] = [10, 25, 50];
+const MODES: QuizMode[] = [100, 250, 500];
 
 const CATEGORY_LABELS: Record<string, string> = {
   fire: "Yangın",
@@ -19,7 +19,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export default function StcwQuizEngine() {
-  const [mode, setMode] = useState<QuizMode>(10);
+  const [mode, setMode] = useState<QuizMode>(MODES[0]);
   const [started, setStarted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [quizQuestions, setQuizQuestions] = useState<StcwQuestion[]>([]);

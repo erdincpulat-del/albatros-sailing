@@ -29,9 +29,8 @@ export async function getStcwQuestionsFromSupabase(
   const rows = (data || []) as DbQuestion[];
 
   return rows
-    .sort(() => Math.random() - 0.5)
-    .slice(0, mode)
-    .map((q) => ({
+  .sort(() => Math.random() - 0.5)
+  .map((q) => ({
       id: q.question_code,
       category: q.category,
       difficulty: q.difficulty,

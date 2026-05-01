@@ -43,7 +43,7 @@ export type StcwQuestion = {
 };
 
 // 🎯 QUIZ MODE
-export type QuizMode = 10 | 25 | 50;
+export type QuizMode = number;
 
 // 📊 SONUÇ MODELİ
 export type QuizResult = {
