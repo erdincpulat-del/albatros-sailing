@@ -401,7 +401,7 @@ export default function SiteHeader() {
           display: none;
         }
 
-        @media (max-width: 980px) {
+        @media (max-width: 1200px) {
           .desktop-nav {
             display: none !important;
           }
