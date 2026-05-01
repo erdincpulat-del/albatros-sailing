@@ -34,14 +34,31 @@ type NavGroup = {
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileGroup, setMobileGroup] = useState<string | null>("home");
+
   const pathname = usePathname();
   const { locale, setLocale } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setOpenMenu(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   const navGroups = useMemo<NavGroup[]>(() => {
     if (locale === "tr") {
@@ -134,6 +151,7 @@ export default function SiteHeader() {
           key: "charter",
           label: "Charter",
           href: "/charter",
+          items: [{ label: "Charter Sayfası", href: "/charter" }],
         },
         {
           key: "verify",
@@ -347,6 +365,17 @@ export default function SiteHeader() {
           }
         }
 
+        @keyframes mobilePanelIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px) scale(0.985);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
         .dropdown-item-card {
           transition:
             background 0.18s ease,
@@ -362,6 +391,44 @@ export default function SiteHeader() {
           border-color: rgba(103,211,255,0.28);
           transform: translateX(2px);
           box-shadow: 0 0 28px rgba(103,211,255,0.18);
+        }
+
+        .desktop-nav {
+          display: flex;
+        }
+
+        .mobile-menu-button {
+          display: none;
+        }
+
+        @media (max-width: 980px) {
+          .desktop-nav {
+            display: none !important;
+          }
+
+          .mobile-menu-button {
+            display: inline-flex !important;
+          }
+
+          .site-header-brand-main {
+            font-size: 13px !important;
+            letter-spacing: 0.22em !important;
+          }
+
+          .site-header-brand-sub {
+            font-size: 12px !important;
+          }
+        }
+
+        @media (max-width: 420px) {
+          .site-header-brand-main {
+            font-size: 11px !important;
+            letter-spacing: 0.18em !important;
+          }
+
+          .site-header-brand-sub {
+            font-size: 11px !important;
+          }
         }
       `}</style>
 
@@ -383,11 +450,11 @@ export default function SiteHeader() {
           style={{
             maxWidth: 1320,
             margin: "0 auto",
-            padding: scrolled ? "10px 24px" : "18px 24px",
+            padding: scrolled ? "10px 18px" : "18px 18px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: 24,
+            gap: 18,
           }}
         >
           <Link href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
@@ -418,6 +485,7 @@ export default function SiteHeader() {
               />
 
               <span
+                className="site-header-brand-main"
                 style={{
                   fontSize: scrolled ? "13px" : "15px",
                   fontWeight: 600,
@@ -432,6 +500,7 @@ export default function SiteHeader() {
               </span>
 
               <span
+                className="site-header-brand-sub"
                 style={{
                   fontSize: scrolled ? "12px" : "14px",
                   fontWeight: 500,
@@ -446,9 +515,46 @@ export default function SiteHeader() {
             </div>
           </Link>
 
-          <nav
+          <button
+            type="button"
+            className="mobile-menu-button"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            aria-label={mobileOpen ? "Menüyü kapat" : "Menüyü aç"}
+            aria-expanded={mobileOpen}
             style={{
-              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 46,
+              height: 46,
+              borderRadius: 16,
+              border: "1px solid rgba(103,211,255,0.32)",
+              background: mobileOpen
+                ? "rgba(103,211,255,0.18)"
+                : "rgba(255,255,255,0.05)",
+              color: "#f8fafc",
+              cursor: "pointer",
+              boxShadow: mobileOpen
+                ? "0 0 28px rgba(103,211,255,0.28)"
+                : "none",
+            }}
+          >
+            <span
+              style={{
+                position: "relative",
+                width: 22,
+                height: 16,
+                display: "inline-block",
+              }}
+            >
+              <span style={hamburgerLine(mobileOpen, "top")} />
+              <span style={hamburgerLine(mobileOpen, "middle")} />
+              <span style={hamburgerLine(mobileOpen, "bottom")} />
+            </span>
+          </button>
+
+          <nav
+            className="desktop-nav"
+            style={{
               alignItems: "center",
               gap: 22,
               flexWrap: "wrap",
@@ -488,245 +594,29 @@ export default function SiteHeader() {
 
                 {(group.items?.length || group.sections?.length) &&
                 openMenu === group.key ? (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "calc(100% - 4px)",
-                      left: 0,
-                      minWidth: group.sections ? 760 : 330,
-                      maxWidth: group.sections ? 860 : 360,
-                      borderRadius: 20,
-                      background:
-                        "linear-gradient(180deg, rgba(10,15,24,0.97), rgba(8,12,20,0.98))",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      boxShadow: "0 26px 60px rgba(0,0,0,0.40)",
-                      padding: 14,
-                      animation: "dropdownIn 0.18s ease",
-                      pointerEvents: "auto",
-                      zIndex: 1200,
-                    }}
-                  >
-                    {group.sections ? (
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(2, minmax(280px, 1fr))",
-                          gap: 14,
-                        }}
-                      >
-                        {group.sections.map((section) => (
-                          <div
-                            key={section.title}
-                            style={{
-                              borderRadius: 16,
-                              border: "1px solid rgba(255,255,255,0.06)",
-                              background: "rgba(255,255,255,0.02)",
-                              padding: 12,
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontSize: 11,
-                                fontWeight: 900,
-                                letterSpacing: "0.16em",
-                                textTransform: "uppercase",
-                                color: "#8ed8ff",
-                                marginBottom: 8,
-                              }}
-                            >
-                              {section.title}
-                            </div>
-
-                            {section.items.map((item) => {
-                              const isQuiz = item.href === "/stcw-quiz";
-
-                              const content = (
-                                <div
-                                  className="dropdown-item-card"
-                                  style={{
-                                    borderRadius: 14,
-                                    padding: "12px 14px",
-                                    background: isQuiz
-                                      ? "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))"
-                                      : undefined,
-                                    border: isQuiz
-                                      ? "1px solid rgba(103,211,255,0.35)"
-                                      : "1px solid transparent",
-                                    boxShadow: isQuiz
-                                      ? "0 0 24px rgba(103,211,255,0.18)"
-                                      : undefined,
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      color: isQuiz ? "#9deaff" : "#f8fafc",
-                                      fontSize: 14,
-                                      fontWeight: 800,
-                                      lineHeight: 1.4,
-                                      transition: "color 0.18s ease",
-                                    }}
-                                  >
-                                    {isQuiz ? "⚓ " : ""}
-                                    {item.label}
-                                  </div>
-                                  {isQuiz && (
-                                    <div
-                                      style={{
-                                        marginTop: 4,
-                                        fontSize: 12,
-                                        lineHeight: 1.45,
-                                        color: "rgba(226,232,240,0.72)",
-                                      }}
-                                    >
-                                      STCW 149/499 gemici hazırlık deneme sistemi
-                                    </div>
-                                  )}
-                                </div>
-                              );
-
-                              return item.external ? (
-                                <a
-                                  key={item.label}
-                                  href={item.href}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  style={{
-                                    textDecoration: "none",
-                                    display: "block",
-                                  }}
-                                >
-                                  {content}
-                                </a>
-                              ) : (
-                                <Link
-                                  key={item.label}
-                                  href={item.href}
-                                  style={{
-                                    textDecoration: "none",
-                                    display: "block",
-                                  }}
-                                >
-                                  {content}
-                                </Link>
-                              );
-                            })}
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <>
-                        {group.items?.map((item) => {
-                          const isQuiz = item.href === "/stcw-quiz";
-
-                          const content = (
-                            <div
-                              className="dropdown-item-card"
-                              style={{
-                                borderRadius: 14,
-                                padding: "12px 14px",
-                                background: isQuiz
-                                  ? "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))"
-                                  : undefined,
-                                border: isQuiz
-                                  ? "1px solid rgba(103,211,255,0.35)"
-                                  : "1px solid transparent",
-                                boxShadow: isQuiz
-                                  ? "0 0 24px rgba(103,211,255,0.18)"
-                                  : undefined,
-                              }}
-                            >
-                              <div
-                                style={{
-                                  color: isQuiz ? "#9deaff" : "#f8fafc",
-                                  fontSize: 14,
-                                  fontWeight: 800,
-                                  lineHeight: 1.4,
-                                  transition: "color 0.18s ease",
-                                }}
-                              >
-                                {isQuiz ? "⚓ " : ""}
-                                {item.label}
-                              </div>
-                              {isQuiz && (
-                                <div
-                                  style={{
-                                    marginTop: 4,
-                                    fontSize: 12,
-                                    lineHeight: 1.45,
-                                    color: "rgba(226,232,240,0.72)",
-                                  }}
-                                >
-                                  STCW 149/499 gemici hazırlık deneme sistemi
-                                </div>
-                              )}
-                            </div>
-                          );
-
-                          return item.external ? (
-                            <a
-                              key={item.label}
-                              href={item.href}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                textDecoration: "none",
-                                display: "block",
-                              }}
-                            >
-                              {content}
-                            </a>
-                          ) : (
-                            <Link
-                              key={item.label}
-                              href={item.href}
-                              style={{
-                                textDecoration: "none",
-                                display: "block",
-                              }}
-                            >
-                              {content}
-                            </Link>
-                          );
-                        })}
-                      </>
-                    )}
-                  </div>
+                  <DesktopDropdown group={group} />
                 ) : null}
               </div>
             ))}
 
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                marginLeft: 4,
-              }}
-            >
-              <button onClick={() => setLocale("tr")} style={langBtn(locale === "tr")}>
+            <div style={{ display: "flex", gap: 8, marginLeft: 4 }}>
+              <button
+                type="button"
+                onClick={() => setLocale("tr")}
+                style={langBtn(locale === "tr")}
+              >
                 TR
               </button>
-              <button onClick={() => setLocale("en")} style={langBtn(locale === "en")}>
+              <button
+                type="button"
+                onClick={() => setLocale("en")}
+                style={langBtn(locale === "en")}
+              >
                 EN
               </button>
             </div>
 
-            <Link
-              href="/admin"
-              className="site-header-cta"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 18px",
-                borderRadius: 999,
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.16)",
-                color: "#f8fafc",
-                fontWeight: 800,
-                fontSize: 13,
-                textDecoration: "none",
-              }}
-            >
+            <Link href="/admin" className="site-header-cta" style={adminBtnStyle}>
               {locale === "tr" ? "Admin Giriş" : "Admin"}
             </Link>
 
@@ -739,27 +629,373 @@ export default function SiteHeader() {
               target="_blank"
               rel="noreferrer"
               className="site-header-cta"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "10px 18px",
-                borderRadius: 999,
-                background: "rgba(103,211,255,0.12)",
-                border: "1px solid rgba(103,211,255,0.35)",
-                color: "#8ed8ff",
-                fontWeight: 800,
-                fontSize: 13,
-                textDecoration: "none",
-                boxShadow: "0 0 22px rgba(103,211,255,0.28)",
-              }}
+              style={applyBtnStyle}
             >
               {locale === "tr" ? "Başvuru" : "Apply"}
             </a>
           </nav>
         </div>
       </header>
+
+      {mobileOpen ? (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 999,
+            background:
+              "radial-gradient(circle at top left, rgba(103,211,255,0.14), transparent 35%), rgba(2,6,12,0.94)",
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
+            paddingTop: 92,
+            overflowY: "auto",
+          }}
+        >
+          <div
+            style={{
+              width: "min(100% - 28px, 760px)",
+              margin: "0 auto 28px",
+              borderRadius: 26,
+              border: "1px solid rgba(103,211,255,0.18)",
+              background:
+                "linear-gradient(180deg, rgba(10,15,24,0.96), rgba(2,6,23,0.98))",
+              boxShadow:
+                "0 30px 90px rgba(0,0,0,0.55), 0 0 42px rgba(103,211,255,0.12)",
+              padding: 16,
+              animation: "mobilePanelIn 0.22s ease",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 10,
+                marginBottom: 14,
+              }}
+            >
+              {navGroups.map((group) => {
+                const active = mobileGroup === group.key || isActive(pathname, group);
+
+                return (
+                  <button
+                    type="button"
+                    key={group.key}
+                    onClick={() =>
+                      group.items?.length || group.sections?.length
+                        ? setMobileGroup((prev) =>
+                            prev === group.key ? null : group.key
+                          )
+                        : setMobileOpen(false)
+                    }
+                    style={{
+                      minHeight: 48,
+                      borderRadius: 16,
+                      border: active
+                        ? "1px solid rgba(103,211,255,0.42)"
+                        : "1px solid rgba(255,255,255,0.08)",
+                      background: active
+                        ? "rgba(103,211,255,0.14)"
+                        : "rgba(255,255,255,0.04)",
+                      color: active ? "#9deaff" : "#f8fafc",
+                      fontWeight: 900,
+                      fontSize: 14,
+                      letterSpacing: 0.2,
+                      cursor: "pointer",
+                      textAlign: "center",
+                    }}
+                  >
+                    {group.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {navGroups.map((group) =>
+              mobileGroup === group.key ? (
+                <div key={group.key} style={{ marginTop: 10 }}>
+                  {group.href ? (
+                    <Link
+                      href={group.href}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "15px 16px",
+                        borderRadius: 18,
+                        background:
+                          "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))",
+                        border: "1px solid rgba(103,211,255,0.28)",
+                        color: "#f8fafc",
+                        textDecoration: "none",
+                        fontWeight: 900,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <span>{group.label}</span>
+                      <span style={{ color: "#8ed8ff" }}>→</span>
+                    </Link>
+                  ) : null}
+
+                  {group.sections ? (
+                    <div style={{ display: "grid", gap: 12 }}>
+                      {group.sections.map((section) => (
+                        <div
+                          key={section.title}
+                          style={{
+                            borderRadius: 18,
+                            border: "1px solid rgba(255,255,255,0.08)",
+                            background: "rgba(255,255,255,0.035)",
+                            padding: 12,
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: 11,
+                              fontWeight: 900,
+                              letterSpacing: "0.16em",
+                              textTransform: "uppercase",
+                              color: "#8ed8ff",
+                              marginBottom: 8,
+                            }}
+                          >
+                            {section.title}
+                          </div>
+
+                          {section.items.map((item) => (
+                            <MobileMenuLink key={item.label} item={item} />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ display: "grid", gap: 8 }}>
+                      {group.items?.map((item) => (
+                        <MobileMenuLink key={item.label} item={item} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : null
+            )}
+
+            <div
+              style={{
+                display: "flex",
+                gap: 10,
+                marginTop: 18,
+                paddingTop: 16,
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setLocale("tr")}
+                style={{ ...langBtn(locale === "tr"), flex: 1, minHeight: 46 }}
+              >
+                TR
+              </button>
+              <button
+                type="button"
+                onClick={() => setLocale("en")}
+                style={{ ...langBtn(locale === "en"), flex: 1, minHeight: 46 }}
+              >
+                EN
+              </button>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr",
+                gap: 10,
+                marginTop: 14,
+              }}
+            >
+              <Link href="/admin" className="site-header-cta" style={adminMobileBtnStyle}>
+                {locale === "tr" ? "Admin Giriş" : "Admin"}
+              </Link>
+
+              <a
+                href={waLink(
+                  locale === "tr"
+                    ? "Merhaba, eğitim hakkında bilgi almak istiyorum."
+                    : "Hello, I would like information about the training."
+                )}
+                target="_blank"
+                rel="noreferrer"
+                className="site-header-cta"
+                style={applyMobileBtnStyle}
+              >
+                {locale === "tr" ? "Başvuru" : "Apply"}
+              </a>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
+  );
+}
+
+function DesktopDropdown({ group }: { group: NavGroup }) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: "calc(100% - 4px)",
+        right: group.sections ? -260 : "auto",
+        left: group.sections ? "auto" : 0,
+        width: group.sections ? "min(860px, calc(100vw - 48px))" : 330,
+        borderRadius: 20,
+        background:
+          "linear-gradient(180deg, rgba(10,15,24,0.97), rgba(8,12,20,0.98))",
+        border: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 26px 60px rgba(0,0,0,0.40)",
+        padding: 14,
+        animation: "dropdownIn 0.18s ease",
+        pointerEvents: "auto",
+        zIndex: 1200,
+      }}
+    >
+      {group.sections ? (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(280px, 1fr))",
+            gap: 14,
+          }}
+        >
+          {group.sections.map((section) => (
+            <div
+              key={section.title}
+              style={{
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.06)",
+                background: "rgba(255,255,255,0.02)",
+                padding: 12,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 11,
+                  fontWeight: 900,
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  color: "#8ed8ff",
+                  marginBottom: 8,
+                }}
+              >
+                {section.title}
+              </div>
+
+              {section.items.map((item) => (
+                <DesktopMenuLink key={item.label} item={item} />
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <>
+          {group.items?.map((item) => (
+            <DesktopMenuLink key={item.label} item={item} />
+          ))}
+        </>
+      )}
+    </div>
+  );
+}
+
+function DesktopMenuLink({ item }: { item: MenuItem }) {
+  const isQuiz = item.href === "/stcw-quiz";
+
+  const content = (
+    <div
+      className="dropdown-item-card"
+      style={{
+        borderRadius: 14,
+        padding: "12px 14px",
+        background: isQuiz
+          ? "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))"
+          : undefined,
+        border: isQuiz
+          ? "1px solid rgba(103,211,255,0.35)"
+          : "1px solid transparent",
+        boxShadow: isQuiz ? "0 0 24px rgba(103,211,255,0.18)" : undefined,
+      }}
+    >
+      <div
+        style={{
+          color: isQuiz ? "#9deaff" : "#f8fafc",
+          fontSize: 14,
+          fontWeight: 800,
+          lineHeight: 1.4,
+          transition: "color 0.18s ease",
+        }}
+      >
+        {isQuiz ? "⚓ " : ""}
+        {item.label}
+      </div>
+
+      {isQuiz ? (
+        <div
+          style={{
+            marginTop: 4,
+            fontSize: 12,
+            lineHeight: 1.45,
+            color: "rgba(226,232,240,0.72)",
+          }}
+        >
+          STCW 149/499 gemici hazırlık deneme sistemi
+        </div>
+      ) : null}
+    </div>
+  );
+
+  return item.external ? (
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noreferrer"
+      style={{ textDecoration: "none", display: "block" }}
+    >
+      {content}
+    </a>
+  ) : (
+    <Link href={item.href} style={{ textDecoration: "none", display: "block" }}>
+      {content}
+    </Link>
+  );
+}
+
+function MobileMenuLink({ item }: { item: MenuItem }) {
+  const isQuiz = item.href === "/stcw-quiz";
+
+  const style: CSSProperties = {
+    display: "block",
+    padding: "13px 14px",
+    borderRadius: 15,
+    background: isQuiz
+      ? "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))"
+      : "rgba(255,255,255,0.035)",
+    border: isQuiz
+      ? "1px solid rgba(103,211,255,0.34)"
+      : "1px solid rgba(255,255,255,0.06)",
+    color: isQuiz ? "#9deaff" : "#f8fafc",
+    textDecoration: "none",
+    fontWeight: 850,
+    fontSize: 14,
+    lineHeight: 1.35,
+  };
+
+  return item.external ? (
+    <a href={item.href} target="_blank" rel="noreferrer" style={style}>
+      {isQuiz ? "⚓ " : ""}
+      {item.label}
+    </a>
+  ) : (
+    <Link href={item.href} style={style}>
+      {isQuiz ? "⚓ " : ""}
+      {item.label}
+    </Link>
   );
 }
 
@@ -789,3 +1025,84 @@ function langBtn(active: boolean): CSSProperties {
     transition: "all 0.2s ease",
   };
 }
+
+function hamburgerLine(
+  open: boolean,
+  part: "top" | "middle" | "bottom"
+): CSSProperties {
+  const base: CSSProperties = {
+    position: "absolute",
+    left: 0,
+    width: 22,
+    height: 2,
+    borderRadius: 999,
+    background: "#f8fafc",
+    transition: "all 0.22s ease",
+  };
+
+  if (part === "top") {
+    return {
+      ...base,
+      top: open ? 7 : 0,
+      transform: open ? "rotate(45deg)" : "rotate(0deg)",
+    };
+  }
+
+  if (part === "middle") {
+    return {
+      ...base,
+      top: 7,
+      opacity: open ? 0 : 1,
+      transform: open ? "scaleX(0)" : "scaleX(1)",
+    };
+  }
+
+  return {
+    ...base,
+    top: open ? 7 : 14,
+    transform: open ? "rotate(-45deg)" : "rotate(0deg)",
+  };
+}
+
+const adminBtnStyle: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "10px 18px",
+  borderRadius: 999,
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.16)",
+  color: "#f8fafc",
+  fontWeight: 800,
+  fontSize: 13,
+  textDecoration: "none",
+};
+
+const applyBtnStyle: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "10px 18px",
+  borderRadius: 999,
+  background: "rgba(103,211,255,0.12)",
+  border: "1px solid rgba(103,211,255,0.35)",
+  color: "#8ed8ff",
+  fontWeight: 800,
+  fontSize: 13,
+  textDecoration: "none",
+  boxShadow: "0 0 22px rgba(103,211,255,0.28)",
+};
+
+const adminMobileBtnStyle: CSSProperties = {
+  ...adminBtnStyle,
+  justifyContent: "center",
+  minHeight: 50,
+  fontSize: 15,
+};
+
+const applyMobileBtnStyle: CSSProperties = {
+  ...applyBtnStyle,
+  justifyContent: "center",
+  minHeight: 50,
+  fontSize: 15,
+};
