@@ -192,6 +192,34 @@ export default function CollisionAvoidancePage() {
             bekler. Kimse erken karar almaz. Son anda yapılan sert manevra artık
             sadece çarpışmayı yumuşatır, önlemez.
           </p>
+
+          <div
+            style={{
+              marginTop: 30,
+              borderRadius: 22,
+              overflow: "hidden",
+              background:
+                "linear-gradient(180deg, rgba(14,20,32,0.95), rgba(2,6,23,0.98))",
+              border: "1px solid rgba(103,211,255,0.18)",
+              boxShadow:
+                "0 24px 70px rgba(0,0,0,0.55), 0 0 34px rgba(103,211,255,0.10)",
+            }}
+          >
+            <video
+              src="/videos/collision.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                background: "#020617",
+              }}
+            />
+          </div>
         </div>
 
         <div style={{ marginTop: 50 }}>
