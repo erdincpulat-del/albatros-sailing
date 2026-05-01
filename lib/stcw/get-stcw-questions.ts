@@ -20,7 +20,7 @@ export async function getStcwQuestionsFromSupabase(
     .select(
       "question_code, category, difficulty, question, options, correct_answer, explanation"
     )
-    .limit(mode);
+    //.limit(mode);
 
   if (error) {
     console.error("STCW Supabase error:", error);
