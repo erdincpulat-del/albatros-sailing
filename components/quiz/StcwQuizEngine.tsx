@@ -18,6 +18,13 @@ const CATEGORY_LABELS: Record<string, string> = {
   emergency: "Acil Durum",
 };
 
+function getModeDescription(mode: QuizMode) {
+  if (mode === 100) return "Dengeli hazırlık modu";
+  if (mode === 250) return "Geniş kapsamlı sınav modu";
+  if (mode === 500) return "Tam gerçek sınav simülasyonu";
+  return "Sınav modu";
+}
+
 export default function StcwQuizEngine() {
   const [mode, setMode] = useState<QuizMode>(MODES[0]);
   const [started, setStarted] = useState(false);
@@ -28,23 +35,48 @@ export default function StcwQuizEngine() {
   const [result, setResult] = useState<QuizResult | null>(null);
 
   const currentQuestion = quizQuestions[currentIndex];
+  const selectedAnswer = currentQuestion
+    ? answers[currentQuestion.id]
+    : undefined;
+  const hasAnswered = selectedAnswer !== undefined;
 
   useEffect(() => {
     if (!started) return;
 
+    let cancelled = false;
+
     async function fetchQuestions() {
       setLoading(true);
-
-      const data = await getStcwQuestionsFromSupabase(mode);
-
-      setQuizQuestions(data);
+      setQuizQuestions([]);
       setCurrentIndex(0);
       setAnswers({});
       setResult(null);
-      setLoading(false);
+
+      try {
+        const data = await getStcwQuestionsFromSupabase(mode);
+
+        if (cancelled) return;
+
+        setQuizQuestions(data);
+        setCurrentIndex(0);
+      } catch (error) {
+        console.error("STCW quiz fetch error:", error);
+
+        if (!cancelled) {
+          setQuizQuestions([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
     }
 
     fetchQuestions();
+
+    return () => {
+      cancelled = true;
+    };
   }, [started, mode]);
 
   function startQuiz(selectedMode: QuizMode) {
@@ -63,6 +95,7 @@ export default function StcwQuizEngine() {
 
   function nextQuestion() {
     if (!currentQuestion) return;
+    if (!hasAnswered) return;
 
     if (currentIndex < quizQuestions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
@@ -147,9 +180,7 @@ export default function StcwQuizEngine() {
                       <div>
                         <p className="text-4xl font-black">{m} Soru</p>
                         <p className="mt-2 text-sm text-slate-300">
-                          {m === 10 && "Hızlı çalışma modu"}
-                          {m === 25 && "Orta seviye sınav modu"}
-                          {m === 50 && "Tam simülasyon modu"}
+                          {getModeDescription(m)}
                         </p>
                       </div>
 
@@ -181,7 +212,7 @@ export default function StcwQuizEngine() {
             Supabase’den soru gelmedi.
             <button
               onClick={restartQuiz}
-              className="mt-6 rounded-full bg-cyan-400 px-6 py-3 font-bold text-slate-950"
+              className="mt-6 block rounded-full bg-cyan-400 px-6 py-3 font-bold text-slate-950"
             >
               Geri Dön
             </button>
@@ -214,11 +245,11 @@ export default function StcwQuizEngine() {
 
             <div className="mt-10 grid gap-4">
               {currentQuestion.options.map((opt, i) => {
-                const selected = answers[currentQuestion.id] === i;
+                const selected = selectedAnswer === i;
 
                 return (
                   <button
-                    key={i}
+                    key={`${currentQuestion.id}-${i}`}
                     onClick={() => handleAnswer(i)}
                     className={`rounded-2xl border p-5 text-left text-lg font-semibold transition ${
                       selected
@@ -238,7 +269,7 @@ export default function StcwQuizEngine() {
             <div className="mt-10 flex flex-wrap gap-4">
               <button
                 onClick={nextQuestion}
-                disabled={answers[currentQuestion.id] === undefined}
+                disabled={!hasAnswered}
                 className="rounded-full bg-cyan-400 px-8 py-4 font-black text-slate-950 transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {currentIndex < quizQuestions.length - 1
@@ -266,16 +297,16 @@ export default function StcwQuizEngine() {
               {result.score >= 80
                 ? "Güçlü bir sonuç."
                 : result.score >= 60
-                ? "Temelin var, geliştirme gerekli."
-                : "Bu alan eğitimle güçlenmeli."}
+                  ? "Temelin var, geliştirme gerekli."
+                  : "Bu alan eğitimle güçlenmeli."}
             </h2>
 
             <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
               {result.score >= 80
                 ? "Denizcilik bilgisi açısından iyi bir seviyedesin. Bir sonraki adım pratik senaryo, gerçek rota ve profesyonel eğitim süreci olmalı."
                 : result.score >= 60
-                ? "Bazı temel konular oturmuş görünüyor; ancak sınav ve gerçek deniz pratiği için eksik başlıkların güçlendirilmesi gerekir."
-                : "Bu sonuç, özellikle güvenlik, acil durum ve temel gemicilik alanlarında yapılandırılmış eğitim ihtiyacını gösterir."}
+                  ? "Bazı temel konular oturmuş görünüyor; ancak sınav ve gerçek deniz pratiği için eksik başlıkların güçlendirilmesi gerekir."
+                  : "Bu sonuç, özellikle güvenlik, acil durum ve temel gemicilik alanlarında yapılandırılmış eğitim ihtiyacını gösterir."}
             </p>
 
             <div className="mt-8 grid gap-4 md:grid-cols-4">
