@@ -2,16 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
 
-type CertificateCardItem = {
-  id: string;
-  fullName: string | null;
-  program: string | null;
-  certificateId: string | null;
-  qualificationLevel: string | null;
-  issueDate: Date | null;
-  status: string | null;
-  cardFrontUrl: string | null;
-  cardBackUrl: string | null;
+type CardsPageProps = {
+  searchParams: Promise<{
+    certificateId?: string;
+  }>;
 };
 
 function normalizeStatus(status?: string | null) {
@@ -76,29 +70,31 @@ function formatDate(value?: Date | null) {
   }).format(date);
 }
 
-export default async function CardsPage() {
-  const certificates: CertificateCardItem[] = await prisma.certificate.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    select: {
-      id: true,
-      fullName: true,
-      program: true,
-      certificateId: true,
-      qualificationLevel: true,
-      issueDate: true,
-      status: true,
-      cardFrontUrl: true,
-      cardBackUrl: true,
-    },
-  });
+export default async function CardsPage({ searchParams }: CardsPageProps) {
+  const params = await searchParams;
+  const certificateId = params.certificateId?.trim().toUpperCase();
 
-  const activeCount = certificates.filter(
-    (item) => normalizeStatus(item.status) === "ACTIVE"
-  ).length;
+  const certificate = certificateId
+    ? await prisma.certificate.findUnique({
+        where: {
+          certificateId,
+        },
+        select: {
+          id: true,
+          fullName: true,
+          program: true,
+          certificateId: true,
+          qualificationLevel: true,
+          issueDate: true,
+          status: true,
+          cardFrontUrl: true,
+          cardBackUrl: true,
+        },
+      })
+    : null;
 
-  const qrReadyCount = certificates.filter((item) => !!item.cardFrontUrl).length;
+  const status = normalizeStatus(certificate?.status);
+  const badge = statusColors(status);
 
   return (
     <main style={styles.page}>
@@ -110,146 +106,140 @@ export default async function CardsPage() {
 
       <section style={styles.container}>
         <div style={styles.hero}>
-          <div style={styles.badge}>ALBATROS SAILING • KART ARŞİVİ</div>
+          <div style={styles.badge}>ALBATROS SAILING • GÜVENLİ KART GÖRÜNTÜLEME</div>
 
-          <h1 style={styles.title}>Sertifika Kartları</h1>
+          <h1 style={styles.title}>Sertifika Kartı</h1>
 
           <p style={styles.description}>
-            Oluşturulmuş sertifika kartlarını inceleyin, detay ekranını açın ve
-            doğrulama yapısına bağlı kayıtları premium arşiv görünümünde yönetin.
+            Bu alan public kart arşivi değildir. Kart yalnızca sertifika numarası
+            veya QR bağlantısı ile görüntülenir.
           </p>
-
-          <div style={styles.summaryRow}>
-            <div style={styles.summaryBox}>
-              <div style={styles.summaryLabel}>Toplam Kayıt</div>
-              <div style={styles.summaryValue}>{certificates.length}</div>
-            </div>
-
-            <div style={styles.summaryBox}>
-              <div style={styles.summaryLabel}>Aktif Kartlar</div>
-              <div style={styles.summaryValue}>{activeCount}</div>
-            </div>
-
-            <div style={styles.summaryBox}>
-              <div style={styles.summaryLabel}>QR Destekli</div>
-              <div style={styles.summaryValue}>{qrReadyCount}</div>
-            </div>
-          </div>
         </div>
 
-        {certificates.length === 0 ? (
+        {!certificateId ? (
           <div style={styles.emptyCard}>
-            <div style={styles.emptyTitle}>Henüz kart kaydı yok</div>
+            <div style={styles.emptyTitle}>Sertifika numarası gerekli</div>
             <p style={styles.emptyText}>
-              Sertifika üretildikçe bu alanda kart ön yüzleri ve detay
-              bağlantıları görünecek.
+              Kart görüntülemek için geçerli bir AS sertifika numarası kullanılmalıdır.
             </p>
+
+            <div style={styles.actionRowStandalone}>
+              <Link href="/registry" style={styles.primaryLink}>
+                Sertifika Doğrulama Ekranına Git
+              </Link>
+            </div>
+          </div>
+        ) : !certificate ? (
+          <div style={styles.emptyCard}>
+            <div style={styles.emptyTitle}>Kart kaydı bulunamadı</div>
+            <p style={styles.emptyText}>
+              Girilen sertifika numarasına ait kart kaydı sistemde bulunamadı.
+            </p>
+
+            <div style={styles.actionRowStandalone}>
+              <Link href="/registry" style={styles.primaryLink}>
+                Tekrar Ara
+              </Link>
+            </div>
           </div>
         ) : (
           <div style={styles.cardsGrid} className="cards-grid">
-            {certificates.map((certificate) => {
-              const status = normalizeStatus(certificate.status);
-const badge = statusColors(status);
+            <article style={styles.card} className="premium-card-shell">
+              <div
+                style={{
+                  ...styles.cardGlow,
+                  boxShadow: badge.glow,
+                }}
+              />
 
-const href = certificate.certificateId
-  ? `/card/${encodeURIComponent(certificate.certificateId)}`
-  : "#";
+              <div style={styles.cardTop}>
+                <div
+                  style={{
+                    ...styles.statusBadge,
+                    color: badge.text,
+                    borderColor: badge.border,
+                    background: badge.background,
+                  }}
+                >
+                  <span
+                    style={{
+                      ...styles.statusDot,
+                      background: badge.dot,
+                      boxShadow: `0 0 12px ${badge.dot}`,
+                    }}
+                  />
+                  {status}
+                </div>
 
-              return (
-                <Link
-  key={certificate.id}
-  href={href || "#"}
-  style={styles.cardLink}
-  className="card-link-shell"
->
-                  <article
-                    style={styles.card}
-                    className="premium-card-shell"
+                <div style={styles.cardId}>{certificate.certificateId || "-"}</div>
+              </div>
+
+              <div style={styles.previewWrap}>
+                {certificate.cardFrontUrl ? (
+                  <Image
+                    src={certificate.cardFrontUrl}
+                    alt={`${certificate.fullName || "Certificate"} front card`}
+                    width={900}
+                    height={560}
+                    style={styles.previewImage}
+                    className="premium-preview-image"
+                  />
+                ) : (
+                  <div style={styles.noImage}>Kart ön yüzü henüz oluşturulmamış.</div>
+                )}
+              </div>
+
+              <div style={styles.previewWrap}>
+                {certificate.cardBackUrl ? (
+                  <Image
+                    src={certificate.cardBackUrl}
+                    alt={`${certificate.fullName || "Certificate"} back card`}
+                    width={900}
+                    height={560}
+                    style={styles.previewImage}
+                    className="premium-preview-image"
+                  />
+                ) : (
+                  <div style={styles.noImage}>Kart arka yüzü henüz oluşturulmamış.</div>
+                )}
+              </div>
+
+              <div style={styles.cardBody}>
+                <div style={styles.name}>{certificate.fullName || "İsimsiz Kayıt"}</div>
+
+                <div style={styles.metaPrimary}>
+                  {certificate.qualificationLevel ||
+                    certificate.program ||
+                    "Program bilgisi yok"}
+                </div>
+
+                <div style={styles.metaGrid}>
+                  <div style={styles.metaBox}>
+                    <div style={styles.metaLabel}>Program</div>
+                    <div style={styles.metaValue}>{certificate.program || "-"}</div>
+                  </div>
+
+                  <div style={styles.metaBox}>
+                    <div style={styles.metaLabel}>Tarih</div>
+                    <div style={styles.metaValue}>
+                      {formatDate(certificate.issueDate)}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={styles.actionRow}>
+                  <Link
+                    href={`/verify/${encodeURIComponent(
+                      certificate.certificateId || ""
+                    )}`}
+                    style={styles.actionGhost}
                   >
-                    <div
-                      style={{
-                        ...styles.cardGlow,
-                        boxShadow: badge.glow,
-                      }}
-                    />
-
-                    <div style={styles.cardTop}>
-                      <div
-                        style={{
-                          ...styles.statusBadge,
-                          color: badge.text,
-                          borderColor: badge.border,
-                          background: badge.background,
-                        }}
-                      >
-                        <span
-                          style={{
-                            ...styles.statusDot,
-                            background: badge.dot,
-                            boxShadow: `0 0 12px ${badge.dot}`,
-                          }}
-                        />
-                        {status}
-                      </div>
-
-                      <div style={styles.cardId}>
-                        {certificate.certificateId || "-"}
-                      </div>
-                    </div>
-
-                    <div style={styles.previewWrap}>
-                      {certificate.cardFrontUrl ? (
-                        <Image
-                          src={certificate.cardFrontUrl}
-                          alt={`${certificate.fullName || "Certificate"} front card`}
-                          width={900}
-                          height={560}
-                          style={styles.previewImage}
-                          className="premium-preview-image"
-                        />
-                      ) : (
-                        <div style={styles.noImage}>
-                          Kart görseli henüz oluşturulmamış.
-                        </div>
-                      )}
-                    </div>
-
-                    <div style={styles.cardBody}>
-                      <div style={styles.name}>
-                        {certificate.fullName || "İsimsiz Kayıt"}
-                      </div>
-
-                      <div style={styles.metaPrimary}>
-                        {certificate.qualificationLevel ||
-                          certificate.program ||
-                          "Program bilgisi yok"}
-                      </div>
-
-                      <div style={styles.metaGrid}>
-                        <div style={styles.metaBox}>
-                          <div style={styles.metaLabel}>Program</div>
-                          <div style={styles.metaValue}>
-                            {certificate.program || "-"}
-                          </div>
-                        </div>
-
-                        <div style={styles.metaBox}>
-                          <div style={styles.metaLabel}>Tarih</div>
-                          <div style={styles.metaValue}>
-                            {formatDate(certificate.issueDate)}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={styles.actionRow}>
-                        <span style={styles.actionGhost}>Detayı Aç</span>
-                        <span style={styles.actionArrow}>→</span>
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              );
-            })}
+                    Tam Doğrulama Sayfasını Aç
+                  </Link>
+                  <span style={styles.actionArrow}>→</span>
+                </div>
+              </div>
+            </article>
           </div>
         )}
       </section>
@@ -283,7 +273,7 @@ const href = certificate.certificateId
               opacity: 0.72;
             }
 
-            .card-link-shell:hover .premium-card-shell {
+            .premium-card-shell:hover {
               transform: translateY(-7px) scale(1.01);
               box-shadow:
                 0 26px 54px rgba(0,0,0,0.32),
@@ -291,18 +281,8 @@ const href = certificate.certificateId
               border-color: rgba(103,211,255,0.14);
             }
 
-            .card-link-shell:hover .premium-preview-image {
+            .premium-card-shell:hover .premium-preview-image {
               transform: scale(1.025);
-            }
-
-            .card-link-shell:hover .card-action-arrow {
-              transform: translateX(4px);
-            }
-
-            @media (max-width: 1100px) {
-              .cards-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-              }
             }
 
             @media (max-width: 720px) {
@@ -429,38 +409,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: "rgba(226,232,240,0.82)",
   },
 
-  summaryRow: {
-    marginTop: 28,
-    display: "flex",
-    gap: 14,
-    flexWrap: "wrap",
-  },
-
-  summaryBox: {
-    minWidth: 160,
-    padding: "14px 16px",
-    borderRadius: 18,
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    backdropFilter: "blur(10px)",
-    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
-  },
-
-  summaryLabel: {
-    fontSize: 11,
-    fontWeight: 800,
-    letterSpacing: "0.14em",
-    textTransform: "uppercase",
-    color: "rgba(226,232,240,0.56)",
-    marginBottom: 8,
-  },
-
-  summaryValue: {
-    fontSize: 22,
-    fontWeight: 800,
-    color: "#f8fafc",
-  },
-
   emptyCard: {
     borderRadius: 24,
     background:
@@ -485,16 +433,32 @@ const styles: Record<string, React.CSSProperties> = {
     color: "rgba(226,232,240,0.72)",
   },
 
-  cardsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-    gap: 22,
+  actionRowStandalone: {
+    marginTop: 22,
+    display: "flex",
+    gap: 12,
+    flexWrap: "wrap",
   },
 
-  cardLink: {
+  primaryLink: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "12px 16px",
+    borderRadius: 14,
+    background: "linear-gradient(180deg, #67d3ff, #42bdf8)",
+    color: "#04121c",
     textDecoration: "none",
-    color: "inherit",
-    display: "block",
+    fontWeight: 900,
+    fontSize: 14,
+    boxShadow: "0 10px 24px rgba(66,189,248,0.22)",
+  },
+
+  cardsGrid: {
+    display: "grid",
+    gridTemplateColumns: "minmax(0, 760px)",
+    gap: 22,
+    justifyContent: "center",
   },
 
   card: {
@@ -657,6 +621,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "rgba(226,232,240,0.78)",
     letterSpacing: "0.06em",
     textTransform: "uppercase",
+    textDecoration: "none",
   },
 
   actionArrow: {

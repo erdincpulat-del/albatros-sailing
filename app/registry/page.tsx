@@ -460,145 +460,165 @@ export default function RegistryPage() {
         )}
 
         {result && (
+  <div
+    style={{
+      borderRadius: "2rem",
+      padding: 24,
+      background:
+        "linear-gradient(180deg, rgba(14,20,32,0.92), rgba(10,15,24,0.96))",
+      border: "1px solid rgba(255,255,255,0.08)",
+      boxShadow: "0 18px 36px rgba(0,0,0,0.18)",
+    }}
+    className="md:p-8"
+  >
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
           <div
             style={{
-              borderRadius: "2rem",
-              padding: 24,
-              background:
-                "linear-gradient(180deg, rgba(14,20,32,0.92), rgba(10,15,24,0.96))",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow: "0 18px 36px rgba(0,0,0,0.18)",
+              fontSize: 11,
+              fontWeight: 800,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "rgba(226,232,240,0.62)",
             }}
-            className="md:p-8"
           >
-            <div className="flex flex-col gap-8">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <div
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 800,
-                      letterSpacing: "0.18em",
-                      textTransform: "uppercase",
-                      color: "rgba(226,232,240,0.62)",
-                    }}
-                  >
-                    {ui.resultTitle}
-                  </div>
-                  <h2
-                    style={{
-                      marginTop: 8,
-                      fontSize: 30,
-                      fontWeight: 800,
-                      color: "#f8fafc",
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    {result.fullName || "-"}
-                  </h2>
-                </div>
-
-                {result.status ? (
-                  <div
-                    style={{
-                      borderRadius: 999,
-                      padding: "10px 16px",
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.10)",
-                      color: "#e2e8f0",
-                      fontSize: 12,
-                      fontWeight: 800,
-                      letterSpacing: "0.18em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {result.status}
-                  </div>
-                ) : null}
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <InfoCard label={ui.fullName} value={result.fullName || "-"} />
-                <InfoCard
-                  label={ui.certificateId}
-                  value={result.certificateId || "-"}
-                />
-                <InfoCard
-                  label={ui.qualification}
-                  value={result.certificateLevel || result.program || "-"}
-                />
-                <InfoCard
-                  label={ui.seaMiles}
-                  value={
-                    typeof result.seaMiles === "number"
-                      ? `${result.seaMiles} NM`
-                      : "-"
-                  }
-                />
-                <InfoCard label={ui.status} value={result.status || "-"} />
-                <InfoCard
-                  label={ui.issueDate}
-                  value={result.certifiedAt || "-"}
-                />
-              </div>
-
-              {result.cardFrontUrl ? (
-                <div
-                  style={{
-                    borderRadius: "1.5rem",
-                    padding: 16,
-                    background:
-                      "linear-gradient(180deg, rgba(12,18,30,0.94), rgba(8,12,20,0.92))",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}
-                >
-                  <img
-                    src={result.cardFrontUrl}
-                    alt={result.fullName}
-                    className="mx-auto block w-full max-w-[620px]"
-                    style={{
-                      borderRadius: "1rem",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                    }}
-                  />
-                </div>
-              ) : null}
-
-              <div className="flex justify-center">
-                <button
-                  onClick={handleOpenVerify}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 14,
-                    padding: "14px 22px",
-                    background: "linear-gradient(180deg, #67d3ff, #42bdf8)",
-                    color: "#04121c",
-                    fontWeight: 900,
-                    fontSize: 14,
-                    border: "none",
-                    cursor: "pointer",
-                    boxShadow: "0 10px 24px rgba(66,189,248,0.22)",
-                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 16px 30px rgba(66,189,248,0.32)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                      "0 10px 24px rgba(66,189,248,0.22)";
-                  }}
-                >
-                  {ui.verifyButton}
-                </button>
-              </div>
-            </div>
+            {ui.resultTitle}
           </div>
-        )}
+
+          <h2
+            style={{
+              marginTop: 8,
+              fontSize: 30,
+              fontWeight: 800,
+              color: "#f8fafc",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            {locale === "tr" ? "Kayıt Bulundu" : "Record Found"}
+          </h2>
+
+          <p
+            style={{
+              marginTop: 12,
+              maxWidth: 680,
+              fontSize: 14,
+              lineHeight: 1.85,
+              color: "rgba(226,232,240,0.78)",
+            }}
+          >
+            {locale === "tr"
+              ? "Bu sertifika ID, Albatros Sailing kayıt sisteminde eşleşti. Kişisel bilgiler ve kart görselleri yalnızca tam doğrulama sayfasında görüntülenir."
+              : "This certificate ID matched the Albatros Sailing registry. Personal details and card visuals are displayed only on the full verification page."}
+          </p>
+        </div>
+
+        {result.status ? (
+          <div
+            style={{
+              borderRadius: 999,
+              padding: "10px 16px",
+              background:
+                String(result.status).toUpperCase() === "ACTIVE"
+                  ? "rgba(34,197,94,0.12)"
+                  : "rgba(255,255,255,0.05)",
+              border:
+                String(result.status).toUpperCase() === "ACTIVE"
+                  ? "1px solid rgba(34,197,94,0.26)"
+                  : "1px solid rgba(255,255,255,0.10)",
+              color:
+                String(result.status).toUpperCase() === "ACTIVE"
+                  ? "#bbf7d0"
+                  : "#e2e8f0",
+              fontSize: 12,
+              fontWeight: 800,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+            }}
+          >
+            {result.status}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <InfoCard
+          label={ui.certificateId}
+          value={result.certificateId || "-"}
+        />
+        <InfoCard label={ui.status} value={result.status || "-"} />
+      </div>
+
+      <div
+        style={{
+          borderRadius: "1.5rem",
+          padding: 20,
+          background:
+            "linear-gradient(180deg, rgba(12,18,30,0.94), rgba(8,12,20,0.92))",
+          border: "1px solid rgba(103,211,255,0.12)",
+        }}
+      >
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "rgba(103,211,255,0.82)",
+          }}
+        >
+          {locale === "tr" ? "Gizlilik Katmanı Aktif" : "Privacy Layer Active"}
+        </div>
+
+        <p
+          style={{
+            marginTop: 12,
+            fontSize: 14,
+            lineHeight: 1.85,
+            color: "rgba(226,232,240,0.78)",
+          }}
+        >
+          {locale === "tr"
+            ? "Bu ekran açık öğrenci listesi değildir. Sertifika sahibine ait detaylar, kart ön/arka yüzleri ve PDF indirme işlemleri yalnızca doğrulama ekranında sunulur."
+            : "This screen is not a public student list. Holder details, card front/back visuals and PDF downloads are only provided on the verification screen."}
+        </p>
+      </div>
+
+      <div className="flex justify-center">
+        <button
+          onClick={handleOpenVerify}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 14,
+            padding: "14px 22px",
+            background: "linear-gradient(180deg, #67d3ff, #42bdf8)",
+            color: "#04121c",
+            fontWeight: 900,
+            fontSize: 14,
+            border: "none",
+            cursor: "pointer",
+            boxShadow: "0 10px 24px rgba(66,189,248,0.22)",
+            transition: "transform 0.25s ease, box-shadow 0.25s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "translateY(-2px)";
+            e.currentTarget.style.boxShadow =
+              "0 16px 30px rgba(66,189,248,0.32)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow =
+              "0 10px 24px rgba(66,189,248,0.22)";
+          }}
+        >
+          {ui.verifyButton}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       </section>
 
       <section
