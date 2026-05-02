@@ -1,14 +1,13 @@
 import { redirect } from "next/navigation";
 
 type Props = {
-  searchParams: Promise<{
+  searchParams: {
     certificateId?: string;
-  }>;
+  };
 };
 
-export default async function Page({ searchParams }: Props) {
-  const params = await searchParams;
-  const id = params.certificateId?.trim();
+export default function Page({ searchParams }: Props) {
+  const id = searchParams?.certificateId?.trim();
 
   if (id) {
     redirect(`/verify/${encodeURIComponent(id)}`);
