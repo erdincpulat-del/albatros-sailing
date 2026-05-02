@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import Link from "next/link";
 import Image from "next/image";
 import prisma from "@/lib/prisma";
@@ -6,6 +9,18 @@ type CardsPageProps = {
   searchParams: Promise<{
     certificateId?: string;
   }>;
+};
+
+type CertificateCardItem = {
+  id: string;
+  fullName: string | null;
+  program: string | null;
+  certificateId: string | null;
+  qualificationLevel: string | null;
+  issueDate: Date | null;
+  status: string | null;
+  cardFrontUrl: string | null;
+  cardBackUrl: string | null;
 };
 
 function normalizeStatus(status?: string | null) {
@@ -72,9 +87,12 @@ function formatDate(value?: Date | null) {
 
 export default async function CardsPage({ searchParams }: CardsPageProps) {
   const params = await searchParams;
-  const certificateId = params.certificateId?.trim().toUpperCase();
 
-  const certificate = certificateId
+  const certificateId = params?.certificateId
+    ? params.certificateId.trim().toUpperCase()
+    : undefined;
+
+  const certificate: CertificateCardItem | null = certificateId
     ? await prisma.certificate.findUnique({
         where: {
           certificateId,
@@ -106,21 +124,41 @@ export default async function CardsPage({ searchParams }: CardsPageProps) {
 
       <section style={styles.container}>
         <div style={styles.hero}>
-          <div style={styles.badge}>ALBATROS SAILING • GÜVENLİ KART GÖRÜNTÜLEME</div>
+          <div style={styles.badge}>
+            ALBATROS SAILING • GÜVENLİ KART GÖRÜNTÜLEME
+          </div>
 
           <h1 style={styles.title}>Sertifika Kartı</h1>
 
           <p style={styles.description}>
-            Bu alan public kart arşivi değildir. Kart yalnızca sertifika numarası
-            veya QR bağlantısı ile görüntülenir.
+            Bu alan public kart arşivi değildir. Kart yalnızca sertifika
+            numarası veya QR bağlantısı ile görüntülenir.
           </p>
+
+          <div style={styles.summaryRow}>
+            <div style={styles.summaryBox}>
+              <div style={styles.summaryLabel}>Public Liste</div>
+              <div style={styles.summaryValue}>Kapalı</div>
+            </div>
+
+            <div style={styles.summaryBox}>
+              <div style={styles.summaryLabel}>Erişim Tipi</div>
+              <div style={styles.summaryValue}>ID / QR</div>
+            </div>
+
+            <div style={styles.summaryBox}>
+              <div style={styles.summaryLabel}>Güvenlik</div>
+              <div style={styles.summaryValue}>Aktif</div>
+            </div>
+          </div>
         </div>
 
         {!certificateId ? (
           <div style={styles.emptyCard}>
             <div style={styles.emptyTitle}>Sertifika numarası gerekli</div>
             <p style={styles.emptyText}>
-              Kart görüntülemek için geçerli bir AS sertifika numarası kullanılmalıdır.
+              Kart görüntülemek için geçerli bir AS sertifika numarası
+              kullanılmalıdır. Public kart arşivi güvenlik nedeniyle kapalıdır.
             </p>
 
             <div style={styles.actionRowStandalone}>
@@ -171,7 +209,9 @@ export default async function CardsPage({ searchParams }: CardsPageProps) {
                   {status}
                 </div>
 
-                <div style={styles.cardId}>{certificate.certificateId || "-"}</div>
+                <div style={styles.cardId}>
+                  {certificate.certificateId || "-"}
+                </div>
               </div>
 
               <div style={styles.previewWrap}>
@@ -185,7 +225,9 @@ export default async function CardsPage({ searchParams }: CardsPageProps) {
                     className="premium-preview-image"
                   />
                 ) : (
-                  <div style={styles.noImage}>Kart ön yüzü henüz oluşturulmamış.</div>
+                  <div style={styles.noImage}>
+                    Kart ön yüzü henüz oluşturulmamış.
+                  </div>
                 )}
               </div>
 
@@ -200,12 +242,16 @@ export default async function CardsPage({ searchParams }: CardsPageProps) {
                     className="premium-preview-image"
                   />
                 ) : (
-                  <div style={styles.noImage}>Kart arka yüzü henüz oluşturulmamış.</div>
+                  <div style={styles.noImage}>
+                    Kart arka yüzü henüz oluşturulmamış.
+                  </div>
                 )}
               </div>
 
               <div style={styles.cardBody}>
-                <div style={styles.name}>{certificate.fullName || "İsimsiz Kayıt"}</div>
+                <div style={styles.name}>
+                  {certificate.fullName || "İsimsiz Kayıt"}
+                </div>
 
                 <div style={styles.metaPrimary}>
                   {certificate.qualificationLevel ||
@@ -216,7 +262,9 @@ export default async function CardsPage({ searchParams }: CardsPageProps) {
                 <div style={styles.metaGrid}>
                   <div style={styles.metaBox}>
                     <div style={styles.metaLabel}>Program</div>
-                    <div style={styles.metaValue}>{certificate.program || "-"}</div>
+                    <div style={styles.metaValue}>
+                      {certificate.program || "-"}
+                    </div>
                   </div>
 
                   <div style={styles.metaBox}>
@@ -283,6 +331,16 @@ export default async function CardsPage({ searchParams }: CardsPageProps) {
 
             .premium-card-shell:hover .premium-preview-image {
               transform: scale(1.025);
+            }
+
+            .premium-card-shell:hover .card-action-arrow {
+              transform: translateX(4px);
+            }
+
+            @media (max-width: 1100px) {
+              .cards-grid {
+                grid-template-columns: minmax(0, 760px) !important;
+              }
             }
 
             @media (max-width: 720px) {
@@ -409,6 +467,38 @@ const styles: Record<string, React.CSSProperties> = {
     color: "rgba(226,232,240,0.82)",
   },
 
+  summaryRow: {
+    marginTop: 28,
+    display: "flex",
+    gap: 14,
+    flexWrap: "wrap",
+  },
+
+  summaryBox: {
+    minWidth: 160,
+    padding: "14px 16px",
+    borderRadius: 18,
+    background: "rgba(255,255,255,0.05)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    backdropFilter: "blur(10px)",
+    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
+  },
+
+  summaryLabel: {
+    fontSize: 11,
+    fontWeight: 800,
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
+    color: "rgba(226,232,240,0.56)",
+    marginBottom: 8,
+  },
+
+  summaryValue: {
+    fontSize: 22,
+    fontWeight: 800,
+    color: "#f8fafc",
+  },
+
   emptyCard: {
     borderRadius: 24,
     background:
@@ -459,6 +549,12 @@ const styles: Record<string, React.CSSProperties> = {
     gridTemplateColumns: "minmax(0, 760px)",
     gap: 22,
     justifyContent: "center",
+  },
+
+  cardLink: {
+    textDecoration: "none",
+    color: "inherit",
+    display: "block",
   },
 
   card: {
