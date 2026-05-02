@@ -1,52 +1,18 @@
-import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-export default async function VerifyPage({
-  searchParams,
-}: {
-  searchParams: { certificateId?: string };
-}) {
-  const rawId = searchParams?.certificateId;
+type Props = {
+  searchParams: Promise<{
+    certificateId?: string;
+  }>;
+};
 
-  if (!rawId) {
-    return (
-      <div style={{ padding: 40 }}>
-        <h2>Sertifika ID gerekli</h2>
-      </div>
-    );
+export default async function Page({ searchParams }: Props) {
+  const params = await searchParams;
+  const id = params.certificateId?.trim();
+
+  if (id) {
+    redirect(`/verify/${encodeURIComponent(id)}`);
   }
 
-  const certificateId = rawId.toUpperCase();
-
-  const certificate = await prisma.certificate.findFirst({
-    where: {
-      certificateId,
-      status: "ACTIVE",
-    },
-  });
-
-  if (!certificate) {
-    return (
-      <div style={{ padding: 40 }}>
-        <h2>Sertifika bulunamadı</h2>
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ padding: 40 }}>
-      <h1>Certificate Verified</h1>
-
-      <p><strong>Ad Soyad:</strong> {certificate.fullName}</p>
-      <p><strong>ID:</strong> {certificate.certificateId}</p>
-      <p><strong>Program:</strong> {certificate.program}</p>
-
-      <div style={{ marginTop: 20 }}>
-        <img src={certificate.cardFrontUrl || ""} width={400} />
-      </div>
-
-      <div style={{ marginTop: 20 }}>
-        <img src={certificate.cardBackUrl || ""} width={400} />
-      </div>
-    </div>
-  );
+  redirect("/registry");
 }
