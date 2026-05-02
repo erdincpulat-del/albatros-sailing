@@ -61,15 +61,15 @@ const weekPlan = [
 
 const routeCards = [
   {
-    title: "Bodrum → Kalimnos",
+    title: "Bodrum → Yunan Adaları",
     text: "Açık deniz geçişi, ada yaklaşımı ve sınır ötesi rota disiplini.",
   },
   {
-    title: "Bodrum → Leros → Lipsi",
+    title: "Bodrum → Knidos → Datça → Hisarönü → Söğüt → Bozukkale → Palamutbükü → Bodrum",
     text: "Çoklu rota planı, zamanlama ve değişen şartlarda doğru seçim yapma pratiği.",
   },
   {
-    title: "Bodrum → Patmos",
+    title: "Bodrum → İstanbul",
     text: "Daha uzun seyir düşüncesi, dikkat yönetimi ve skipper dayanıklılığı.",
   },
 ];
@@ -83,8 +83,8 @@ const proofItems = [
 const pricingPlans = [
   {
     title: "Standart Katılım",
-    badge: "Core",
-    price: "€1.450",
+    badge: "Özel",
+    price: "Sorunuz",
     desc: "Programın tüm eğitim akışına tam katılım.",
     items: [
       "7 gün offshore eğitim akışı",
@@ -96,8 +96,8 @@ const pricingPlans = [
   },
   {
     title: "Early Bird",
-    badge: "Önerilen",
-    price: "€1.250",
+    badge: "Özel",
+    price: "Sorunuz",
     desc: "Erken kayıt dönemi için avantajlı katılım paketi.",
     items: [
       "Tüm standart içerik",
@@ -1403,19 +1403,7 @@ export default function OffshoreSkipperPage() {
             color: "#67d3ff",
           }}
         >
-          Nisan ayı : Tek kişi kamara kapatma 700 Euro / İki kişi kamara kapatma 1100 Euro / Tekne kapatma 2700 Euro
-
-Mayıs ayı : Tek kişi kamara kapatma 800 Euro  / İki kişi kamara kapatma 1300 Euro / Tekne kapatma 2900 Euro
-
-Haziran ayı: Tek kişi kamara kapatma 900 Euro / İki kişi kamara kapatma 1600 Euro / Tekne kapatma 3600 .Euro
-
-Temmuz ayı: Tek kişi kamara kapatma 1100 Euro / İki kişi kamara kapatma 1800 Euro / Tekne kapatma 3900 Euro
-
-Ağustos ayı : Tek kişi kamara kapatma 1100 Euro / İki kişi kamara kapatma 1800 Euro / Tekne kapatma 3900 Euro
-
-Eylül ayı : Tek kişi kamara kapatma 900 Euro / İki kişi kamara kapatma 1600 Euro / Tekne kapatma 3600 Euro
-
-Ekim ayı : Tek kişi kamara kapatma 900 Euro / İki kişi kamara kapatma 1600 Euro / Tekne kapatma 3600 Euro
+          
         </div>
 
         <p style={{ marginTop: 10, opacity: 0.7 }}>
