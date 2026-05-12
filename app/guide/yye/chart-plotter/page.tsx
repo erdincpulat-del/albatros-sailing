@@ -5,9 +5,9 @@ export default function Page() {
         <p className="text-sm font-bold uppercase tracking-[0.3em] text-cyan-300">
           YES Eğitim Sistemi
         </p>
-        <h1 className="mt-6 text-5xl font-black">Passage Planning</h1>
+        <h1 className="mt-6 text-5xl font-black">Chart Plotter</h1>
         <p className="mt-6 max-w-2xl text-slate-300">
-          Bu modül Albatros Ultimate eğitim motorundan taşınacak. Route aktif.
+          Chart Plotter modülü için route aktif.
         </p>
       </div>
     </main>
