@@ -80,11 +80,11 @@ export default function SiteHeader() {
           href: "/guide",
           sections: [
             {
-              title: "Temel Denizcilik",
+              title: "YES Eğitim Sistemi",
               items: [
                 { label: "Güvenlik", href: "/guide/guvenlik" },
                 { label: "Demirleme ve Demir Alma", href: "/guide/demirleme-ve-demir-alma" },
-                { label: "Marina Giriş Çıkış Usulleri", href: "/guide/marina-giris-cikis-usulleri" },
+                { label: "Marina Giriş / Çıkış Usulleri", href: "/guide/marina-giris-cikis-usulleri" },
                 { label: "Tekne Hakimiyeti", href: "/guide/tekne-hakimiyeti" },
               ],
             },
@@ -107,6 +107,7 @@ export default function SiteHeader() {
                 { label: "AIS / VTS", href: "/guide/ais-ve-vts" },
                 { label: "AIS / VTS Nedir", href: "/guide/ais-ve-vts-nedir" },
                 { label: "TSS Nedir", href: "/guide/tss-nedir" },
+                { label: "Buoyage", href: "/guide/buoyage" },
               ],
             },
             {
@@ -117,6 +118,17 @@ export default function SiteHeader() {
                 { label: "Signals", href: "/guide/signals" },
                 { label: "Wind Engine", href: "/guide/wind-engine" },
                 { label: "Yelkenin Çalışma Prensibi", href: "/guide/yelkenin-calisma-prensibi" },
+              ],
+            },
+            {
+              title: "Simülasyonlar",
+              items: [
+                { label: "Marina Simulator", href: "/simulator/marina" },
+                { label: "Chart Plotter", href: "/guide/chart-plotter" },
+                { label: "DR / EP / Fix", href: "/guide/dr-ep-fix" },
+                { label: "Passage Planning", href: "/guide/passage-planning" },
+                { label: "Radar", href: "/guide/radar" },
+                { label: "Bridge Tools", href: "/guide/bridge-tools" },
               ],
             },
             {
@@ -198,7 +210,7 @@ export default function SiteHeader() {
         href: "/guide",
         sections: [
           {
-            title: "Core Seamanship",
+            title: "YES Training System",
             items: [
               { label: "Safety", href: "/guide/guvenlik" },
               { label: "Anchoring", href: "/guide/demirleme-ve-demir-alma" },
@@ -225,6 +237,7 @@ export default function SiteHeader() {
               { label: "AIS / VTS", href: "/guide/ais-ve-vts" },
               { label: "What is AIS / VTS?", href: "/guide/ais-ve-vts-nedir" },
               { label: "What is TSS?", href: "/guide/tss-nedir" },
+              { label: "Buoyage", href: "/guide/buoyage" },
             ],
           },
           {
@@ -235,6 +248,17 @@ export default function SiteHeader() {
               { label: "Signals", href: "/guide/signals" },
               { label: "Wind Engine", href: "/guide/wind-engine" },
               { label: "How Sails Work", href: "/guide/yelkenin-calisma-prensibi" },
+            ],
+          },
+          {
+            title: "Simulations",
+            items: [
+              { label: "Marina Simulator", href: "/simulator/marina" },
+              { label: "Chart Plotter", href: "/guide/chart-plotter" },
+              { label: "DR / EP / Fix", href: "/guide/dr-ep-fix" },
+              { label: "Passage Planning", href: "/guide/passage-planning" },
+              { label: "Radar", href: "/guide/radar" },
+              { label: "Bridge Tools", href: "/guide/bridge-tools" },
             ],
           },
           {
@@ -906,6 +930,8 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
 
 function DesktopMenuLink({ item }: { item: MenuItem }) {
   const isQuiz = item.href === "/stcw-quiz";
+  const isSimulator = item.href.startsWith("/simulator") || item.href.includes("simulator");
+  const featured = isQuiz || isSimulator;
 
   const content = (
     <div
@@ -913,18 +939,18 @@ function DesktopMenuLink({ item }: { item: MenuItem }) {
       style={{
         borderRadius: 14,
         padding: "12px 14px",
-        background: isQuiz
+        background: featured
           ? "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))"
           : undefined,
-        border: isQuiz
+        border: featured
           ? "1px solid rgba(103,211,255,0.35)"
           : "1px solid transparent",
-        boxShadow: isQuiz ? "0 0 24px rgba(103,211,255,0.18)" : undefined,
+        boxShadow: featured ? "0 0 24px rgba(103,211,255,0.18)" : undefined,
       }}
     >
       <div
         style={{
-          color: isQuiz ? "#9deaff" : "#f8fafc",
+          color: featured ? "#9deaff" : "#f8fafc",
           fontSize: 14,
           fontWeight: 800,
           lineHeight: 1.4,
@@ -932,6 +958,7 @@ function DesktopMenuLink({ item }: { item: MenuItem }) {
         }}
       >
         {isQuiz ? "⚓ " : ""}
+        {isSimulator ? "◈ " : ""}
         {item.label}
       </div>
 
@@ -945,6 +972,19 @@ function DesktopMenuLink({ item }: { item: MenuItem }) {
           }}
         >
           STCW 149/499 gemici hazırlık deneme sistemi
+        </div>
+      ) : null}
+
+      {isSimulator ? (
+        <div
+          style={{
+            marginTop: 4,
+            fontSize: 12,
+            lineHeight: 1.45,
+            color: "rgba(226,232,240,0.72)",
+          }}
+        >
+          İnteraktif YES eğitim simülasyonu
         </div>
       ) : null}
     </div>
@@ -968,18 +1008,20 @@ function DesktopMenuLink({ item }: { item: MenuItem }) {
 
 function MobileMenuLink({ item }: { item: MenuItem }) {
   const isQuiz = item.href === "/stcw-quiz";
+  const isSimulator = item.href.startsWith("/simulator") || item.href.includes("simulator");
+  const featured = isQuiz || isSimulator;
 
   const style: CSSProperties = {
     display: "block",
     padding: "13px 14px",
     borderRadius: 15,
-    background: isQuiz
+    background: featured
       ? "linear-gradient(135deg, rgba(103,211,255,0.16), rgba(103,211,255,0.04))"
       : "rgba(255,255,255,0.035)",
-    border: isQuiz
+    border: featured
       ? "1px solid rgba(103,211,255,0.34)"
       : "1px solid rgba(255,255,255,0.06)",
-    color: isQuiz ? "#9deaff" : "#f8fafc",
+    color: featured ? "#9deaff" : "#f8fafc",
     textDecoration: "none",
     fontWeight: 850,
     fontSize: 14,
@@ -989,11 +1031,13 @@ function MobileMenuLink({ item }: { item: MenuItem }) {
   return item.external ? (
     <a href={item.href} target="_blank" rel="noreferrer" style={style}>
       {isQuiz ? "⚓ " : ""}
+      {isSimulator ? "◈ " : ""}
       {item.label}
     </a>
   ) : (
     <Link href={item.href} style={style}>
       {isQuiz ? "⚓ " : ""}
+      {isSimulator ? "◈ " : ""}
       {item.label}
     </Link>
   );
