@@ -121,16 +121,20 @@ export default function SiteHeader() {
               ],
             },
             {
-              title: "Simülasyonlar",
-              items: [
-                { label: "Marina Simulator", href: "/simulator/marina" },
-                { label: "Chart Plotter", href: "/guide/chart-plotter" },
-                { label: "DR / EP / Fix", href: "/guide/dr-ep-fix" },
-                { label: "Passage Planning", href: "/guide/passage-planning" },
-                { label: "Radar", href: "/guide/radar" },
-                { label: "Bridge Tools", href: "/guide/bridge-tools" },
-              ],
-            },
+  title: "Simülasyonlar",
+  items: [
+    {
+      label: "Marina Simulator",
+      href: "/guide/yye/marina-simulator",
+      desc: "Interaktif YES eğitim simülasyonu",
+    },
+    { label: "Chart Plotter", href: "/guide/navigation" },
+    { label: "DR / EP / Fix", href: "/guide/navigation" },
+    { label: "Passage Planning", href: "/guide/passage-planning" },
+    { label: "Radar", href: "/guide/radar" },
+    { label: "Bridge Tools", href: "/guide/bridge-dashboard" },
+  ],
+},
             {
               title: "İleri ve Kariyer",
               items: [
