@@ -164,6 +164,15 @@ export default function SiteHeader() {
           items: [{ label: "Eğitmen Hakkında", href: "/about" }],
         },
         {
+          key: "stories",
+          label: "Hikâyeler",
+          href: "/stories",
+          items: [
+            { label: "Öğrenci Hikâyeleri", href: "/stories" },
+            { label: "İlk Gece Vardiyası", href: "/stories/ilk-gece-vardiyasi" },
+          ],
+        },
+        {
           key: "charter",
           label: "Charter",
           href: "/charter",
@@ -292,6 +301,15 @@ export default function SiteHeader() {
         label: "Instructor",
         href: "/about",
         items: [{ label: "About the Instructor", href: "/about" }],
+      },
+      {
+        key: "stories",
+        label: "Stories",
+        href: "/stories",
+        items: [
+          { label: "Student Stories", href: "/stories" },
+          { label: "First Night Watch", href: "/stories/ilk-gece-vardiyasi" },
+        ],
       },
       {
         key: "charter",

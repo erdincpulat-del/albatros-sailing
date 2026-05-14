@@ -263,3 +263,12 @@ button {
   position: relative;
   z-index: 1; /* metin üstte kalsın */
 }
+@keyframes slowZoom {
+  from {
+    transform: scale(1.02);
+  }
+
+  to {
+    transform: scale(1.12);
+  }
+}
