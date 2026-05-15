@@ -128,8 +128,8 @@ export default function SiteHeader() {
       href: "/guide/yye/marina-simulator",
       desc: "Interaktif YES eğitim simülasyonu",
     },
-    { label: "Chart Plotter", href: "/guide/navigation" },
-    { label: "DR / EP / Fix", href: "/guide/navigation" },
+    { label: "Chart Plotter", href: "/guide/yye/chart-plotter" },
+{ label: "DR / EP / Fix", href: "/guide/yye/dr-ep-fix" },
     { label: "Passage Planning", href: "/guide/passage-planning" },
     { label: "Radar", href: "/guide/radar" },
     { label: "Bridge Tools", href: "/guide/bridge-dashboard" },
@@ -264,16 +264,16 @@ export default function SiteHeader() {
             ],
           },
           {
-            title: "Simulations",
-            items: [
-              { label: "Marina Simulator", href: "/simulator/marina" },
-              { label: "Chart Plotter", href: "/guide/chart-plotter" },
-              { label: "DR / EP / Fix", href: "/guide/dr-ep-fix" },
-              { label: "Passage Planning", href: "/guide/passage-planning" },
-              { label: "Radar", href: "/guide/radar" },
-              { label: "Bridge Tools", href: "/guide/bridge-tools" },
-            ],
-          },
+  title: "Simulations",
+  items: [
+    { label: "Marina Simulator", href: "/simulator/marina" },
+    { label: "Chart Plotter", href: "/guide/yye/chart-plotter" },
+    { label: "DR / EP / Fix", href: "/guide/yye/dr-ep-fix" },
+    { label: "Passage Planning", href: "/guide/passage-planning" },
+    { label: "Radar", href: "/guide/radar" },
+    { label: "Bridge Tools", href: "/guide/bridge-tools" },
+  ],
+},
           {
             title: "Advanced & Career",
             items: [
