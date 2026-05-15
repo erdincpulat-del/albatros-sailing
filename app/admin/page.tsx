@@ -579,6 +579,12 @@ export default function AdminPage() {
             <button onClick={openLatestVerify} style={navButtonStyle}>
               Latest Verify
             </button>
+          <button
+  onClick={() => window.location.href = "/admin/stories"}
+  className="w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-left text-sm font-semibold text-white transition-all duration-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 hover:text-cyan-300"
+>
+  Stories Moderation
+</button>
           </nav>
         </div>
 
