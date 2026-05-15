@@ -144,7 +144,7 @@ export default function StoriesPage() {
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
                 href="/stories/submit"
-                className="rounded-full bg-cyan-300 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_0_40px_rgba(34,211,238,0.35)] transition hover:scale-105"
+                className="rounded-full border border-white/20 bg-white/10 px-8 py-4 text-sm font-black text-white hover:bg-white/20 transition"
               >
                 Kendi Hikâyeni Başlat
               </Link>
