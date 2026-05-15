@@ -215,7 +215,7 @@ export default function SubmitStoryPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-full bg-cyan-300 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_0_40px_rgba(34,211,238,0.35)] transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-full border border-white/20 bg-white/10 py-4 text-sm font-black text-white hover:bg-white/20 transition"
               >
                 {loading ? "Gönderiliyor..." : "Hikâyemi Gönder"}
               </button>
