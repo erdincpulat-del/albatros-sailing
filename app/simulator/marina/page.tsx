@@ -1,5 +1,5 @@
 import MarinaDockingSimulator from "@/components/simulator/MarinaDockingSimulator";
 
-export default function MarinaPage() {
+export default function Page() {
   return <MarinaDockingSimulator />;
 }

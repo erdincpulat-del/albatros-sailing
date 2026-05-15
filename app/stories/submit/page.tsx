@@ -4,46 +4,85 @@ import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function SubmitStoryPage() {
   const [fullName, setFullName] = useState("");
   const [program, setProgram] = useState("");
   const [title, setTitle] = useState("");
   const [story, setStory] = useState("");
+  const [photo, setPhoto] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  async function uploadPhoto() {
+    if (!photo) return null;
+
+    const fileExt = photo.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2)}.${fileExt}`;
+
+    const filePath = `story-covers/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("student-story-images")
+      .upload(filePath, photo, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      throw uploadError;
+    }
+
+    const { data } = supabase.storage
+      .from("student-story-images")
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     setLoading(true);
     setError("");
     setSuccess(false);
 
-    const { error } = await supabase.from("student_stories").insert({
-      full_name: fullName,
-      program,
-      title,
-      story,
-      status: "REVIEW",
-    });
+    try {
+      const imageUrl = await uploadPhoto();
 
-    setLoading(false);
+      const { error: insertError } = await supabase
+        .from("student_stories")
+        .insert({
+          full_name: fullName,
+          program,
+          title,
+          story,
+          image_url: imageUrl,
+          status: "REVIEW",
+        });
 
-    if (error) {
+      if (insertError) {
+        throw insertError;
+      }
+
+      setSuccess(true);
+      setFullName("");
+      setProgram("");
+      setTitle("");
+      setStory("");
+      setPhoto(null);
+    } catch {
       setError("Gönderim sırasında hata oluştu. Lütfen tekrar deneyin.");
-      return;
+    } finally {
+      setLoading(false);
     }
-
-    setSuccess(true);
-    setFullName("");
-    setProgram("");
-    setTitle("");
-    setStory("");
   }
 
   return (
@@ -74,7 +113,13 @@ export default function SubmitStoryPage() {
 
             <p className="mt-6 text-lg leading-8 text-slate-300">
               Eğitim sonunda kazandığın deneyimi, güveni ve dönüşümü bizimle
-              paylaş. Hikâyen admin onayından sonra yayına alınır.
+              paylaş. Hikâyen inceleme sonrası yayına alınabilir.
+            </p>
+
+            <p className="mt-6 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-5 text-sm leading-7 text-cyan-100">
+              Fotoğraf alanı sadece hikâye kapak görseli içindir. Sertifika,
+              verified badge, öğrenci kimlik fotoğrafı veya ehliyet sistemiyle
+              bağlantılı değildir.
             </p>
           </div>
 
@@ -135,6 +180,25 @@ export default function SubmitStoryPage() {
                 />
               </label>
 
+              <label className="grid gap-2">
+                <span className="text-sm font-bold text-slate-200">
+                  Hikâye Kapak Fotoğrafı
+                </span>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+                  className="rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 text-sm text-slate-300 file:mr-4 file:rounded-full file:border-0 file:bg-cyan-300 file:px-4 file:py-2 file:text-sm file:font-black file:text-slate-950"
+                />
+
+                {photo && (
+                  <p className="text-xs font-bold text-cyan-300">
+                    Seçilen dosya: {photo.name}
+                  </p>
+                )}
+              </label>
+
               {error && (
                 <p className="rounded-2xl border border-red-400/30 bg-red-400/10 p-4 text-sm font-bold text-red-200">
                   {error}
@@ -143,7 +207,8 @@ export default function SubmitStoryPage() {
 
               {success && (
                 <p className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-sm font-bold text-emerald-200">
-                  Hikâyen alındı. İnceleme sonrası hikâyeler sayfasında yayınlanabilir.
+                  Hikâyen alındı. İnceleme sonrası hikâyeler sayfasında
+                  yayınlanabilir.
                 </p>
               )}
 
