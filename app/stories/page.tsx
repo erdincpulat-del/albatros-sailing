@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import Tilt from "react-parallax-tilt";
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 const stories = [
   {
@@ -58,7 +60,40 @@ const stories = [
   },
 ];
 
+type StudentStory = {
+  id: string;
+  full_name: string;
+  program: string | null;
+  title: string;
+  story: string;
+  status: string;
+  created_at: string;
+};
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
 export default function StoriesPage() {
+  const [studentStories, setStudentStories] = useState<StudentStory[]>([]);
+
+  useEffect(() => {
+    async function loadStories() {
+      const { data, error } = await supabase
+        .from("student_stories")
+        .select("*")
+        .eq("status", "PUBLISHED")
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setStudentStories(data);
+      }
+    }
+
+    loadStories();
+  }, []);
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#020817] text-white">
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
@@ -108,7 +143,7 @@ export default function StoriesPage() {
 
             <div className="mt-10 flex flex-wrap gap-4">
               <Link
-                href="/contact"
+                href="/stories/submit"
                 className="rounded-full bg-cyan-300 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_0_40px_rgba(34,211,238,0.35)] transition hover:scale-105"
               >
                 Kendi Hikâyeni Başlat
@@ -250,6 +285,74 @@ export default function StoriesPage() {
                       >
                         Hikâyeyi Oku →
                       </Link>
+                    </div>
+                  </div>
+                </article>
+              </Tilt>
+            ))}
+
+            {studentStories.map((story) => (
+              <Tilt
+                key={story.id}
+                glareEnable
+                glareMaxOpacity={0.12}
+                scale={1.02}
+                tiltMaxAngleX={6}
+                tiltMaxAngleY={6}
+                transitionSpeed={1800}
+              >
+                <article className="group relative h-[580px] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] shadow-2xl backdrop-blur transition-all duration-700 hover:-translate-y-2 hover:border-cyan-300/50 hover:bg-white/[0.07]">
+                  <div className="absolute inset-0 opacity-0 transition duration-700 group-hover:opacity-100">
+                    <div className="absolute -left-20 top-0 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
+                    <div className="absolute bottom-0 right-0 h-40 w-40 rounded-full bg-blue-500/10 blur-3xl" />
+                  </div>
+
+                  <div className="relative h-56 border-b border-white/10 bg-[#071426]">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_35%),linear-gradient(to_bottom,rgba(2,8,23,0.15),#020817)]" />
+                    <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(255,255,255,.55)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.55)_1px,transparent_1px)] [background-size:34px_34px]" />
+
+                    <div className="absolute left-4 top-4 rounded-full border border-cyan-300/20 bg-black/40 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.25em] text-cyan-200 backdrop-blur">
+                      Student Story
+                    </div>
+
+                    <div className="absolute bottom-5 left-5 right-5">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-cyan-300">
+                        Albatros Sailing Experience
+                      </p>
+                      <p className="mt-2 text-sm font-bold text-white/90">
+                        Shared by student
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="relative z-10 flex h-[356px] flex-col p-6">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <span className="rounded-full bg-cyan-300/10 px-3 py-1.5 text-[11px] font-bold text-cyan-300">
+                        Student Experience
+                      </span>
+
+                      <span className="rounded-full border border-cyan-300/30 px-3 py-1 text-[11px] font-bold text-cyan-200">
+                        Published
+                      </span>
+                    </div>
+
+                    <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.25em] text-slate-400">
+                      Student Story
+                    </p>
+
+                    <h3 className="text-lg font-black leading-tight">
+                      {story.title}
+                    </h3>
+
+                    <p className="mt-4 line-clamp-8 text-[13px] leading-6 text-slate-300">
+                      “{story.story}”
+                    </p>
+
+                    <div className="mt-auto border-t border-white/10 pt-5">
+                      <p className="font-bold text-white">{story.full_name}</p>
+                      <p className="text-sm text-slate-400">
+                        {story.program || "Student Experience"}
+                      </p>
                     </div>
                   </div>
                 </article>
