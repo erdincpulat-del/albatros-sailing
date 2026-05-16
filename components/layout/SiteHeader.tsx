@@ -155,6 +155,14 @@ export default function SiteHeader() {
             { label: "Başlangıç Yelken Eğitimi", href: "/programs/basic-sailing" },
             { label: "Coastal Skipper", href: "/programs/coastal-skipper" },
             { label: "Offshore Yacht Course", href: "/programs/offshore-yacht-course" },
+
+            { label: "Yelkenli Yat Eğitim ve Tatil", href: "/yelkenli-yat-egitim-ve-tatil" },
+            { label: "Bodrum Yelken Eğitimi", href: "/bodrum-yelken-egitimi" },
+            { label: "Offshore Yelken Eğitimi", href: "/offshore-yelken-egitimi" },
+            { label: "Konaklamalı Yelken Eğitimi", href: "/konaklamali-yelken-egitimi" },
+            { label: "Yat Kaptanlığı Eğitimi", href: "/yat-kaptanligi-egitimi" },
+            { label: "Yelkenli Yat Okulu", href: "/yelkenli-yat-okulu" },
+            { label: "Ege Denizi Yelken Rotaları", href: "/ege-denizi-yelken-rotalari" },
           ],
         },
         {
@@ -294,6 +302,14 @@ export default function SiteHeader() {
           { label: "Basic Sailing", href: "/programs/basic-sailing" },
           { label: "Coastal Skipper", href: "/programs/coastal-skipper" },
           { label: "Offshore Yacht Course", href: "/programs/offshore-yacht-course" },
+
+          { label: "Sailing Training & Holiday", href: "/yelkenli-yat-egitim-ve-tatil" },
+          { label: "Bodrum Sailing Training", href: "/bodrum-yelken-egitimi" },
+          { label: "Offshore Sailing Training", href: "/offshore-yelken-egitimi" },
+          { label: "Liveaboard Sailing Training", href: "/konaklamali-yelken-egitimi" },
+          { label: "Yacht Captain Training", href: "/yat-kaptanligi-egitimi" },
+          { label: "Sailing Yacht School", href: "/yelkenli-yat-okulu" },
+          { label: "Aegean Sailing Routes", href: "/ege-denizi-yelken-rotalari" },
         ],
       },
       {
