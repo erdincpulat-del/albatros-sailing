@@ -5,7 +5,7 @@ import { LanguageProvider } from "../contexts/LanguageProvider";
 import SiteHeader from "@/components/layout/SiteHeader";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://albatrossailing.com.tr"),
+  metadataBase: new URL("https://albatros-sailing.com.tr"),
 
   title: {
     default: "Albatros Sailing",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Albatros Sailing",
     description:
       "Premium sailing academy and offshore sailing training experience.",
-    url: "https://albatrossailing.com.tr",
+    url: "https://albatros-sailing.com.tr",
     siteName: "Albatros Sailing",
     locale: "tr_TR",
     type: "website",
