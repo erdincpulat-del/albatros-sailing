@@ -14,6 +14,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
 
-    sitemap: "https://albatrossailing.com/sitemap.xml",
+    sitemap: "https://albatros-sailing.com.tr/sitemap.xml",
   };
 }
