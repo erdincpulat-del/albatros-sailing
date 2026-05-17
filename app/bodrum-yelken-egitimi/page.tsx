@@ -116,6 +116,35 @@ export default function BodrumYelkenEgitimiPage() {
     }),
   }}
 />
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Ana Sayfa",
+          item: "https://albatros-sailing.com.tr",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Eğitim",
+          item: "https://albatros-sailing.com.tr/programs",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Bodrum Yelken Eğitimi",
+          item: "https://albatros-sailing.com.tr/bodrum-yelken-egitimi",
+        },
+      ],
+    }),
+  }}
+/>
       {/* HERO */}
       <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden">
         <div className="absolute inset-0">
