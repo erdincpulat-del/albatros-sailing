@@ -89,6 +89,33 @@ const faq = [
 export default function BodrumYelkenEgitimiPage() {
   return (
     <main className="bg-slate-950 text-white">
+      <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Bodrum yelken eğitimi kimler için uygundur?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Bodrum yelken eğitimi, ilk kez yelkenli yat deneyimi yaşamak isteyenler, temel denizcilik öğrenmek isteyenler ve uygulamalı eğitim arayan katılımcılar için uygundur.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Yelken eğitimi için deneyim gerekir mi?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Hayır. Başlangıç seviyesindeki katılımcılar için eğitimler sıfırdan başlar.",
+          },
+        },
+      ],
+    }),
+  }}
+/>
       {/* HERO */}
       <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden">
         <div className="absolute inset-0">
