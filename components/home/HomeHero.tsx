@@ -292,7 +292,7 @@ export default function HomeHero() {
                   e.currentTarget.style.transform = "scale(1.03)";
                 }}
               >
-                <source src="/videos/home-hero-small.mp4" type="video/mp4" />
+                <source src="/videos/home-hero-small kopyası.webm" type="video/webm" />
               </video>
 
               <div
