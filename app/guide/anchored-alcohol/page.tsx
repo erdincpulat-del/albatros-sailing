@@ -788,7 +788,7 @@ export default function AnchoredAlcoholPage() {
     <div className="grid gap-6 lg:grid-cols-2">
 
       <a
-        href="https://www.denizticaretodasi.org.tr/tr/Media/ViewerWithName/141578?fileName=64_218__zel_teknelerin_donat_m_ve_zel_tekneleri_kullanacak_ki_ilerin_yeterlikleri_hakk_nda_y_netmelik.pdf"
+        href="https://www.denizticaretodasi.org.tr/tr/sirkuler/ozel-teknelerin-donatimi-ve-ozel-tekneleri-kullanacak-kisilerin-yeterlikleri-hakkinda-yonetmelik-23548"
         target="_blank"
         rel="noopener noreferrer"
         className="group rounded-[28px] border border-white/10 bg-white/[0.04] p-7 transition hover:border-emerald-300/25 hover:bg-white/[0.055]"
