@@ -776,6 +776,94 @@ export default function AnchoredAlcoholPage() {
           </div>
         </div>
       </section>
+      <section className="border-b border-white/10 bg-[#081513] px-6 py-20 md:px-8">
+  <div className="mx-auto max-w-7xl">
+
+    <SectionTitle
+      eyebrow="Resmi Kaynaklar"
+      title="İlgili mevzuat ve resmi referanslar"
+      description="Bu eğitim içeriği; deniz emniyeti, iyi denizcilik uygulamaları, COLREG yaklaşımı ve Türkiye’deki ilgili mevzuat çerçevesinde hazırlanmıştır."
+    />
+
+    <div className="grid gap-6 lg:grid-cols-2">
+
+      <a
+        href="https://www.denizticaretodasi.org.tr/tr/Media/ViewerWithName/141578?fileName=64_218__zel_teknelerin_donat_m_ve_zel_tekneleri_kullanacak_ki_ilerin_yeterlikleri_hakk_nda_y_netmelik.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group rounded-[28px] border border-white/10 bg-white/[0.04] p-7 transition hover:border-emerald-300/25 hover:bg-white/[0.055]"
+      >
+        <div className="mb-5 flex items-center gap-4">
+          <div className="rounded-2xl bg-emerald-400/10 p-3 text-emerald-200">
+            <FileText className="h-5 w-5" />
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold text-white">
+              Özel Tekneler Yönetmeliği
+            </h3>
+
+            <p className="mt-1 text-sm text-white/55">
+              Deniz Ticaret Odası / Resmi PDF Kaynağı
+            </p>
+          </div>
+        </div>
+
+        <p className="text-sm leading-8 text-white/70">
+          Özel teknelerin donatımı, kullanım esasları,
+          deniz emniyeti yaklaşımı ve yeterlilik çerçevesi hakkında
+          resmi yönetmelik metni.
+        </p>
+        <div className="mt-6 flex items-center gap-2 text-sm font-medium text-emerald-200">
+  Resmi PDF’i Aç →
+</div>
+      </a>
+
+      <a
+        href="https://www.imo.org/en/About/Conventions/Pages/COLREG.aspx"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group rounded-[28px] border border-white/10 bg-white/[0.04] p-7 transition hover:border-amber-300/25 hover:bg-white/[0.055]"
+      >
+        <div className="mb-5 flex items-center gap-4">
+          <div className="rounded-2xl bg-amber-400/10 p-3 text-amber-200">
+            <BookOpen className="h-5 w-5" />
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold text-white">
+              IMO COLREG Convention
+            </h3>
+
+            <p className="mt-1 text-sm text-white/55">
+              International Maritime Organization
+            </p>
+          </div>
+        </div>
+
+        <p className="text-sm leading-8 text-white/70">
+  Uluslararası Denizde Çatışmayı Önleme Kuralları (COLREG)
+  resmi IMO kaynağı.
+</p>
+
+<div className="mt-6 flex items-center gap-2 text-sm font-medium text-amber-200">
+  IMO Kaynağını Aç →
+</div>
+
+</a>
+
+    </div>
+
+    <div className="mt-8 rounded-[28px] border border-amber-300/15 bg-amber-500/[0.08] p-6">
+      <p className="text-sm leading-8 text-amber-100/90">
+        Bu içerik eğitim amaçlı hazırlanmıştır.
+        Hukuki danışmanlık yerine geçmez.
+        Somut olaylar kendi koşulları içerisinde ayrıca değerlendirilmelidir.
+      </p>
+    </div>
+
+  </div>
+</section>
 
       <section className="px-6 py-20 md:px-8">
         <div className="mx-auto max-w-6xl">
